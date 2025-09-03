@@ -124,22 +124,23 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
 
   return (
     <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-black ${className}`}>
-      {/* Banner Publicitário */}
+      {/* Banner Publicitário - Totalmente Responsivo */}
       {showAd && selectedBanner && (
-        <div className="absolute inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="absolute inset-0 z-50 bg-black rounded-xl overflow-hidden">
           <div className="relative w-full h-full">
-            {/* Banner Content - Video ou Image */}
+            {/* Banner Content - Encaixa perfeitamente no container */}
             <div 
-              className="w-full h-full cursor-pointer group relative overflow-hidden"
+              className="w-full h-full cursor-pointer group relative overflow-hidden rounded-xl"
               onClick={handleAdClick}
             >
               {isAdVideo ? (
-                // Vídeo como banner
-                <div className="w-full h-full relative">
+                // Vídeo como banner - mantém aspect ratio do container
+                <div className="w-full h-full relative rounded-xl overflow-hidden">
                   {isYouTubeUrl(selectedBanner.imagem_url) ? (
                     <iframe
                       src={getYouTubeEmbedUrl(selectedBanner.imagem_url) + '&autoplay=1&mute=1&loop=1'}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full rounded-xl"
+                      style={{ objectFit: 'cover' }}
                       allowFullScreen
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       title={selectedBanner.titulo}
@@ -151,54 +152,64 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                       muted
                       loop
                       playsInline
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-xl"
                     />
                   )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300 rounded-xl" />
                 </div>
               ) : (
-                // Imagem como banner
-                <>
+                // Imagem como banner - otimizada para 16:9
+                <div className="w-full h-full relative rounded-xl overflow-hidden">
                   <img
                     src={selectedBanner.imagem_url}
                     alt={selectedBanner.titulo}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 rounded-xl"
+                    style={{ aspectRatio: '16/9' }}
                   />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
-                </>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 group-hover:from-black/40 transition-all duration-300 rounded-xl" />
+                </div>
               )}
             </div>
 
-            {/* Ad Info Badge */}
-            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-black/80 backdrop-blur-sm rounded-lg px-2 py-1 sm:px-3 sm:py-1">
-              <p className="text-white text-xs sm:text-sm font-medium">Publicidade</p>
+            {/* Ad Info Badge - Responsivo */}
+            <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-black/90 backdrop-blur-sm rounded-full px-3 py-1.5 md:px-4 md:py-2">
+              <p className="text-white text-xs md:text-sm font-semibold tracking-wide">PUBLICIDADE</p>
             </div>
 
-            {/* Skip Button */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex flex-col sm:flex-row items-end sm:items-center gap-2">
-              <div className="bg-black/80 backdrop-blur-sm rounded-lg px-2 py-1 sm:px-3 sm:py-1">
-                <p className="text-white text-xs sm:text-sm text-right sm:text-left">
-                  {canSkip ? 'Pular anúncio' : `Aguarde ${adCountdown}s`}
-                </p>
-              </div>
+            {/* Skip Button - Layout responsivo otimizado */}
+            <div className="absolute top-3 right-3 md:top-4 md:right-4 flex flex-col gap-2">
+              {!canSkip && (
+                <div className="bg-black/90 backdrop-blur-sm rounded-full px-3 py-1.5 md:px-4 md:py-2 min-w-[80px] text-center">
+                  <p className="text-white text-xs md:text-sm font-medium">
+                    {adCountdown}s
+                  </p>
+                </div>
+              )}
               {canSkip && (
                 <Button
                   onClick={handleSkipAd}
                   variant="secondary"
                   size="sm"
-                  className="bg-white/90 text-black hover:bg-white text-xs sm:text-sm px-2 py-1 h-auto"
+                  className="bg-white/95 text-black hover:bg-white shadow-lg text-xs md:text-sm px-3 py-2 h-auto rounded-full font-semibold min-w-[80px] transition-all duration-200 hover:scale-105"
                 >
-                  <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                  <X className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                   Pular
                 </Button>
               )}
             </div>
 
-            {/* Banner Title - Responsive */}
-            <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4">
-              <h3 className="text-white text-sm sm:text-lg font-bold drop-shadow-lg line-clamp-2">
-                {selectedBanner.titulo}
-              </h3>
+            {/* Banner Title - Totalmente responsivo */}
+            <div className="absolute bottom-3 left-3 right-3 md:bottom-6 md:left-6 md:right-6">
+              <div className="bg-gradient-to-t from-black/80 to-transparent p-3 md:p-4 rounded-lg -m-3 md:-m-4">
+                <h3 className="text-white text-sm md:text-xl lg:text-2xl font-bold drop-shadow-xl line-clamp-2 leading-tight">
+                  {selectedBanner.titulo}
+                </h3>
+                {selectedBanner.link_url && (
+                  <p className="text-white/80 text-xs md:text-sm mt-1 md:mt-2 font-medium">
+                    Clique para saber mais
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
