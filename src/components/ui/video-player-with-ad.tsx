@@ -116,8 +116,11 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
   };
 
   const isVideoUrl = (url: string) => {
-    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi'];
-    return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || isYouTubeUrl(url);
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || 
+           isYouTubeUrl(url) ||
+           url.includes('blob:') ||
+           url.includes('data:video/');
   };
 
   const isAdVideo = selectedBanner?.tipo_midia === 'video' && selectedBanner?.imagem_url && isVideoUrl(selectedBanner.imagem_url);
@@ -153,6 +156,16 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                       loop
                       playsInline
                       className="w-full h-full object-cover rounded-xl"
+                      onError={(e) => {
+                        console.error('Erro ao carregar vídeo do banner:', e);
+                        // Fallback para imagem se o vídeo não carregar
+                        const videoElement = e.target as HTMLVideoElement;
+                        const img = document.createElement('img');
+                        img.src = selectedBanner.imagem_url;
+                        img.className = 'w-full h-full object-cover rounded-xl';
+                        img.alt = 'Banner publicitário';
+                        videoElement.parentNode?.replaceChild(img, videoElement);
+                      }}
                     />
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300 rounded-xl" />
