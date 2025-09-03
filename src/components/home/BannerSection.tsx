@@ -146,7 +146,7 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
                 <div className="relative w-full aspect-[970/250]">
                   <img
                     src={banner.imagem_url}
-                    alt={banner.titulo}
+                    alt="Banner publicitário"
                     className="w-full h-full object-cover transition-opacity duration-500"
                     {...(index === 0 ? { 
                       fetchPriority: "high" as const,

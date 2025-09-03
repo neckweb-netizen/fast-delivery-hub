@@ -143,7 +143,7 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                       style={{ objectFit: 'cover' }}
                       allowFullScreen
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      title={selectedBanner.titulo}
+                      title="Banner publicitário"
                     />
                   ) : (
                     <video
@@ -162,7 +162,7 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                 <div className="w-full h-full relative rounded-xl overflow-hidden">
                   <img
                     src={selectedBanner.imagem_url}
-                    alt={selectedBanner.titulo}
+                    alt="Banner publicitário"
                     className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 rounded-xl"
                     style={{ aspectRatio: '16/9' }}
                   />
@@ -198,19 +198,6 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
               )}
             </div>
 
-            {/* Banner Title - Totalmente responsivo */}
-            <div className="absolute bottom-3 left-3 right-3 md:bottom-6 md:left-6 md:right-6">
-              <div className="bg-gradient-to-t from-black/80 to-transparent p-3 md:p-4 rounded-lg -m-3 md:-m-4">
-                <h3 className="text-white text-sm md:text-xl lg:text-2xl font-bold drop-shadow-xl line-clamp-2 leading-tight">
-                  {selectedBanner.titulo}
-                </h3>
-                {selectedBanner.link_url && (
-                  <p className="text-white/80 text-xs md:text-sm mt-1 md:mt-2 font-medium">
-                    Clique para saber mais
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       )}
