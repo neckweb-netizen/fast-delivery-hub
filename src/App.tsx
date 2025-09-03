@@ -118,7 +118,7 @@ const App = () => {
               <Route path=":shortCode" element={<ShortUrlRedirect />} />
             </Route>
             
-            <Route path="/local-dashboard" element={<MainLayout />}>
+            <Route path="/empresa-dashboard" element={<MainLayout />}>
               <Route index element={<LocalDashboard />} />
             </Route>
 
