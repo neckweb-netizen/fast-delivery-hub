@@ -104,7 +104,7 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
           <div className="absolute top-3 right-3 flex gap-2">
             <div onClick={(e) => e.stopPropagation()}>
               <ShareButton 
-                url={`${window.location.origin}/empresas/${empresa.id}`}
+                url={`${window.location.origin}/local/${empresa.id}`}
                 title={empresa.nome}
                 description={empresa.descricao || `Confira ${empresa.nome} no nosso app`}
                 variant="secondary"

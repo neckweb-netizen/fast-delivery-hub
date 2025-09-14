@@ -25,7 +25,7 @@ export const SearchBar = () => {
 
   const handleSuggestionClick = (type: 'empresa' | 'categoria' | 'cidade', item: any) => {
     if (type === 'empresa') {
-      navigate(`/empresas/${item.slug || item.id}`);
+      navigate(`/local/${item.slug || item.id}`);
     } else if (type === 'categoria') {
       navigate(`/search?categoria=${item.id}`);
     } else if (type === 'cidade') {

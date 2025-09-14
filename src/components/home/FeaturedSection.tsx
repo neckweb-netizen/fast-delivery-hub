@@ -50,7 +50,7 @@ export const FeaturedSection = ({ cidadeId }: FeaturedSectionProps) => {
   }
 
   const handleEmpresaClick = (empresaId: string) => {
-    navigate(`/empresas/${empresaId}`);
+    navigate(`/local/${empresaId}`);
   };
 
   return (
@@ -63,7 +63,7 @@ export const FeaturedSection = ({ cidadeId }: FeaturedSectionProps) => {
           </Badge>
         </div>
         <button 
-          onClick={() => navigate('/empresas')}
+          onClick={() => navigate('/locais')}
           className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
         >
           Ver todas →

@@ -100,7 +100,7 @@ const App = () => {
               <Route path="locais" element={<Locais />} />
               <Route path="categorias" element={<Categorias />} />
               <Route path="locais/:slug" element={<LocalProfile />} />
-              <Route path="empresas/:slug" element={<LocalProfile />} />
+              <Route path="local/:slug" element={<LocalProfile />} />
               <Route path="cadastro-local" element={<CadastroLocal />} />
               <Route path="eventos" element={<Eventos />} />
               <Route path="eventos/:id" element={<EventoPage />} />

@@ -96,9 +96,9 @@ export const StoryViewer = ({
       let profileUrl;
       
       if (currentStory.empresas.slug) {
-        profileUrl = `/empresas/${currentStory.empresas.slug}`;
+        profileUrl = `/local/${currentStory.empresas.slug}`;
       } else {
-        profileUrl = `/empresa/${currentStory.empresa_id}`;
+        profileUrl = `/local/${currentStory.empresa_id}`;
       }
       
       console.log('📍 Navigating to company profile:', profileUrl);

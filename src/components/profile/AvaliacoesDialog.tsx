@@ -19,7 +19,7 @@ export const AvaliacoesDialog = ({ open, onOpenChange }: AvaliacoesDialogProps) 
   const { data: avaliacoes, isLoading } = useUserAvaliacoes(user?.id);
 
   const handleVisitEmpresa = (empresa: any) => {
-    navigate(`/empresas/${empresa.slug || empresa.id}`);
+    navigate(`/local/${empresa.slug || empresa.id}`);
     onOpenChange(false);
   };
 

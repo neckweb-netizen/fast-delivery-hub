@@ -16,7 +16,7 @@ export const FavoritosDialog = ({ open, onOpenChange }: FavoritosDialogProps) =>
   const navigate = useNavigate();
 
   const handleVisitEmpresa = (empresaId: string) => {
-    navigate(`/empresas/${empresaId}`);
+    navigate(`/local/${empresaId}`);
     onOpenChange(false);
   };
 
