@@ -74,15 +74,34 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
             alt={empresa.nome}
             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
             onClick={onClick}
+            onError={(e) => {
+              console.warn('Erro ao carregar imagem:', empresa.imagem_capa_url);
+              // Remove a imagem com erro e mostra o fallback
+              e.currentTarget.style.display = 'none';
+              const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+              if (fallbackDiv) {
+                fallbackDiv.style.display = 'flex';
+              }
+            }}
+            onLoad={(e) => {
+              // Esconde o fallback se a imagem carregar com sucesso
+              const fallbackDiv = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
+              if (fallbackDiv) {
+                fallbackDiv.style.display = 'none';
+              }
+            }}
           />
-        ) : (
-          <div 
-            className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
-            onClick={onClick}
-          >
-            <Camera className="h-12 w-12 text-muted-foreground" />
-          </div>
-        )}
+        ) : null}
+        
+        {/* Fallback sempre presente, mas inicialmente escondido se há imagem */}
+        <div 
+          className={`w-full h-48 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-300 ${
+            empresa.imagem_capa_url ? 'hidden' : 'flex'
+          }`}
+          onClick={onClick}
+        >
+          <Camera className="h-12 w-12 text-muted-foreground" />
+        </div>
         
         {/* Badges no canto superior */}
         <div className="absolute top-3 left-3 flex flex-col space-y-1">
