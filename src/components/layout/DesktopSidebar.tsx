@@ -39,7 +39,7 @@ export const DesktopSidebar = ({
     id: 'empresas',
     nome_item: 'Locais',
     icone: 'Building2',
-    rota: '/empresas',
+    rota: '/locais',
     categoria: 'principal'
   }, {
     id: 'categorias',

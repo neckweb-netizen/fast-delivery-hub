@@ -58,8 +58,8 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
     {
       label: 'Gestão',
       items: [
-        { icon: Building2, label: 'Locais', path: '/admin/empresas', section: 'empresas' },
-        { icon: UserCheck, label: 'Locais Pendentes', path: '/admin/empresas-pendentes', section: 'empresas-pendentes' },
+        { icon: Building2, label: 'Locais', path: '/admin/locais', section: 'empresas' },
+        { icon: UserCheck, label: 'Locais Pendentes', path: '/admin/locais-pendentes', section: 'empresas-pendentes' },
         { icon: Calendar, label: 'Eventos', path: '/admin/eventos', section: 'eventos' },
         { icon: Users, label: 'Usuários', path: '/admin/usuarios', section: 'usuarios' },
         { icon: Tag, label: 'Categorias', path: '/admin/categorias', section: 'categorias' },

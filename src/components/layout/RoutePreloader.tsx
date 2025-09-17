@@ -14,16 +14,16 @@ export const RoutePreloader = () => {
       // Define routes to preload based on current location
       switch (currentPath) {
         case '/':
-          routesToPreload = ['/empresas', '/eventos', '/categorias'];
+          routesToPreload = ['/locais', '/eventos', '/categorias'];
           break;
-        case '/empresas':
+        case '/locais':
           routesToPreload = ['/categorias', '/eventos'];
           break;
         case '/eventos':
-          routesToPreload = ['/empresas', '/canal-informativo'];
+          routesToPreload = ['/locais', '/canal-informativo'];
           break;
         case '/categorias':
-          routesToPreload = ['/empresas'];
+          routesToPreload = ['/locais'];
           break;
         default:
           routesToPreload = ['/'];

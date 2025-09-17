@@ -24,7 +24,7 @@ export const BottomNavigation = () => {
 
   const leftMenuItems = [
     { icon: Home, label: 'Início', path: '/' },
-    { icon: Building2, label: 'Locais', path: '/empresas' },
+    { icon: Building2, label: 'Locais', path: '/locais' },
   ];
 
   const rightMenuItems = [
