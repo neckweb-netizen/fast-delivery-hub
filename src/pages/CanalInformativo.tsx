@@ -32,7 +32,7 @@ const CanalInformativo = () => {
     <div className="dark min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       {/* Modern Header with Gradient */}
       <div className="sticky top-0 z-40 tiktok-glass border-b border-border/20">
-        <div className="container mx-auto px-4 py-4">
+        <div className="w-full px-4 py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -61,7 +61,7 @@ const CanalInformativo = () => {
       </div>
 
       {/* Content Area with Modern Scroll */}
-      <div className="container mx-auto px-4 py-6 modern-scroll content-fade">
+      <div className="w-full px-4 py-6 modern-scroll content-fade">
         <CanalInformativoList />
       </div>
 
