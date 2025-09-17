@@ -84,12 +84,32 @@ export const ImageUpload = ({
   };
 
   const handleUrlSubmit = () => {
-    if (urlInput.trim()) {
-      onChange(urlInput.trim());
+    console.log('🔍 Tentando adicionar URL:', urlInput.trim());
+    
+    if (!urlInput.trim()) {
+      console.warn('⚠️ URL vazia detectada');
+      return;
+    }
+
+    try {
+      // Validar se é uma URL válida
+      const url = new URL(urlInput.trim());
+      console.log('✅ URL válida detectada:', url.href);
+      
+      onChange(url.href);
       setUrlInput('');
       setShowUrlInput(false);
+      
+      console.log('✅ URL adicionada com sucesso:', url.href);
       toast({
         title: 'URL da imagem adicionada!',
+      });
+    } catch (error) {
+      console.error('❌ URL inválida:', error);
+      toast({
+        title: 'URL inválida',
+        description: 'Por favor, insira uma URL válida.',
+        variant: 'destructive',
       });
     }
   };
@@ -122,6 +142,13 @@ export const ImageUpload = ({
             src={value}
             alt="Preview"
             className="w-full h-40 object-cover rounded-lg border"
+            onLoad={() => {
+              console.log('✅ Imagem carregada com sucesso:', value);
+            }}
+            onError={(e) => {
+              console.error('❌ Erro ao carregar imagem:', value);
+              console.error('Detalhes do erro:', e);
+            }}
           />
           <Button
             type="button"

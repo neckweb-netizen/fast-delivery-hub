@@ -19,7 +19,17 @@ const formSchema = z.object({
   titulo: z.string().min(1, 'Título é obrigatório'),
   conteudo: z.string().optional(),
   tipo_conteudo: z.enum(['noticia', 'video', 'imagem', 'resultado_sorteio']),
-  url_midia: z.string().url('URL inválida').optional().or(z.literal('')),
+  url_midia: z.string().optional().refine((val) => {
+    if (!val || val === '') return true; // Permite vazio
+    try {
+      new URL(val);
+      return true;
+    } catch {
+      return false;
+    }
+  }, {
+    message: 'URL inválida'
+  }),
   link_externo: z.string().url('URL inválida').optional().or(z.literal('')),
 });
 
@@ -52,6 +62,10 @@ export const CanalInformativoForm = () => {
   const tipoConteudo = form.watch('tipo_conteudo');
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('📝 Dados do formulário recebidos:', values);
+    console.log('🖼️ URL da imagem uploadada:', uploadedImageUrl);
+    console.log('🔗 URL da mídia do campo:', values.url_midia);
+    
     setIsSubmitting(true);
     try {
       const data: CreateCanalInformativoData = {
@@ -61,6 +75,8 @@ export const CanalInformativoForm = () => {
         url_midia: uploadedImageUrl || values.url_midia || undefined,
         link_externo: values.link_externo || undefined,
       };
+
+      console.log('📤 Dados finais para envio:', data);
 
       // Se for resultado de sorteio, adicionar os dados específicos
       if (values.tipo_conteudo === 'resultado_sorteio') {
@@ -83,6 +99,7 @@ export const CanalInformativoForm = () => {
   };
 
   const handleImageUpload = (url: string) => {
+    console.log('📤 Upload de imagem realizado, URL recebida:', url);
     setUploadedImageUrl(url);
     form.setValue('url_midia', '');
   };
@@ -92,7 +109,9 @@ export const CanalInformativoForm = () => {
   };
 
   const handleUrlChange = (url: string) => {
+    console.log('🔗 URL de mídia alterada:', url);
     if (url) {
+      console.log('🔄 Limpando imagem uploadada pois URL foi inserida');
       setUploadedImageUrl('');
     }
     form.setValue('url_midia', url);
