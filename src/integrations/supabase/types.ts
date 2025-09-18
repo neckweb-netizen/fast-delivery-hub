@@ -2160,6 +2160,10 @@ export type Database = {
         Args: { vaga_id: string }
         Returns: undefined
       }
+      limpar_urls_google: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       refresh_empresas_populares: {
         Args: Record<PropertyKey, never>
         Returns: undefined
