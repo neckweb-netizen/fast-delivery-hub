@@ -96,8 +96,26 @@ export const ImageUpload = ({
       const url = new URL(urlInput.trim());
       console.log('✅ ImageUpload: URL válida detectada:', url.href);
       
-      // Testar se a URL da imagem é acessível
+      // Verificar se é uma URL do Google (que pode ter problemas de CORS)
+      const isGoogleUrl = url.hostname.includes('googleusercontent.com') || 
+                         url.hostname.includes('google.com');
+      
+      if (isGoogleUrl) {
+        console.warn('⚠️ ImageUpload: URL do Google detectada, pode ter restrições CORS');
+        // Para URLs do Google, aceitar sem teste prévio mas avisar
+        onChange(url.href);
+        setUrlInput('');
+        setShowUrlInput(false);
+        toast({
+          title: 'URL da imagem adicionada!',
+          description: 'URLs do Google podem ter restrições. Se não carregar, tente fazer upload direto.',
+        });
+        return;
+      }
+      
+      // Testar se a URL da imagem é acessível para outros domínios
       const testImg = new Image();
+      testImg.crossOrigin = 'anonymous';
       testImg.onload = () => {
         console.log('✅ ImageUpload: Imagem testada e carregou com sucesso');
         onChange(url.href);
@@ -109,10 +127,14 @@ export const ImageUpload = ({
       };
       testImg.onerror = () => {
         console.error('❌ ImageUpload: Imagem não pôde ser carregada da URL');
+        // Mesmo com erro no teste, permitir a URL (pode ser problema de CORS no teste)
+        onChange(url.href);
+        setUrlInput('');
+        setShowUrlInput(false);
         toast({
-          title: 'Erro ao carregar imagem',
-          description: 'A URL fornecida não contém uma imagem válida ou não está acessível.',
-          variant: 'destructive',
+          title: 'URL adicionada com aviso',
+          description: 'A imagem foi adicionada, mas pode não carregar devido a restrições de CORS.',
+          variant: 'default',
         });
       };
       testImg.src = url.href;

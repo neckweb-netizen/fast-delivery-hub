@@ -75,13 +75,27 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
               alt={empresa.nome}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               onClick={onClick}
+              crossOrigin="anonymous"
+              loading="lazy"
               onError={(e) => {
                 console.error('❌ Erro ao carregar imagem da empresa:', empresa.nome);
                 console.error('❌ URL da imagem:', empresa.imagem_capa_url);
-                console.error('❌ Detalhes do erro:', e);
-                // Remove a imagem com erro e mostra o fallback
-                e.currentTarget.style.display = 'none';
-                const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                console.error('❌ Tipo de erro:', e.type);
+                console.error('❌ Target:', e.target);
+                
+                // Tentar recarregar a imagem uma vez com timestamp para evitar cache
+                const img = e.currentTarget as HTMLImageElement;
+                if (!img.dataset.retried) {
+                  img.dataset.retried = 'true';
+                  const originalUrl = empresa.imagem_capa_url!;
+                  const separator = originalUrl.includes('?') ? '&' : '?';
+                  img.src = `${originalUrl}${separator}t=${Date.now()}`;
+                  return;
+                }
+                
+                // Se ainda falhou, mostrar fallback
+                img.style.display = 'none';
+                const fallbackDiv = img.nextElementSibling as HTMLElement;
                 if (fallbackDiv) {
                   fallbackDiv.style.display = 'flex';
                 }
