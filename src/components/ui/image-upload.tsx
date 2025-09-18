@@ -101,14 +101,21 @@ export const ImageUpload = ({
                          url.hostname.includes('google.com');
       
       if (isGoogleUrl) {
-        console.warn('⚠️ ImageUpload: URL do Google detectada, pode ter restrições CORS');
-        // Para URLs do Google, aceitar sem teste prévio mas avisar
-        onChange(url.href);
+        console.warn('⚠️ ImageUpload: URL do Google detectada, limpando parâmetros');
+        // Para URLs do Google, limpar parâmetros que podem causar problemas
+        let cleanUrl = url.href;
+        if (url.hostname.includes('googleusercontent.com')) {
+          // Remover parâmetros de tamanho específicos do Google Photos/Maps
+          cleanUrl = url.href.split('=')[0];
+          console.log('🔄 URL do Google limpa:', cleanUrl);
+        }
+        
+        onChange(cleanUrl);
         setUrlInput('');
         setShowUrlInput(false);
         toast({
           title: 'URL da imagem adicionada!',
-          description: 'URLs do Google podem ter restrições. Se não carregar, tente fazer upload direto.',
+          description: 'URL do Google foi otimizada para melhor compatibilidade.',
         });
         return;
       }

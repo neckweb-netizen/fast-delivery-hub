@@ -79,20 +79,34 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
               loading="lazy"
               onError={(e) => {
                 console.error('❌ Erro ao carregar imagem da empresa:', empresa.nome);
-                console.error('❌ URL da imagem:', empresa.imagem_capa_url);
+                console.error('❌ URL original da imagem:', empresa.imagem_capa_url);
                 console.error('❌ Tipo de erro:', e.type);
-                console.error('❌ Target:', e.target);
+                console.error('❌ Target src atual:', (e.target as HTMLImageElement)?.src);
                 
-                // Tentar recarregar a imagem uma vez com timestamp para evitar cache
                 const img = e.currentTarget as HTMLImageElement;
-                if (!img.dataset.retried) {
-                  img.dataset.retried = 'true';
-                  const originalUrl = empresa.imagem_capa_url!;
-                  const separator = originalUrl.includes('?') ? '&' : '?';
-                  img.src = `${originalUrl}${separator}t=${Date.now()}`;
+                const originalUrl = empresa.imagem_capa_url!;
+                
+                // Para URLs do Google, tentar versão sem parâmetros de tamanho primeiro
+                if (originalUrl.includes('googleusercontent.com') && !img.dataset.googleRetried) {
+                  img.dataset.googleRetried = 'true';
+                  // Remover parâmetros específicos do Google que podem causar problemas
+                  let cleanUrl = originalUrl.split('=')[0]; // Remove tudo após o primeiro =
+                  console.log('🔄 Tentando URL do Google limpa:', cleanUrl);
+                  img.src = cleanUrl;
                   return;
                 }
                 
+                // Tentar recarregar a imagem uma vez com timestamp para evitar cache
+                if (!img.dataset.retried) {
+                  img.dataset.retried = 'true';
+                  const separator = originalUrl.includes('?') ? '&' : '?';
+                  const retryUrl = `${originalUrl}${separator}t=${Date.now()}`;
+                  console.log('🔄 Tentando com timestamp:', retryUrl);
+                  img.src = retryUrl;
+                  return;
+                }
+                
+                console.warn('⚠️ Todas as tentativas falharam, mostrando fallback para:', empresa.nome);
                 // Se ainda falhou, mostrar fallback
                 img.style.display = 'none';
                 const fallbackDiv = img.nextElementSibling as HTMLElement;
