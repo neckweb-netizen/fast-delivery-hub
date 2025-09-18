@@ -69,39 +69,50 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
     <NeonCard className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-card backdrop-blur-sm">
       <div className="relative overflow-hidden rounded-t-lg">
         {empresa.imagem_capa_url ? (
-          <img 
-            src={empresa.imagem_capa_url} 
-            alt={empresa.nome}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          <>
+            <img 
+              src={empresa.imagem_capa_url} 
+              alt={empresa.nome}
+              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              onClick={onClick}
+              onError={(e) => {
+                console.error('❌ Erro ao carregar imagem da empresa:', empresa.nome);
+                console.error('❌ URL da imagem:', empresa.imagem_capa_url);
+                console.error('❌ Detalhes do erro:', e);
+                // Remove a imagem com erro e mostra o fallback
+                e.currentTarget.style.display = 'none';
+                const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                if (fallbackDiv) {
+                  fallbackDiv.style.display = 'flex';
+                }
+              }}
+              onLoad={() => {
+                console.log('✅ Imagem carregada com sucesso:', empresa.nome, empresa.imagem_capa_url);
+              }}
+            />
+            {/* Fallback sempre presente, mas inicialmente escondido */}
+            <div 
+              className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted hidden items-center justify-center group-hover:scale-105 transition-transform duration-300"
+              onClick={onClick}
+              style={{ display: 'none' }}
+            >
+              <div className="text-center">
+                <Camera className="h-12 w-12 text-muted-foreground mb-2 mx-auto" />
+                <p className="text-xs text-muted-foreground">Imagem não disponível</p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div 
+            className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
             onClick={onClick}
-            onError={(e) => {
-              console.warn('Erro ao carregar imagem:', empresa.imagem_capa_url);
-              // Remove a imagem com erro e mostra o fallback
-              e.currentTarget.style.display = 'none';
-              const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
-              if (fallbackDiv) {
-                fallbackDiv.style.display = 'flex';
-              }
-            }}
-            onLoad={(e) => {
-              // Esconde o fallback se a imagem carregar com sucesso
-              const fallbackDiv = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-              if (fallbackDiv) {
-                fallbackDiv.style.display = 'none';
-              }
-            }}
-          />
-        ) : null}
-        
-        {/* Fallback sempre presente, mas inicialmente escondido se há imagem */}
-        <div 
-          className={`w-full h-48 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-300 ${
-            empresa.imagem_capa_url ? 'hidden' : 'flex'
-          }`}
-          onClick={onClick}
-        >
-          <Camera className="h-12 w-12 text-muted-foreground" />
-        </div>
+          >
+            <div className="text-center">
+              <Camera className="h-12 w-12 text-muted-foreground mb-2 mx-auto" />
+              <p className="text-xs text-muted-foreground">Sem imagem</p>
+            </div>
+          </div>
+        )}
         
         {/* Badges no canto superior */}
         <div className="absolute top-3 left-3 flex flex-col space-y-1">

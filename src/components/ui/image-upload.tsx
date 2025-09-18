@@ -84,28 +84,41 @@ export const ImageUpload = ({
   };
 
   const handleUrlSubmit = () => {
-    console.log('🔍 Tentando adicionar URL:', urlInput.trim());
+    console.log('🔍 ImageUpload: Tentando adicionar URL:', urlInput.trim());
     
     if (!urlInput.trim()) {
-      console.warn('⚠️ URL vazia detectada');
+      console.warn('⚠️ ImageUpload: URL vazia detectada');
       return;
     }
 
     try {
       // Validar se é uma URL válida
       const url = new URL(urlInput.trim());
-      console.log('✅ URL válida detectada:', url.href);
+      console.log('✅ ImageUpload: URL válida detectada:', url.href);
       
-      onChange(url.href);
-      setUrlInput('');
-      setShowUrlInput(false);
+      // Testar se a URL da imagem é acessível
+      const testImg = new Image();
+      testImg.onload = () => {
+        console.log('✅ ImageUpload: Imagem testada e carregou com sucesso');
+        onChange(url.href);
+        setUrlInput('');
+        setShowUrlInput(false);
+        toast({
+          title: 'URL da imagem adicionada!',
+        });
+      };
+      testImg.onerror = () => {
+        console.error('❌ ImageUpload: Imagem não pôde ser carregada da URL');
+        toast({
+          title: 'Erro ao carregar imagem',
+          description: 'A URL fornecida não contém uma imagem válida ou não está acessível.',
+          variant: 'destructive',
+        });
+      };
+      testImg.src = url.href;
       
-      console.log('✅ URL adicionada com sucesso:', url.href);
-      toast({
-        title: 'URL da imagem adicionada!',
-      });
     } catch (error) {
-      console.error('❌ URL inválida:', error);
+      console.error('❌ ImageUpload: URL inválida:', error);
       toast({
         title: 'URL inválida',
         description: 'Por favor, insira uma URL válida.',
