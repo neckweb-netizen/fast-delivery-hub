@@ -108,7 +108,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
   return (
     <Sidebar>
       <SidebarHeader className="p-4 border-b">
-        <h2 className="text-lg font-semibold">Admin Panel</h2>
+        <h2 className="text-lg font-semibold text-foreground">Admin Panel</h2>
       </SidebarHeader>
       
       <SidebarContent>
@@ -143,7 +143,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
       </SidebarContent>
       
       <SidebarFooter className="p-4 border-t">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-foreground/70">
           Sistema de Gestão
         </div>
       </SidebarFooter>

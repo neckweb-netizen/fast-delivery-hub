@@ -154,8 +154,8 @@ export const MobileHamburger = () => {
   };
   return <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="sm" className="lg:hidden">
-          <Menu className="h-5 w-5" />
+        <Button variant="ghost" size="sm" className="lg:hidden text-foreground hover:text-foreground">
+          <Menu className="h-5 w-5 text-foreground" />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 p-0 bg-background">
@@ -182,8 +182,8 @@ export const MobileHamburger = () => {
                     ? "bg-primary text-primary-foreground scale-95" // Feedback visual imediato
                     : isActive(item.rota) 
                       ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:scale-95"
-                )} 
+                      : "text-foreground hover:bg-muted hover:text-foreground active:scale-95"
+                )}
                 onClick={() => handleNavigation(item.rota)}
                 disabled={navigatingTo === item.rota}
               >

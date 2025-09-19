@@ -39,12 +39,12 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    --sidebar-background: 210 100% 98%;
-    --sidebar-foreground: 210 100% 15%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
     --sidebar-primary: 210 100% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 210 40% 95.9%;
-    --sidebar-accent-foreground: 210 100% 40%;
+    --sidebar-accent: 210 40% 93%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
     --sidebar-border: 210 13% 91%;
     --sidebar-ring: 210 100% 60%;
 

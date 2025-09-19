@@ -157,11 +157,11 @@ export const DesktopSidebar = ({
               key={item.id} 
               to={item.rota} 
                className={cn(
-                 "flex items-center gap-3 px-4 py-3 transition-all duration-100 text-left font-normal hover:scale-105 active:scale-95",
-                 isActive(item.rota) 
-                   ? "bg-primary text-primary-foreground" 
-                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-               )}
+                  "flex items-center gap-3 px-4 py-3 transition-all duration-100 text-left font-normal hover:scale-105 active:scale-95",
+                  isActive(item.rota) 
+                    ? "bg-primary text-primary-foreground" 
+                    : "text-foreground hover:bg-muted hover:text-foreground"
+                )}
             >
                   {IconComponent && <IconComponent className="h-5 w-5 flex-shrink-0" />}
                   {isOpen && <span className="text-sm font-medium truncate">
