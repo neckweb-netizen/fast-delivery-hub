@@ -63,7 +63,7 @@ export const SearchContent = () => {
       <BannerSection secao="busca" />
       
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Buscar Locais</h1>
+        <h1 className="text-4xl font-bold text-foreground mb-4">Buscar Locais</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
           Encontre os melhores locais e serviços da sua região
         </p>
