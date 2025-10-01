@@ -116,7 +116,7 @@ export const BannersSection = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Banners Publicitários</h2>
+          <h2 className="text-2xl font-bold text-foreground">Banners Publicitários</h2>
           <p className="text-muted-foreground">
             Gerencie os banners publicitários exibidos nas diferentes seções do site
           </p>

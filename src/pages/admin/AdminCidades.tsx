@@ -3,7 +3,7 @@ export const AdminCidades = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Gerenciar Cidades</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Gerenciar Cidades</h2>
         <p className="text-muted-foreground">
           Gerencie as cidades disponíveis no sistema
         </p>

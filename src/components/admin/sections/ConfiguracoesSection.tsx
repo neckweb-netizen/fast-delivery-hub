@@ -7,7 +7,7 @@ export const ConfiguracoesSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Configurações Gerais</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Configurações Gerais</h2>
         <p className="text-muted-foreground">
           Configure as opções gerais do sistema
         </p>

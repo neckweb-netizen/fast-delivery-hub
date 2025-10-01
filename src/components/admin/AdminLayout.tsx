@@ -81,7 +81,7 @@ export const AdminLayout = () => {
           <header className="h-16 border-b flex items-center px-6 bg-white">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
-              <h1 className="text-xl font-semibold">Painel Administrativo</h1>
+              <h1 className="text-xl font-semibold text-foreground">Painel Administrativo</h1>
             </div>
             
             <div className="ml-auto flex items-center gap-4">

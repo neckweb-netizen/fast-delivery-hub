@@ -59,7 +59,7 @@ export const AvisosSistemaSection = () => {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Avisos do Sistema</h2>
+          <h2 className="text-2xl font-bold text-foreground">Avisos do Sistema</h2>
         </div>
         <div className="grid gap-4">
           {[...Array(3)].map((_, i) => (
@@ -82,7 +82,7 @@ export const AvisosSistemaSection = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Avisos do Sistema</h2>
+          <h2 className="text-2xl font-bold text-foreground">Avisos do Sistema</h2>
           <p className="text-muted-foreground">Gerencie avisos e comunicados para locais</p>
         </div>
         <Button onClick={() => setShowForm(true)}>
@@ -202,7 +202,7 @@ export const AvisosSistemaSection = () => {
             <CardContent className="pt-6">
               <div className="text-center py-8">
                 <Info className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Nenhum aviso cadastrado</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2">Nenhum aviso cadastrado</h3>
                 <p className="text-muted-foreground mb-4">
                   Comece criando um aviso para comunicar atualizações aos locais.
                 </p>

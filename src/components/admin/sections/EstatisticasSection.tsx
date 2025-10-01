@@ -21,7 +21,7 @@ export const EstatisticasSection = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard / Estatísticas</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard / Estatísticas</h2>
         </div>
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando estatísticas...</p>
@@ -47,7 +47,7 @@ export const EstatisticasSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard / Estatísticas</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard / Estatísticas</h2>
         <p className="text-muted-foreground">
           Visualize estatísticas detalhadas do sistema
         </p>

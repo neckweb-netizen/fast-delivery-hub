@@ -190,7 +190,7 @@ export function AdminServicos() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Serviços Autônomos</h1>
+          <h1 className="text-3xl font-bold text-foreground">Serviços Autônomos</h1>
           <p className="text-muted-foreground">Gerencie os serviços autônomos disponíveis</p>
         </div>
         

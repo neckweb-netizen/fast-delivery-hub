@@ -150,7 +150,7 @@ const ServicosAutonomos = () => {
                 <div className="flex flex-col items-center gap-4">
                   <Search className="w-16 h-16 text-muted-foreground/50" />
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">Nenhum serviço encontrado</h3>
+                    <h3 className="text-xl font-semibold text-foreground">Nenhum serviço encontrado</h3>
                     <p className="text-muted-foreground">
                       Tente ajustar os filtros de busca para encontrar mais resultados.
                     </p>

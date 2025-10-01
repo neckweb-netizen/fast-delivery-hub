@@ -17,7 +17,7 @@ export const PrivacyPolicy = () => {
         >
           <ArrowLeft className="w-4 h-4" />
         </Button>
-        <h1 className="text-3xl font-bold">Política de Privacidade</h1>
+        <h1 className="text-3xl font-bold text-foreground">Política de Privacidade</h1>
       </div>
 
       <Card>

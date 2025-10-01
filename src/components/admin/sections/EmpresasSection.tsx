@@ -42,7 +42,7 @@ export const EmpresasSection = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Gestão de Empresas</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Gestão de Empresas</h2>
         </div>
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando empresas...</p>
@@ -100,7 +100,7 @@ export const EmpresasSection = () => {
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Gestão de Empresas</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Gestão de Empresas</h2>
           <p className="text-muted-foreground">
             Gerencie as empresas cadastradas no sistema
           </p>

@@ -212,7 +212,7 @@ const VagasEmprego = () => {
                 <div className="flex flex-col items-center gap-4">
                   <Briefcase className="w-16 h-16 text-muted-foreground/50" />
                   <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">Nenhuma vaga encontrada</h3>
+                    <h3 className="text-xl font-semibold text-foreground">Nenhuma vaga encontrada</h3>
                     <p className="text-muted-foreground">
                       Tente ajustar os filtros de busca para encontrar mais oportunidades.
                     </p>

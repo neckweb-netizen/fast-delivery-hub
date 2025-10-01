@@ -68,7 +68,7 @@ const CategoriaLocais = () => {
               </div>
               
               <div>
-                <h1 className="text-xl font-bold">{categoria?.nome || 'Categoria'}</h1>
+                <h1 className="text-xl font-bold text-foreground">{categoria?.nome || 'Categoria'}</h1>
                 <p className="text-primary-foreground/80 text-sm">Locais disponíveis</p>
               </div>
             </div>

@@ -18,7 +18,7 @@ export const CategoriasSection = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Gestão de Categorias</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Gestão de Categorias</h2>
         </div>
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando categorias...</p>
@@ -94,7 +94,7 @@ export const CategoriasSection = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Gestão de Categorias</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Gestão de Categorias</h2>
           <p className="text-muted-foreground">
             Gerencie as categorias disponíveis no sistema
           </p>

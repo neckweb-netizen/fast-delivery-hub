@@ -29,7 +29,7 @@ export default function Radios() {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <Radio className="w-8 h-8 text-red-500" />
-              <h1 className="text-3xl font-bold tracking-tight">Rádios</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Rádios</h1>
             </div>
             <p className="text-lg text-muted-foreground">
               Carregando rádios...
@@ -46,7 +46,7 @@ export default function Radios() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Radio className="w-8 h-8 text-red-500" />
-            <h1 className="text-3xl font-bold tracking-tight">Rádios</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Rádios</h1>
           </div>
           <p className="text-lg text-muted-foreground">
             Ouça as melhores rádios da região ao vivo
@@ -73,7 +73,7 @@ export default function Radios() {
         ) : (
           <div className="text-center py-12">
             <Radio className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Nenhuma rádio cadastrada</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2">Nenhuma rádio cadastrada</h2>
             <p className="text-muted-foreground">
               Ainda não há rádios cadastradas na categoria "Rádios".
             </p>

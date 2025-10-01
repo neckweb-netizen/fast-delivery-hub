@@ -134,7 +134,7 @@ export function AdminHomeSections() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Ordem das Seções</h1>
+          <h1 className="text-3xl font-bold text-foreground">Ordem das Seções</h1>
           <p className="text-muted-foreground">
             Gerencie a ordem e visibilidade das seções da página inicial
           </p>

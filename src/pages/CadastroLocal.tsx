@@ -156,7 +156,7 @@ const CadastroLocal = () => {
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-8 pb-6">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Local Cadastrado!</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Local Cadastrado!</h2>
             <p className="text-muted-foreground mb-4">
               Seu local foi cadastrado com sucesso. Aguarde a aprovação do administrador.
             </p>

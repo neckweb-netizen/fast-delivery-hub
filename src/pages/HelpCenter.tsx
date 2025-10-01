@@ -46,7 +46,7 @@ export const HelpCenter = () => {
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="p-2">
           <ArrowLeft className="w-4 h-4" />
         </Button>
-        <h1 className="text-3xl font-bold">Central de Ajuda</h1>
+        <h1 className="text-3xl font-bold text-foreground">Central de Ajuda</h1>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">

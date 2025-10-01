@@ -60,7 +60,7 @@ export const CanalInformativoSection = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Canal Informativo</h2>
+          <h2 className="text-2xl font-bold text-foreground">Canal Informativo</h2>
           <p className="text-muted-foreground">
             Gerencie as publicações do canal informativo
           </p>

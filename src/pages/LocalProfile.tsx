@@ -255,7 +255,7 @@ const EmpresaProfile = () => {
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
-                    <h1 className="text-3xl font-bold">{empresa.nome}</h1>
+                    <h1 className="text-3xl font-bold text-foreground">{empresa.nome}</h1>
                     <div className="flex items-center flex-wrap gap-2">
                       <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                         {empresa.categorias?.nome}
@@ -407,7 +407,7 @@ const EmpresaProfile = () => {
                           <Card>
                             <CardContent className="p-6">
                               <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-semibold">Avaliações & Comentários</h2>
+                                <h2 className="text-xl font-semibold text-foreground">Avaliações & Comentários</h2>
                                 <Button variant="outline" size="sm" onClick={handleAvaliar}>
                                   <MessageCircle className="h-4 w-4 mr-2" />
                                   Avaliar

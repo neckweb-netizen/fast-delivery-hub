@@ -173,7 +173,7 @@ export const EnquetesSection = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Gerenciar Enquetes</h1>
+          <h1 className="text-3xl font-bold text-foreground">Gerenciar Enquetes</h1>
           <p className="text-muted-foreground">
             Crie e gerencie enquetes e visualize relatórios de desempenho
           </p>

@@ -147,7 +147,7 @@ const Oportunidades = () => {
 
         {/* Categorias Populares */}
         <div className="bg-card rounded-2xl p-6 shadow-lg border">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
             <Users className="w-6 h-6 text-primary" />
             Categorias Populares
           </h2>

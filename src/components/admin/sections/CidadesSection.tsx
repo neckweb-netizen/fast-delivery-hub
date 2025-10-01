@@ -5,7 +5,7 @@ export const CidadesSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Gestão de Cidades</h2>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Gestão de Cidades</h2>
         <p className="text-muted-foreground">
           Gerencie as cidades disponíveis no sistema
         </p>
