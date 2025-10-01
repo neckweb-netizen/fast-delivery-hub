@@ -50,7 +50,7 @@ export const CouponsContent = () => {
     return (
       <div className="px-2 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold">🎟️ Cupons</h1>
+          <h1 className="text-2xl font-bold text-foreground">🎟️ Cupons</h1>
           <p className="text-muted-foreground">
             Aproveite as melhores promoções da cidade
           </p>
@@ -65,7 +65,7 @@ export const CouponsContent = () => {
   return (
     <div className="px-2 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold">🎟️ Cupons</h1>
+        <h1 className="text-2xl font-bold text-foreground">🎟️ Cupons</h1>
         <p className="text-muted-foreground">
           Aproveite as melhores promoções da cidade
         </p>
@@ -132,7 +132,7 @@ export const CouponsContent = () => {
         <div className="text-center py-12 space-y-4">
           <div className="text-6xl">🎟️</div>
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Nenhum cupom disponível</h3>
+            <h3 className="text-lg font-semibold text-foreground">Nenhum cupom disponível</h3>
             <p className="text-muted-foreground">
               Fique atento! Em breve teremos ótimas promoções para você.
             </p>

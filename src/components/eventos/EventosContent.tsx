@@ -55,7 +55,7 @@ export const EventosContent = () => {
       <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-xl p-8 mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">
               Eventos em {cidadePadrao?.nome}
             </h1>
             <p className="text-muted-foreground text-lg">
@@ -179,7 +179,7 @@ export const EventosContent = () => {
                 <div className="space-y-4">
                   <Calendar className="w-16 h-16 text-muted-foreground/50 mx-auto" />
                   <div className="space-y-2">
-                    <h3 className="text-lg font-semibold">Nenhum evento encontrado</h3>
+                    <h3 className="text-lg font-semibold text-foreground">Nenhum evento encontrado</h3>
                     <p className="text-muted-foreground">
                       Não há eventos programados para {cidadePadrao?.nome} no momento.
                     </p>
