@@ -1,0 +1,254 @@
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { useProblemasCidade, useCategoriasProblema } from '@/hooks/useProblemasCidade';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { Eye, CheckCircle, XCircle, Trash2, AlertCircle } from 'lucide-react';
+
+export const ProblemasCidadeSection = () => {
+  const { problemas, isLoading } = useProblemasCidade(undefined, {
+    ordenacao: 'recentes',
+  });
+  const { categorias } = useCategoriasProblema();
+  const [problemaModal, setProblemaModal] = useState<any>(null);
+  const [statusSelecionado, setStatusSelecionado] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+
+  const handleAtualizarStatus = async () => {
+    if (!problemaModal) return;
+
+    const { error } = await supabase
+      .from('problemas_cidade')
+      .update({
+        status: statusSelecionado,
+        moderado: true,
+        data_moderacao: new Date().toISOString(),
+        observacoes_moderacao: observacoes,
+      })
+      .eq('id', problemaModal.id);
+
+    if (error) {
+      toast.error('Erro ao atualizar status');
+      return;
+    }
+
+    toast.success('Status atualizado com sucesso');
+    setProblemaModal(null);
+    setObservacoes('');
+  };
+
+  const handleExcluir = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir este problema?')) return;
+
+    const { error } = await supabase
+      .from('problemas_cidade')
+      .update({ ativo: false })
+      .eq('id', id);
+
+    if (error) {
+      toast.error('Erro ao excluir problema');
+      return;
+    }
+
+    toast.success('Problema excluído');
+  };
+
+  const statusColors = {
+    aberto: 'bg-red-500/10 text-red-500',
+    em_analise: 'bg-yellow-500/10 text-yellow-500',
+    resolvido: 'bg-green-500/10 text-green-500',
+    fechado: 'bg-gray-500/10 text-gray-500',
+  };
+
+  const statusLabels = {
+    aberto: 'Aberto',
+    em_analise: 'Em Análise',
+    resolvido: 'Resolvido',
+    fechado: 'Fechado',
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold tracking-tight">Problemas da Cidade</h2>
+        <p className="text-muted-foreground">
+          Gerencie e modere os problemas relatados pelos cidadãos
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Todos os Problemas</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="text-center py-8">Carregando...</div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Título</TableHead>
+                  <TableHead>Categoria</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Prioridade</TableHead>
+                  <TableHead>Votos</TableHead>
+                  <TableHead>Data</TableHead>
+                  <TableHead>Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {problemas?.map((problema) => (
+                  <TableRow key={problema.id}>
+                    <TableCell className="font-medium">{problema.titulo}</TableCell>
+                    <TableCell>
+                      {problema.categoria?.nome || 'Sem categoria'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={statusColors[problema.status]}>
+                        {statusLabels[problema.status]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          problema.prioridade === 'urgente'
+                            ? 'destructive'
+                            : 'secondary'
+                        }
+                      >
+                        {problema.prioridade}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {problema.votos_positivos - problema.votos_negativos}
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(problema.criado_em), 'dd/MM/yyyy', {
+                        locale: ptBR,
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setProblemaModal(problema);
+                            setStatusSelecionado(problema.status);
+                          }}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleExcluir(problema.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Modal de Detalhes/Moderação */}
+      <Dialog open={!!problemaModal} onOpenChange={() => setProblemaModal(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Moderar Problema</DialogTitle>
+          </DialogHeader>
+
+          {problemaModal && (
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold mb-2">Título</h3>
+                <p>{problemaModal.titulo}</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2">Descrição</h3>
+                <p className="text-sm whitespace-pre-wrap">{problemaModal.descricao}</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2">Localização</h3>
+                <p className="text-sm">
+                  {problemaModal.endereco}
+                  {problemaModal.bairro && ` - ${problemaModal.bairro}`}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-semibold mb-2">Status Atual</h3>
+                  <Select value={statusSelecionado} onValueChange={setStatusSelecionado}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="aberto">Aberto</SelectItem>
+                      <SelectItem value="em_analise">Em Análise</SelectItem>
+                      <SelectItem value="resolvido">Resolvido</SelectItem>
+                      <SelectItem value="fechado">Fechado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold mb-2">Prioridade</h3>
+                  <Badge>{problemaModal.prioridade}</Badge>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-semibold mb-2">Observações de Moderação</h3>
+                <Textarea
+                  value={observacoes}
+                  onChange={(e) => setObservacoes(e.target.value)}
+                  placeholder="Adicione observações sobre a moderação..."
+                  rows={3}
+                />
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setProblemaModal(null)}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleAtualizarStatus}>
+                  Salvar Alterações
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};

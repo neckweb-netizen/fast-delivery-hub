@@ -385,6 +385,45 @@ export type Database = {
         }
         Relationships: []
       }
+      categorias_problema: {
+        Row: {
+          ativo: boolean
+          atualizado_em: string
+          cor: string | null
+          criado_em: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          ordem: number
+          slug: string
+        }
+        Insert: {
+          ativo?: boolean
+          atualizado_em?: string
+          cor?: string | null
+          criado_em?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          slug: string
+        }
+        Update: {
+          ativo?: boolean
+          atualizado_em?: string
+          cor?: string | null
+          criado_em?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          slug?: string
+        }
+        Relationships: []
+      }
       cidades: {
         Row: {
           ativo: boolean
@@ -420,6 +459,72 @@ export type Database = {
           slug?: string
         }
         Relationships: []
+      }
+      comentarios_problema: {
+        Row: {
+          ativo: boolean
+          atualizado_em: string
+          comentario_pai_id: string | null
+          conteudo: string
+          criado_em: string
+          data_moderacao: string | null
+          id: string
+          imagens: string[] | null
+          moderado: boolean
+          moderado_por: string | null
+          problema_id: string
+          usuario_id: string
+          votos_negativos: number
+          votos_positivos: number
+        }
+        Insert: {
+          ativo?: boolean
+          atualizado_em?: string
+          comentario_pai_id?: string | null
+          conteudo: string
+          criado_em?: string
+          data_moderacao?: string | null
+          id?: string
+          imagens?: string[] | null
+          moderado?: boolean
+          moderado_por?: string | null
+          problema_id: string
+          usuario_id: string
+          votos_negativos?: number
+          votos_positivos?: number
+        }
+        Update: {
+          ativo?: boolean
+          atualizado_em?: string
+          comentario_pai_id?: string | null
+          conteudo?: string
+          criado_em?: string
+          data_moderacao?: string | null
+          id?: string
+          imagens?: string[] | null
+          moderado?: boolean
+          moderado_por?: string | null
+          problema_id?: string
+          usuario_id?: string
+          votos_negativos?: number
+          votos_positivos?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comentarios_problema_comentario_pai_id_fkey"
+            columns: ["comentario_pai_id"]
+            isOneToOne: false
+            referencedRelation: "comentarios_problema"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comentarios_problema_problema_id_fkey"
+            columns: ["problema_id"]
+            isOneToOne: false
+            referencedRelation: "problemas_cidade"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       configuracoes_sistema: {
         Row: {
@@ -620,7 +725,7 @@ export type Database = {
           id: string
           imagem_capa_url: string | null
           link_radio: string | null
-          localizacao: unknown | null
+          localizacao: unknown
           nome: string
           observacoes_admin: string | null
           plano_atual_id: string | null
@@ -651,7 +756,7 @@ export type Database = {
           id?: string
           imagem_capa_url?: string | null
           link_radio?: string | null
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome: string
           observacoes_admin?: string | null
           plano_atual_id?: string | null
@@ -682,7 +787,7 @@ export type Database = {
           id?: string
           imagem_capa_url?: string | null
           link_radio?: string | null
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome?: string
           observacoes_admin?: string | null
           plano_atual_id?: string | null
@@ -747,7 +852,7 @@ export type Database = {
           endereco: string
           horario_funcionamento: Json | null
           id: string
-          localizacao: unknown | null
+          localizacao: unknown
           nome_identificacao: string
           principal: boolean
           telefone: string | null
@@ -763,7 +868,7 @@ export type Database = {
           endereco: string
           horario_funcionamento?: Json | null
           id?: string
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome_identificacao: string
           principal?: boolean
           telefone?: string | null
@@ -779,7 +884,7 @@ export type Database = {
           endereco?: string
           horario_funcionamento?: Json | null
           id?: string
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome_identificacao?: string
           principal?: boolean
           telefone?: string | null
@@ -1095,7 +1200,7 @@ export type Database = {
           horario_funcionamento: Json | null
           id: string
           imagem_url: string | null
-          localizacao: unknown | null
+          localizacao: unknown
           nome: string
           telefone: string | null
           tipo: string
@@ -1111,7 +1216,7 @@ export type Database = {
           horario_funcionamento?: Json | null
           id?: string
           imagem_url?: string | null
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome: string
           telefone?: string | null
           tipo: string
@@ -1127,7 +1232,7 @@ export type Database = {
           horario_funcionamento?: Json | null
           id?: string
           imagem_url?: string | null
-          localizacao?: unknown | null
+          localizacao?: unknown
           nome?: string
           telefone?: string | null
           tipo?: string
@@ -1286,6 +1391,102 @@ export type Database = {
           suporte_prioritario?: boolean
         }
         Relationships: []
+      }
+      problemas_cidade: {
+        Row: {
+          ativo: boolean
+          atualizado_em: string
+          bairro: string | null
+          categoria_id: string | null
+          cidade_id: string
+          criado_em: string
+          data_moderacao: string | null
+          descricao: string
+          endereco: string
+          id: string
+          imagens: string[] | null
+          localizacao: unknown
+          moderado: boolean
+          moderado_por: string | null
+          observacoes_moderacao: string | null
+          prioridade: Database["public"]["Enums"]["prioridade_problema"]
+          resolvido_em: string | null
+          resolvido_por: string | null
+          status: Database["public"]["Enums"]["status_problema"]
+          titulo: string
+          usuario_id: string
+          visualizacoes: number
+          votos_negativos: number
+          votos_positivos: number
+        }
+        Insert: {
+          ativo?: boolean
+          atualizado_em?: string
+          bairro?: string | null
+          categoria_id?: string | null
+          cidade_id: string
+          criado_em?: string
+          data_moderacao?: string | null
+          descricao: string
+          endereco: string
+          id?: string
+          imagens?: string[] | null
+          localizacao?: unknown
+          moderado?: boolean
+          moderado_por?: string | null
+          observacoes_moderacao?: string | null
+          prioridade?: Database["public"]["Enums"]["prioridade_problema"]
+          resolvido_em?: string | null
+          resolvido_por?: string | null
+          status?: Database["public"]["Enums"]["status_problema"]
+          titulo: string
+          usuario_id: string
+          visualizacoes?: number
+          votos_negativos?: number
+          votos_positivos?: number
+        }
+        Update: {
+          ativo?: boolean
+          atualizado_em?: string
+          bairro?: string | null
+          categoria_id?: string | null
+          cidade_id?: string
+          criado_em?: string
+          data_moderacao?: string | null
+          descricao?: string
+          endereco?: string
+          id?: string
+          imagens?: string[] | null
+          localizacao?: unknown
+          moderado?: boolean
+          moderado_por?: string | null
+          observacoes_moderacao?: string | null
+          prioridade?: Database["public"]["Enums"]["prioridade_problema"]
+          resolvido_em?: string | null
+          resolvido_por?: string | null
+          status?: Database["public"]["Enums"]["status_problema"]
+          titulo?: string
+          usuario_id?: string
+          visualizacoes?: number
+          votos_negativos?: number
+          votos_positivos?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "problemas_cidade_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_problema"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "problemas_cidade_cidade_id_fkey"
+            columns: ["cidade_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       produtos: {
         Row: {
@@ -1496,6 +1697,35 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      seguidores_problema: {
+        Row: {
+          criado_em: string
+          id: string
+          problema_id: string
+          usuario_id: string
+        }
+        Insert: {
+          criado_em?: string
+          id?: string
+          problema_id: string
+          usuario_id: string
+        }
+        Update: {
+          criado_em?: string
+          id?: string
+          problema_id?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seguidores_problema_problema_id_fkey"
+            columns: ["problema_id"]
+            isOneToOne: false
+            referencedRelation: "problemas_cidade"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       servicos_agendamento: {
         Row: {
@@ -1885,6 +2115,70 @@ export type Database = {
           },
         ]
       }
+      votos_comentario: {
+        Row: {
+          comentario_id: string
+          criado_em: string
+          id: string
+          tipo_voto: number
+          usuario_id: string
+        }
+        Insert: {
+          comentario_id: string
+          criado_em?: string
+          id?: string
+          tipo_voto: number
+          usuario_id: string
+        }
+        Update: {
+          comentario_id?: string
+          criado_em?: string
+          id?: string
+          tipo_voto?: number
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votos_comentario_comentario_id_fkey"
+            columns: ["comentario_id"]
+            isOneToOne: false
+            referencedRelation: "comentarios_problema"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      votos_problema: {
+        Row: {
+          criado_em: string
+          id: string
+          problema_id: string
+          tipo_voto: number
+          usuario_id: string
+        }
+        Insert: {
+          criado_em?: string
+          id?: string
+          problema_id: string
+          tipo_voto: number
+          usuario_id: string
+        }
+        Update: {
+          criado_em?: string
+          id?: string
+          problema_id?: string
+          tipo_voto?: number
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votos_problema_problema_id_fkey"
+            columns: ["problema_id"]
+            isOneToOne: false
+            referencedRelation: "problemas_cidade"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       mv_empresas_populares: {
@@ -2039,7 +2333,7 @@ export type Database = {
         }[]
       }
       buscar_enquete_ativa: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           descricao: string
           id: string
@@ -2083,14 +2377,8 @@ export type Database = {
         Args: { target_role: Database["public"]["Enums"]["tipo_conta"] }
         Returns: boolean
       }
-      cleanup_expired_sessions: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      cleanup_rate_limits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      cleanup_expired_sessions: { Args: never; Returns: undefined }
+      cleanup_rate_limits: { Args: never; Returns: undefined }
       criar_resultado_sorteio: {
         Args: {
           canal_id: string
@@ -2099,10 +2387,7 @@ export type Database = {
         }
         Returns: undefined
       }
-      deletar_eventos_finalizados_antigos: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      deletar_eventos_finalizados_antigos: { Args: never; Returns: undefined }
       empresa_esta_favoritada: {
         Args: { empresa_id_param: string; usuario_id_param: string }
         Returns: boolean
@@ -2119,18 +2404,9 @@ export type Database = {
           total_visualizacoes: number
         }[]
       }
-      finalizar_eventos_expirados: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      generate_short_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      finalizar_eventos_expirados: { Args: never; Returns: undefined }
+      generate_short_code: { Args: never; Returns: string }
+      get_current_user_role: { Args: never; Returns: string }
       get_servicos_with_secure_contact: {
         Args: { categoria_slug?: string; search_term?: string }
         Returns: {
@@ -2148,9 +2424,10 @@ export type Database = {
           whatsapp_prestador: string
         }[]
       }
-      increment_url_clicks: {
-        Args: { code: string }
-        Returns: string
+      increment_url_clicks: { Args: { code: string }; Returns: string }
+      incrementar_visualizacao_problema: {
+        Args: { problema_id_param: string }
+        Returns: undefined
       }
       incrementar_visualizacao_servico: {
         Args: { servico_id: string }
@@ -2160,18 +2437,9 @@ export type Database = {
         Args: { vaga_id: string }
         Returns: undefined
       }
-      limpar_urls_google: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      refresh_empresas_populares: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      usar_cupom: {
-        Args: { cupom_id_param: string }
-        Returns: boolean
-      }
+      limpar_urls_google: { Args: never; Returns: undefined }
+      refresh_empresas_populares: { Args: never; Returns: undefined }
+      usar_cupom: { Args: { cupom_id_param: string }; Returns: boolean }
       user_has_permission: {
         Args: { target_cidade_id?: string; target_user_id?: string }
         Returns: boolean
@@ -2198,7 +2466,9 @@ export type Database = {
       }
     }
     Enums: {
+      prioridade_problema: "baixa" | "media" | "alta" | "urgente"
       status_aprovacao: "pendente" | "aprovado" | "rejeitado" | "finalizado"
+      status_problema: "aberto" | "em_analise" | "resolvido" | "fechado"
       status_servico: "pendente" | "aprovado" | "rejeitado"
       tipo_categoria: "empresa" | "evento" | "servico"
       tipo_conta:
@@ -2344,7 +2614,9 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      prioridade_problema: ["baixa", "media", "alta", "urgente"],
       status_aprovacao: ["pendente", "aprovado", "rejeitado", "finalizado"],
+      status_problema: ["aberto", "em_analise", "resolvido", "fechado"],
       status_servico: ["pendente", "aprovado", "rejeitado"],
       tipo_categoria: ["empresa", "evento", "servico"],
       tipo_conta: [
