@@ -71,7 +71,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Relatar Problema da Cidade</DialogTitle>
+          <DialogTitle>Relatar Sugestão</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -84,7 +84,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
                   <FormLabel>Título</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ex: Buraco na via principal do bairro"
+                      placeholder="Ex: Melhoria na iluminação da via principal"
                       {...field}
                     />
                   </FormControl>
@@ -150,7 +150,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
                   <FormLabel>Descrição</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Descreva o problema em detalhes..."
+                      placeholder="Descreva sua sugestão em detalhes..."
                       rows={5}
                       {...field}
                     />
@@ -200,7 +200,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
                 Cancelar
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Publicando...' : 'Publicar Problema'}
+                {isSubmitting ? 'Publicando...' : 'Publicar Sugestão'}
               </Button>
             </div>
           </form>

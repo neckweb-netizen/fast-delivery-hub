@@ -60,7 +60,7 @@ export const ProblemasCidadeSection = () => {
   };
 
   const handleExcluir = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este problema?')) return;
+    if (!confirm('Tem certeza que deseja excluir esta sugestão?')) return;
 
     const { error } = await supabase
       .from('problemas_cidade')
@@ -68,11 +68,11 @@ export const ProblemasCidadeSection = () => {
       .eq('id', id);
 
     if (error) {
-      toast.error('Erro ao excluir problema');
+      toast.error('Erro ao excluir sugestão');
       return;
     }
 
-    toast.success('Problema excluído');
+    toast.success('Sugestão excluída');
   };
 
   const statusColors = {
@@ -92,15 +92,15 @@ export const ProblemasCidadeSection = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Problemas da Cidade</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Voz do Povo</h2>
         <p className="text-muted-foreground">
-          Gerencie e modere os problemas relatados pelos cidadãos
+          Gerencie e modere as sugestões relatadas pelos cidadãos
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Todos os Problemas</CardTitle>
+          <CardTitle>Todas as Sugestões</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -182,7 +182,7 @@ export const ProblemasCidadeSection = () => {
       <Dialog open={!!problemaModal} onOpenChange={() => setProblemaModal(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Moderar Problema</DialogTitle>
+            <DialogTitle>Moderar Sugestão</DialogTitle>
           </DialogHeader>
 
           {problemaModal && (

@@ -44,7 +44,7 @@ const ProblemaDetalhes = () => {
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-8 text-center">
-          <p className="text-muted-foreground">Problema não encontrado</p>
+          <p className="text-muted-foreground">Sugestão não encontrada</p>
         </div>
       </MainLayout>
     );

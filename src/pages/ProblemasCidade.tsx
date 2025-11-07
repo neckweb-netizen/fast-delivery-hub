@@ -10,6 +10,7 @@ import { ProblemaFormDialog } from '@/components/problemas/ProblemaFormDialog';
 import { useProblemasCidade, useCategoriasProblema } from '@/hooks/useProblemasCidade';
 import { useCidadePadrao } from '@/hooks/useCidadePadrao';
 import { useAuth } from '@/hooks/useAuth';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 
 const ProblemasCidade = () => {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ const ProblemasCidade = () => {
   const [ordenacao, setOrdenacao] = useState<'recentes' | 'populares' | 'resolvidos'>('recentes');
   const [statusFiltro, setStatusFiltro] = useState<string>('all');
   const [dialogAberto, setDialogAberto] = useState(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   const { problemas, isLoading } = useProblemasCidade(cidadePadrao?.id, {
     categoriaId: categoriaFiltro !== 'all' ? categoriaFiltro : undefined,
@@ -37,10 +39,10 @@ const ProblemasCidade = () => {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">
-            Problemas da Cidade
+            Voz do Povo
           </h1>
           <p className="text-muted-foreground">
-            Relate problemas, vote e acompanhe soluções para melhorar nossa cidade
+            Relate sugestões, vote e acompanhe soluções para melhorar nossa cidade
           </p>
         </div>
 
@@ -48,7 +50,7 @@ const ProblemasCidade = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Buscar problemas..."
+              placeholder="Buscar sugestões..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -82,12 +84,18 @@ const ProblemasCidade = () => {
             </SelectContent>
           </Select>
 
-          {user && (
-            <Button onClick={() => setDialogAberto(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Relatar Problema
-            </Button>
-          )}
+          <Button 
+            onClick={() => {
+              if (user) {
+                setDialogAberto(true);
+              } else {
+                setAuthDialogOpen(true);
+              }
+            }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Relatar Sugestão
+          </Button>
         </div>
 
         <Tabs value={ordenacao} onValueChange={(v) => setOrdenacao(v as any)}>
@@ -113,19 +121,22 @@ const ProblemasCidade = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">
-                  Nenhum problema encontrado
+                  Nenhuma sugestão encontrada
                 </p>
               </div>
             )}
           </TabsContent>
         </Tabs>
 
-        {user && (
-          <ProblemaFormDialog
-            open={dialogAberto}
-            onOpenChange={setDialogAberto}
-          />
-        )}
+        <ProblemaFormDialog
+          open={dialogAberto}
+          onOpenChange={setDialogAberto}
+        />
+
+        <AuthDialog
+          open={authDialogOpen}
+          onOpenChange={setAuthDialogOpen}
+        />
       </div>
     </MainLayout>
   );
