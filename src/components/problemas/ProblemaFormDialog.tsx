@@ -29,7 +29,7 @@ interface ProblemaFormDialogProps {
 }
 
 export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogProps) => {
-  const { cidadePadrao } = useCidadePadrao();
+  const { data: cidadePadrao } = useCidadePadrao();
   const { categorias } = useCategoriasProblema();
   const { criarProblema } = useProblemasCidade();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +52,12 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
     setIsSubmitting(true);
     try {
       await criarProblema.mutateAsync({
-        ...data,
+        titulo: data.titulo,
+        descricao: data.descricao,
+        categoria_id: data.categoria_id,
+        endereco: data.endereco,
+        bairro: data.bairro,
+        prioridade: data.prioridade,
         cidade_id: cidadePadrao.id,
       });
       form.reset();

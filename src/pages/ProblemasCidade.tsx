@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 const ProblemasCidade = () => {
   const { user } = useAuth();
-  const { cidadePadrao } = useCidadePadrao();
+  const { data: cidadePadrao } = useCidadePadrao();
   const { categorias } = useCategoriasProblema();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState<string>('all');

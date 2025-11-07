@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUp, ArrowDown, MessageCircle, Eye, MapPin } from 'lucide-react';
-import { ProblemaC idade, useProblemasCidade } from '@/hooks/useProblemasCidade';
+import { ProblemaCidade, useProblemasCidade } from '@/hooks/useProblemasCidade';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import * as LucideIcons from 'lucide-react';
 
 interface ProblemaCardProps {
-  problema: ProblemaC idade;
+  problema: ProblemaCidade;
 }
 
 export const ProblemaCard = ({ problema }: ProblemaCardProps) => {

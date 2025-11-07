@@ -226,7 +226,7 @@ const ProblemaDetalhes = () => {
           <Separator className="my-6" />
 
           {comentarios && comentarios.length > 0 ? (
-            <ComentariosList comentarios={comentarios} />
+            <ComentariosList comentarios={comentarios as any} />
           ) : (
             <p className="text-center text-muted-foreground py-8">
               Nenhum comentário ainda. Seja o primeiro a comentar!

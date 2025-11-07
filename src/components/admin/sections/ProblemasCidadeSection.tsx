@@ -42,7 +42,7 @@ export const ProblemasCidadeSection = () => {
     const { error } = await supabase
       .from('problemas_cidade')
       .update({
-        status: statusSelecionado,
+        status: statusSelecionado as 'aberto' | 'em_analise' | 'resolvido' | 'fechado',
         moderado: true,
         data_moderacao: new Date().toISOString(),
         observacoes_moderacao: observacoes,

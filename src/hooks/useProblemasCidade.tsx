@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export interface ProblemaC idade {
+export interface ProblemaCidade {
   id: string;
   titulo: string;
   descricao: string;
@@ -61,7 +61,7 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
       }
 
       if (filters?.status) {
-        query = query.eq('status', filters.status);
+        query = query.eq('status', filters.status as any);
       }
 
       // Ordenação
@@ -76,7 +76,7 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data as ProblemaC idade[];
+      return data as any[];
     },
   });
 
@@ -91,9 +91,12 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
       imagens?: string[];
       prioridade?: 'baixa' | 'media' | 'alta' | 'urgente';
     }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
       const { data, error } = await supabase
         .from('problemas_cidade')
-        .insert([novoProblema])
+        .insert([{ ...novoProblema, usuario_id: user.id }])
         .select()
         .single();
 
@@ -111,10 +114,14 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
 
   const votarProblema = useMutation({
     mutationFn: async ({ problemaId, tipoVoto }: { problemaId: string; tipoVoto: 1 | -1 }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
       const { data: votoExistente } = await supabase
         .from('votos_problema')
         .select('*')
         .eq('problema_id', problemaId)
+        .eq('usuario_id', user.id)
         .maybeSingle();
 
       if (votoExistente) {
@@ -135,7 +142,7 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
         // Cria novo voto
         await supabase
           .from('votos_problema')
-          .insert([{ problema_id: problemaId, tipo_voto: tipoVoto }]);
+          .insert([{ problema_id: problemaId, tipo_voto: tipoVoto, usuario_id: user.id }]);
       }
     },
     onSuccess: () => {
@@ -178,7 +185,7 @@ export const useProblemaDetalhes = (problemaId: string) => {
         .single();
 
       if (error) throw error;
-      return data as ProblemaC idade;
+      return data as any;
     },
     enabled: !!problemaId,
   });
@@ -209,10 +216,14 @@ export const useProblemaDetalhes = (problemaId: string) => {
       imagens?: string[];
       comentario_pai_id?: string;
     }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
       const { data, error } = await supabase
         .from('comentarios_problema')
         .insert([{
           problema_id: problemaId,
+          usuario_id: user.id,
           ...novoComentario,
         }])
         .select()
@@ -238,7 +249,7 @@ export const useProblemaDetalhes = (problemaId: string) => {
   };
 };
 
-export const useCategorias Problema = () => {
+export const useCategoriasProblema = () => {
   const { data: categorias, isLoading } = useQuery({
     queryKey: ['categorias-problema'],
     queryFn: async () => {
