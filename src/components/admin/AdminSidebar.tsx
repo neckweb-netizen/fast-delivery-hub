@@ -23,7 +23,8 @@ import {
   Wrench,
   UserCheck,
   Download,
-  Vote
+  Vote,
+  Megaphone
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -78,6 +79,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
       label: 'Conteúdo',
       items: [
         { icon: MessageCircle, label: 'Canal Informativo', path: '/admin/canal-informativo', section: 'canal-informativo' },
+        { icon: Megaphone, label: 'Voz do Povo', path: '/admin/problemas-cidade', section: 'problemas-cidade' },
         { icon: Image, label: 'Banners', path: '/admin/banners', section: 'banners' },
         { icon: BookOpen, label: 'Stories', path: '/admin/stories', section: 'stories' },
         { icon: Vote, label: 'Enquetes', path: '/admin/enquetes', section: 'enquetes' },

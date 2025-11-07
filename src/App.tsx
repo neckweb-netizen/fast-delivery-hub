@@ -62,6 +62,9 @@ const AdminVagas = lazy(() => import("./pages/admin/AdminVagas").then(m => ({ de
 const AdminServicos = lazy(() => import("./pages/admin/AdminServicos").then(m => ({ default: m.AdminServicos })));
 const AdminLugaresPublicos = lazy(() => import("./pages/admin/AdminLugaresPublicos"));
 const AdminEnquetes = lazy(() => import("./pages/admin/AdminEnquetes"));
+const ProblemasCidade = lazy(() => import("./pages/ProblemasCidade"));
+const ProblemaDetalhes = lazy(() => import("./pages/ProblemaDetalhes"));
+const AdminProblemasCidade = lazy(() => import("./pages/admin/AdminProblemasCidade"));
 const ShortUrlRedirect = lazy(() => import("./pages/ShortUrlRedirect"));
 
 import { MainLayout } from "./components/layout/MainLayout";
@@ -115,6 +118,8 @@ const App = () => {
               <Route path="help" element={<HelpCenter />} />
               <Route path="contact" element={<ContactPage />} />
               <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="problemas-cidade" element={<ProblemasCidade />} />
+              <Route path="problemas-cidade/:id" element={<ProblemaDetalhes />} />
               <Route path="unauthorized" element={<UnauthorizedPage />} />
               <Route path=":shortCode" element={<ShortUrlRedirect />} />
             </Route>
@@ -150,6 +155,7 @@ const App = () => {
               <Route path="servicos" element={<AdminServicos />} />
               <Route path="lugares-publicos" element={<AdminLugaresPublicos />} />
               <Route path="enquetes" element={<AdminEnquetes />} />
+              <Route path="problemas-cidade" element={<AdminProblemasCidade />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

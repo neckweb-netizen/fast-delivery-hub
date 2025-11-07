@@ -72,6 +72,12 @@ export const DesktopSidebar = ({
     rota: '/canal-informativo',
     categoria: 'principal'
   }, {
+    id: 'voz-do-povo',
+    nome_item: 'Voz do Povo',
+    icone: 'Megaphone',
+    rota: '/problemas-cidade',
+    categoria: 'principal'
+  }, {
     id: 'buscar',
     nome_item: 'Buscar',
     icone: 'Search',
