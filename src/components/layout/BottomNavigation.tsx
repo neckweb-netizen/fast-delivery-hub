@@ -28,7 +28,7 @@ export const BottomNavigation = () => {
   ];
 
   const rightMenuItems = [
-    { icon: Megaphone, label: 'Voz do Povo', path: '/problemas-cidade' },
+    { icon: Megaphone, label: 'Voz do Povo', path: '/reclamacoes' },
     { icon: Briefcase, label: 'Oportunidades', path: '/oportunidades' },
   ];
 

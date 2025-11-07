@@ -44,7 +44,7 @@ const ProblemaDetalhes = () => {
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-8 text-center">
-          <p className="text-muted-foreground">Sugestão não encontrada</p>
+          <p className="text-muted-foreground">Reclamação não encontrada</p>
         </div>
       </MainLayout>
     );
@@ -93,7 +93,7 @@ const ProblemaDetalhes = () => {
         <Button
           variant="ghost"
           className="mb-4"
-          onClick={() => navigate('/problemas-cidade')}
+          onClick={() => navigate('/reclamacoes')}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Voltar

@@ -75,7 +75,7 @@ export const DesktopSidebar = ({
     id: 'voz-do-povo',
     nome_item: 'Voz do Povo',
     icone: 'Megaphone',
-    rota: '/problemas-cidade',
+    rota: '/reclamacoes',
     categoria: 'principal'
   }, {
     id: 'buscar',

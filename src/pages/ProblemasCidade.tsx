@@ -42,7 +42,7 @@ const ProblemasCidade = () => {
             Voz do Povo
           </h1>
           <p className="text-muted-foreground">
-            Relate sugestões, vote e acompanhe soluções para melhorar nossa cidade
+            Relate reclamações, vote e acompanhe soluções para melhorar nossa cidade
           </p>
         </div>
 
@@ -50,7 +50,7 @@ const ProblemasCidade = () => {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Buscar sugestões..."
+              placeholder="Buscar reclamações..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -94,7 +94,7 @@ const ProblemasCidade = () => {
             }}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Relatar Sugestão
+            Relatar Reclamação
           </Button>
         </div>
 
@@ -121,7 +121,7 @@ const ProblemasCidade = () => {
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">
-                  Nenhuma sugestão encontrada
+                  Nenhuma reclamação encontrada
                 </p>
               </div>
             )}

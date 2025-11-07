@@ -61,7 +61,7 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
   return (
     <Card 
       className="cursor-pointer hover:shadow-lg transition-shadow"
-      onClick={() => navigate(`/problemas-cidade/${problema.id}`)}
+      onClick={() => navigate(`/reclamacoes/${problema.id}`)}
     >
       <CardContent className="p-6">
         <div className="flex items-start gap-4">

@@ -105,10 +105,10 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['problemas-cidade'] });
-      toast.success('Sugestão publicada com sucesso!');
+      toast.success('Reclamação publicada com sucesso!');
     },
     onError: () => {
-      toast.error('Erro ao publicar sugestão');
+      toast.error('Erro ao publicar reclamação');
     },
   });
 
