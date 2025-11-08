@@ -1394,12 +1394,14 @@ export type Database = {
       }
       problemas_cidade: {
         Row: {
+          aprovado_por: string | null
           ativo: boolean
           atualizado_em: string
           bairro: string | null
           categoria_id: string | null
           cidade_id: string
           criado_em: string
+          data_aprovacao: string | null
           data_moderacao: string | null
           descricao: string
           endereco: string
@@ -1413,6 +1415,9 @@ export type Database = {
           resolvido_em: string | null
           resolvido_por: string | null
           status: Database["public"]["Enums"]["status_problema"]
+          status_aprovacao:
+            | Database["public"]["Enums"]["status_aprovacao"]
+            | null
           titulo: string
           usuario_id: string
           visualizacoes: number
@@ -1420,12 +1425,14 @@ export type Database = {
           votos_positivos: number
         }
         Insert: {
+          aprovado_por?: string | null
           ativo?: boolean
           atualizado_em?: string
           bairro?: string | null
           categoria_id?: string | null
           cidade_id: string
           criado_em?: string
+          data_aprovacao?: string | null
           data_moderacao?: string | null
           descricao: string
           endereco: string
@@ -1439,6 +1446,9 @@ export type Database = {
           resolvido_em?: string | null
           resolvido_por?: string | null
           status?: Database["public"]["Enums"]["status_problema"]
+          status_aprovacao?:
+            | Database["public"]["Enums"]["status_aprovacao"]
+            | null
           titulo: string
           usuario_id: string
           visualizacoes?: number
@@ -1446,12 +1456,14 @@ export type Database = {
           votos_positivos?: number
         }
         Update: {
+          aprovado_por?: string | null
           ativo?: boolean
           atualizado_em?: string
           bairro?: string | null
           categoria_id?: string | null
           cidade_id?: string
           criado_em?: string
+          data_aprovacao?: string | null
           data_moderacao?: string | null
           descricao?: string
           endereco?: string
@@ -1465,6 +1477,9 @@ export type Database = {
           resolvido_em?: string | null
           resolvido_por?: string | null
           status?: Database["public"]["Enums"]["status_problema"]
+          status_aprovacao?:
+            | Database["public"]["Enums"]["status_aprovacao"]
+            | null
           titulo?: string
           usuario_id?: string
           visualizacoes?: number
@@ -1472,6 +1487,13 @@ export type Database = {
           votos_positivos?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "problemas_cidade_aprovado_por_fkey"
+            columns: ["aprovado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "problemas_cidade_categoria_id_fkey"
             columns: ["categoria_id"]

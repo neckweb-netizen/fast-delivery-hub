@@ -50,7 +50,8 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
           categoria:categorias_problema(nome, icone, cor),
           usuario:usuarios(nome)
         `)
-        .eq('ativo', true);
+        .eq('ativo', true)
+        .eq('status_aprovacao', 'aprovado');
 
       if (cidadeId) {
         query = query.eq('cidade_id', cidadeId);
@@ -105,7 +106,7 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['problemas-cidade'] });
-      toast.success('Reclamação publicada com sucesso!');
+      toast.success('Reclamação enviada para aprovação!');
     },
     onError: () => {
       toast.error('Erro ao publicar reclamação');

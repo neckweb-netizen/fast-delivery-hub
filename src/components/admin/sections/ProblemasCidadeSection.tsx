@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +21,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { useProblemasCidade, useCategoriasProblema } from '@/hooks/useProblemasCidade';
+import { useCategoriasProblema } from '@/hooks/useProblemasCidade';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,13 +29,90 @@ import { toast } from 'sonner';
 import { Eye, CheckCircle, XCircle, Trash2, AlertCircle } from 'lucide-react';
 
 export const ProblemasCidadeSection = () => {
-  const { problemas, isLoading } = useProblemasCidade(undefined, {
-    ordenacao: 'recentes',
-  });
   const { categorias } = useCategoriasProblema();
   const [problemaModal, setProblemaModal] = useState<any>(null);
   const [statusSelecionado, setStatusSelecionado] = useState('');
   const [observacoes, setObservacoes] = useState('');
+  const [filtroStatus, setFiltroStatus] = useState<'pendente' | 'aprovado' | 'rejeitado' | 'todos'>('pendente');
+  
+  // Query customizada para admin ver TODAS as reclamações
+  const { data: problemas, isLoading } = useQuery({
+    queryKey: ['problemas-cidade-admin', filtroStatus],
+    queryFn: async () => {
+      let query = supabase
+        .from('problemas_cidade')
+        .select(`
+          *,
+          categoria:categorias_problema(nome, icone, cor),
+          usuario:usuarios(nome)
+        `)
+        .eq('ativo', true);
+
+      if (filtroStatus !== 'todos') {
+        query = query.eq('status_aprovacao', filtroStatus);
+      }
+
+      query = query.order('criado_em', { ascending: false });
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const queryClient = useQueryClient();
+  
+  const handleAprovar = async () => {
+    if (!problemaModal) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    const { error } = await supabase
+      .from('problemas_cidade')
+      .update({
+        status_aprovacao: 'aprovado',
+        aprovado_por: user?.id,
+        data_aprovacao: new Date().toISOString(),
+        observacoes_moderacao: observacoes,
+      })
+      .eq('id', problemaModal.id);
+
+    if (error) {
+      toast.error('Erro ao aprovar reclamação');
+      return;
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['problemas-cidade-admin'] });
+    toast.success('Reclamação aprovada com sucesso');
+    setProblemaModal(null);
+    setObservacoes('');
+  };
+
+  const handleRejeitar = async () => {
+    if (!problemaModal) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    const { error } = await supabase
+      .from('problemas_cidade')
+      .update({
+        status_aprovacao: 'rejeitado',
+        aprovado_por: user?.id,
+        data_aprovacao: new Date().toISOString(),
+        observacoes_moderacao: observacoes,
+      })
+      .eq('id', problemaModal.id);
+
+    if (error) {
+      toast.error('Erro ao rejeitar reclamação');
+      return;
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['problemas-cidade-admin'] });
+    toast.success('Reclamação rejeitada');
+    setProblemaModal(null);
+    setObservacoes('');
+  };
 
   const handleAtualizarStatus = async () => {
     if (!problemaModal) return;
@@ -75,6 +153,18 @@ export const ProblemasCidadeSection = () => {
     toast.success('Reclamação excluída');
   };
 
+  const statusAprovacaoColors = {
+    pendente: 'bg-yellow-500/10 text-yellow-500',
+    aprovado: 'bg-green-500/10 text-green-500',
+    rejeitado: 'bg-red-500/10 text-red-500',
+  };
+
+  const statusAprovacaoLabels = {
+    pendente: 'Pendente',
+    aprovado: 'Aprovado',
+    rejeitado: 'Rejeitado',
+  };
+
   const statusColors = {
     aberto: 'bg-red-500/10 text-red-500',
     em_analise: 'bg-yellow-500/10 text-yellow-500',
@@ -99,8 +189,19 @@ export const ProblemasCidadeSection = () => {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Todas as Reclamações</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Reclamações</CardTitle>
+          <Select value={filtroStatus} onValueChange={(value: any) => setFiltroStatus(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pendente">Pendentes</SelectItem>
+              <SelectItem value="aprovado">Aprovadas</SelectItem>
+              <SelectItem value="rejeitado">Rejeitadas</SelectItem>
+              <SelectItem value="todos">Todas</SelectItem>
+            </SelectContent>
+          </Select>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -111,6 +212,7 @@ export const ProblemasCidadeSection = () => {
                 <TableRow>
                   <TableHead>Título</TableHead>
                   <TableHead>Categoria</TableHead>
+                  <TableHead>Aprovação</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Prioridade</TableHead>
                   <TableHead>Votos</TableHead>
@@ -124,6 +226,11 @@ export const ProblemasCidadeSection = () => {
                     <TableCell className="font-medium">{problema.titulo}</TableCell>
                     <TableCell>
                       {problema.categoria?.nome || 'Sem categoria'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={statusAprovacaoColors[problema.status_aprovacao]}>
+                        {statusAprovacaoLabels[problema.status_aprovacao]}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge className={statusColors[problema.status]}>
@@ -187,6 +294,15 @@ export const ProblemasCidadeSection = () => {
 
           {problemaModal && (
             <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold mb-2">Status de Aprovação</h3>
+                  <Badge className={statusAprovacaoColors[problemaModal.status_aprovacao]}>
+                    {statusAprovacaoLabels[problemaModal.status_aprovacao]}
+                  </Badge>
+                </div>
+              </div>
+
               <div>
                 <h3 className="font-semibold mb-2">Título</h3>
                 <p>{problemaModal.titulo}</p>
@@ -207,7 +323,7 @@ export const ProblemasCidadeSection = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h3 className="font-semibold mb-2">Status Atual</h3>
+                  <h3 className="font-semibold mb-2">Status</h3>
                   <Select value={statusSelecionado} onValueChange={setStatusSelecionado}>
                     <SelectTrigger>
                       <SelectValue />
@@ -237,13 +353,25 @@ export const ProblemasCidadeSection = () => {
                 />
               </div>
 
-              <DialogFooter>
+              <DialogFooter className="gap-2">
                 <Button variant="outline" onClick={() => setProblemaModal(null)}>
                   Cancelar
                 </Button>
-                <Button onClick={handleAtualizarStatus}>
-                  Salvar Alterações
-                </Button>
+                {problemaModal.status_aprovacao === 'pendente' && (
+                  <>
+                    <Button variant="destructive" onClick={handleRejeitar}>
+                      Rejeitar
+                    </Button>
+                    <Button onClick={handleAprovar}>
+                      Aprovar
+                    </Button>
+                  </>
+                )}
+                {problemaModal.status_aprovacao !== 'pendente' && (
+                  <Button onClick={handleAtualizarStatus}>
+                    Atualizar Status
+                  </Button>
+                )}
               </DialogFooter>
             </div>
           )}
