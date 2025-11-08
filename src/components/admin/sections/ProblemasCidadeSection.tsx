@@ -33,6 +33,11 @@ export const ProblemasCidadeSection = () => {
   const [problemaModal, setProblemaModal] = useState<any>(null);
   const [statusSelecionado, setStatusSelecionado] = useState('');
   const [observacoes, setObservacoes] = useState('');
+  const [tituloEdit, setTituloEdit] = useState('');
+  const [descricaoEdit, setDescricaoEdit] = useState('');
+  const [enderecoEdit, setEnderecoEdit] = useState('');
+  const [bairroEdit, setBairroEdit] = useState('');
+  const [prioridadeEdit, setPrioridadeEdit] = useState('');
   const [filtroStatus, setFiltroStatus] = useState<'pendente' | 'aprovado' | 'rejeitado' | 'todos'>('pendente');
   
   // Query customizada para admin ver TODAS as reclamações
@@ -114,12 +119,17 @@ export const ProblemasCidadeSection = () => {
     setObservacoes('');
   };
 
-  const handleAtualizarStatus = async () => {
+  const handleAtualizarReclamacao = async () => {
     if (!problemaModal) return;
 
     const { error } = await supabase
       .from('problemas_cidade')
       .update({
+        titulo: tituloEdit,
+        descricao: descricaoEdit,
+        endereco: enderecoEdit,
+        bairro: bairroEdit,
+        prioridade: prioridadeEdit as 'baixa' | 'media' | 'alta' | 'urgente',
         status: statusSelecionado as 'aberto' | 'em_analise' | 'resolvido' | 'fechado',
         moderado: true,
         data_moderacao: new Date().toISOString(),
@@ -128,11 +138,12 @@ export const ProblemasCidadeSection = () => {
       .eq('id', problemaModal.id);
 
     if (error) {
-      toast.error('Erro ao atualizar status');
+      toast.error('Erro ao atualizar reclamação');
       return;
     }
 
-    toast.success('Status atualizado com sucesso');
+    queryClient.invalidateQueries({ queryKey: ['problemas-cidade-admin'] });
+    toast.success('Reclamação atualizada com sucesso');
     setProblemaModal(null);
     setObservacoes('');
   };
@@ -264,6 +275,11 @@ export const ProblemasCidadeSection = () => {
                           onClick={() => {
                             setProblemaModal(problema);
                             setStatusSelecionado(problema.status);
+                            setTituloEdit(problema.titulo);
+                            setDescricaoEdit(problema.descricao);
+                            setEnderecoEdit(problema.endereco);
+                            setBairroEdit(problema.bairro || '');
+                            setPrioridadeEdit(problema.prioridade);
                           }}
                         >
                           <Eye className="w-4 h-4" />
@@ -305,20 +321,40 @@ export const ProblemasCidadeSection = () => {
 
               <div>
                 <h3 className="font-semibold mb-2">Título</h3>
-                <p>{problemaModal.titulo}</p>
+                <Input
+                  value={tituloEdit}
+                  onChange={(e) => setTituloEdit(e.target.value)}
+                  placeholder="Título da reclamação"
+                />
               </div>
 
               <div>
                 <h3 className="font-semibold mb-2">Descrição</h3>
-                <p className="text-sm whitespace-pre-wrap">{problemaModal.descricao}</p>
+                <Textarea
+                  value={descricaoEdit}
+                  onChange={(e) => setDescricaoEdit(e.target.value)}
+                  placeholder="Descrição detalhada"
+                  rows={4}
+                />
               </div>
 
-              <div>
-                <h3 className="font-semibold mb-2">Localização</h3>
-                <p className="text-sm">
-                  {problemaModal.endereco}
-                  {problemaModal.bairro && ` - ${problemaModal.bairro}`}
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-semibold mb-2">Endereço</h3>
+                  <Input
+                    value={enderecoEdit}
+                    onChange={(e) => setEnderecoEdit(e.target.value)}
+                    placeholder="Endereço"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Bairro</h3>
+                  <Input
+                    value={bairroEdit}
+                    onChange={(e) => setBairroEdit(e.target.value)}
+                    placeholder="Bairro"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -339,7 +375,17 @@ export const ProblemasCidadeSection = () => {
 
                 <div>
                   <h3 className="font-semibold mb-2">Prioridade</h3>
-                  <Badge>{problemaModal.prioridade}</Badge>
+                  <Select value={prioridadeEdit} onValueChange={setPrioridadeEdit}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="baixa">Baixa</SelectItem>
+                      <SelectItem value="media">Média</SelectItem>
+                      <SelectItem value="alta">Alta</SelectItem>
+                      <SelectItem value="urgente">Urgente</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -368,8 +414,8 @@ export const ProblemasCidadeSection = () => {
                   </>
                 )}
                 {problemaModal.status_aprovacao !== 'pendente' && (
-                  <Button onClick={handleAtualizarStatus}>
-                    Atualizar Status
+                  <Button onClick={handleAtualizarReclamacao}>
+                    Salvar Alterações
                   </Button>
                 )}
               </DialogFooter>
