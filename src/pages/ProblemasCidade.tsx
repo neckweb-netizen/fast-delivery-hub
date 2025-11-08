@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -35,8 +34,7 @@ const ProblemasCidade = () => {
   );
 
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">
             Voz do Povo
@@ -138,7 +136,6 @@ const ProblemasCidade = () => {
           onOpenChange={setAuthDialogOpen}
         />
       </div>
-    </MainLayout>
   );
 };
 
