@@ -17,9 +17,11 @@ interface Comentario {
 
 interface ComentariosListProps {
   comentarios: Comentario[];
+  onVotar?: (comentarioId: string, tipoVoto: 1 | -1) => void;
+  canVote?: boolean;
 }
 
-export const ComentariosList = ({ comentarios }: ComentariosListProps) => {
+export const ComentariosList = ({ comentarios, onVotar, canVote = false }: ComentariosListProps) => {
   return (
     <div className="space-y-4">
       {comentarios.map((comentario) => (
@@ -27,13 +29,25 @@ export const ComentariosList = ({ comentarios }: ComentariosListProps) => {
           <CardContent className="p-4">
             <div className="flex gap-4">
               <div className="flex flex-col items-center gap-1 min-w-[40px]">
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0"
+                  onClick={() => onVotar?.(comentario.id, 1)}
+                  disabled={!canVote}
+                >
                   <ArrowUp className="w-3.5 h-3.5" />
                 </Button>
                 <span className="text-sm font-medium">
                   {comentario.votos_positivos - comentario.votos_negativos}
                 </span>
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0"
+                  onClick={() => onVotar?.(comentario.id, -1)}
+                  disabled={!canVote}
+                >
                   <ArrowDown className="w-3.5 h-3.5" />
                 </Button>
               </div>

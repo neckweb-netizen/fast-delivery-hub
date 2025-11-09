@@ -242,11 +242,47 @@ export const useProblemaDetalhes = (problemaId: string) => {
     },
   });
 
+  const votarComentario = useMutation({
+    mutationFn: async ({ comentarioId, tipoVoto }: { comentarioId: string; tipoVoto: 1 | -1 }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
+      const { data: votoExistente } = await supabase
+        .from('votos_comentario')
+        .select('*')
+        .eq('comentario_id', comentarioId)
+        .eq('usuario_id', user.id)
+        .maybeSingle();
+
+      if (votoExistente) {
+        if (votoExistente.tipo_voto === tipoVoto) {
+          await supabase
+            .from('votos_comentario')
+            .delete()
+            .eq('id', votoExistente.id);
+        } else {
+          await supabase
+            .from('votos_comentario')
+            .update({ tipo_voto: tipoVoto })
+            .eq('id', votoExistente.id);
+        }
+      } else {
+        await supabase
+          .from('votos_comentario')
+          .insert([{ comentario_id: comentarioId, tipo_voto: tipoVoto, usuario_id: user.id }]);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comentarios-problema', problemaId] });
+    },
+  });
+
   return {
     problema,
     comentarios,
     isLoading,
     criarComentario,
+    votarComentario,
   };
 };
 

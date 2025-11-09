@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -18,7 +17,7 @@ const ProblemaDetalhes = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { problema, comentarios, isLoading } = useProblemaDetalhes(id!);
+  const { problema, comentarios, isLoading, votarComentario } = useProblemaDetalhes(id!);
   const { votarProblema, incrementarVisualizacao } = useProblemasCidade();
 
   useEffect(() => {
@@ -29,24 +28,20 @@ const ProblemaDetalhes = () => {
 
   if (isLoading) {
     return (
-      <MainLayout>
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          <div className="space-y-4">
-            <div className="h-8 w-32 bg-muted animate-pulse rounded" />
-            <div className="h-64 bg-muted animate-pulse rounded-lg" />
-          </div>
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="space-y-4">
+          <div className="h-8 w-32 bg-muted animate-pulse rounded" />
+          <div className="h-64 bg-muted animate-pulse rounded-lg" />
         </div>
-      </MainLayout>
+      </div>
     );
   }
 
   if (!problema) {
     return (
-      <MainLayout>
-        <div className="container mx-auto px-4 py-8 text-center">
-          <p className="text-muted-foreground">Reclamação não encontrada</p>
-        </div>
-      </MainLayout>
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-muted-foreground">Reclamação não encontrada</p>
+      </div>
     );
   }
 
@@ -83,13 +78,17 @@ const ProblemaDetalhes = () => {
     await votarProblema.mutateAsync({ problemaId: problema.id, tipoVoto });
   };
 
+  const handleVotarComentario = async (comentarioId: string, tipoVoto: 1 | -1) => {
+    if (!user) return;
+    await votarComentario.mutateAsync({ comentarioId, tipoVoto });
+  };
+
   const IconeCategoria = problema.categoria?.icone
     ? (LucideIcons as any)[problema.categoria.icone]
     : null;
 
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Button
           variant="ghost"
           className="mb-4"
@@ -226,7 +225,11 @@ const ProblemaDetalhes = () => {
           <Separator className="my-6" />
 
           {comentarios && comentarios.length > 0 ? (
-            <ComentariosList comentarios={comentarios as any} />
+            <ComentariosList 
+              comentarios={comentarios as any} 
+              onVotar={handleVotarComentario}
+              canVote={!!user}
+            />
           ) : (
             <p className="text-center text-muted-foreground py-8">
               Nenhum comentário ainda. Seja o primeiro a comentar!
@@ -234,7 +237,6 @@ const ProblemaDetalhes = () => {
           )}
         </div>
       </div>
-    </MainLayout>
   );
 };
 
