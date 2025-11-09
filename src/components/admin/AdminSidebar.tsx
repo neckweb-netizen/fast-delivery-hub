@@ -24,7 +24,8 @@ import {
   UserCheck,
   Download,
   Vote,
-  Megaphone
+  Megaphone,
+  MessagesSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -80,6 +81,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
       items: [
         { icon: MessageCircle, label: 'Canal Informativo', path: '/admin/canal-informativo', section: 'canal-informativo' },
         { icon: Megaphone, label: 'Voz do Povo', path: '/admin/reclamacoes', section: 'reclamacoes' },
+        { icon: MessagesSquare, label: 'Comentários', path: '/admin/comentarios-problema', section: 'comentarios-problema' },
         { icon: Image, label: 'Banners', path: '/admin/banners', section: 'banners' },
         { icon: BookOpen, label: 'Stories', path: '/admin/stories', section: 'stories' },
         { icon: Vote, label: 'Enquetes', path: '/admin/enquetes', section: 'enquetes' },

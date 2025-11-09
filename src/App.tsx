@@ -65,6 +65,7 @@ const AdminEnquetes = lazy(() => import("./pages/admin/AdminEnquetes"));
 const Reclamacoes = lazy(() => import("./pages/ProblemasCidade"));
 const ReclamacaoDetalhes = lazy(() => import("./pages/ProblemaDetalhes"));
 const AdminReclamacoes = lazy(() => import("./pages/admin/AdminProblemasCidade"));
+const AdminComentariosProblema = lazy(() => import("./pages/admin/AdminComentariosProblema"));
 const ShortUrlRedirect = lazy(() => import("./pages/ShortUrlRedirect"));
 
 import { MainLayout } from "./components/layout/MainLayout";
@@ -156,6 +157,7 @@ const App = () => {
               <Route path="lugares-publicos" element={<AdminLugaresPublicos />} />
               <Route path="enquetes" element={<AdminEnquetes />} />
               <Route path="reclamacoes" element={<AdminReclamacoes />} />
+              <Route path="comentarios-problema" element={<AdminComentariosProblema />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

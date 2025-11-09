@@ -196,17 +196,31 @@ export const useProblemaDetalhes = (problemaId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('comentarios_problema')
-        .select(`
-          *,
-          usuario:usuarios(nome)
-        `)
+        .select('*')
         .eq('problema_id', problemaId)
         .eq('ativo', true)
         .is('comentario_pai_id', null)
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data;
+
+      // Buscar informações dos usuários manualmente
+      const comentariosComUsuarios = await Promise.all(
+        (data || []).map(async (comentario) => {
+          const { data: usuario } = await supabase
+            .from('usuarios')
+            .select('nome')
+            .eq('id', comentario.usuario_id)
+            .maybeSingle();
+
+          return {
+            ...comentario,
+            usuario,
+          };
+        })
+      );
+
+      return comentariosComUsuarios;
     },
     enabled: !!problemaId,
   });
