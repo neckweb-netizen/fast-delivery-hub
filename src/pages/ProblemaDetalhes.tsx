@@ -1,22 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, ArrowUp, ArrowDown, MapPin, Calendar, Eye, User } from 'lucide-react';
+import { ArrowLeft, ArrowUp, ArrowDown, MapPin, Calendar, Eye, User, MessageSquare } from 'lucide-react';
 import { useProblemaDetalhes, useProblemasCidade } from '@/hooks/useProblemasCidade';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ComentariosList } from '@/components/problemas/ComentariosList';
 import { ComentarioForm } from '@/components/problemas/ComentarioForm';
 import { useAuth } from '@/hooks/useAuth';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 import * as LucideIcons from 'lucide-react';
 
 const ProblemaDetalhes = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { problema, comentarios, isLoading, votarComentario } = useProblemaDetalhes(id!);
   const { votarProblema, incrementarVisualizacao } = useProblemasCidade();
 
@@ -98,69 +100,75 @@ const ProblemaDetalhes = () => {
           Voltar
         </Button>
 
-        <Card>
-          <CardContent className="p-6">
+        <Card className="overflow-hidden shadow-lg border-border/50">
+          <CardContent className="p-0">
             {/* Header com badges */}
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              {problema.categoria && IconeCategoria && (
-                <div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium"
-                  style={{
-                    backgroundColor: `${problema.categoria.cor}15`,
-                    color: problema.categoria.cor,
-                  }}
-                >
-                  <IconeCategoria className="w-4 h-4" />
-                  {problema.categoria.nome}
+            <div className="p-6 pb-4">
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                {problema.categoria && IconeCategoria && (
+                  <div
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold shadow-sm"
+                    style={{
+                      backgroundColor: `${problema.categoria.cor}20`,
+                      color: problema.categoria.cor,
+                    }}
+                  >
+                    <IconeCategoria className="w-4 h-4" />
+                    {problema.categoria.nome}
+                  </div>
+                )}
+                <Badge className={`${statusColors[problema.status]} border-0 shadow-sm`}>
+                  {statusLabels[problema.status]}
+                </Badge>
+                <Badge className={`${prioridadeColors[problema.prioridade]} border-0 shadow-sm`}>
+                  {prioridadeLabels[problema.prioridade]}
+                </Badge>
+              </div>
+
+              {/* Título */}
+              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 leading-tight">
+                {problema.titulo}
+              </h1>
+
+              {/* Metadados */}
+              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1 rounded-full">
+                  <User className="w-3.5 h-3.5" />
+                  <span className="font-medium">{problema.usuario?.nome || 'Anônimo'}</span>
                 </div>
-              )}
-              <Badge className={statusColors[problema.status]}>
-                {statusLabels[problema.status]}
-              </Badge>
-              <Badge className={prioridadeColors[problema.prioridade]}>
-                {prioridadeLabels[problema.prioridade]}
-              </Badge>
-            </div>
-
-            {/* Título */}
-            <h1 className="text-3xl font-bold text-foreground mb-4">
-              {problema.titulo}
-            </h1>
-
-            {/* Metadados */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
-              <div className="flex items-center gap-1.5">
-                <User className="w-4 h-4" />
-                {problema.usuario?.nome || 'Anônimo'}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                {format(new Date(problema.criado_em), "d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Eye className="w-4 h-4" />
-                {problema.visualizacoes} visualizações
+                <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1 rounded-full">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{format(new Date(problema.criado_em), "d 'de' MMMM", { locale: ptBR })}</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-muted/50 px-2.5 py-1 rounded-full">
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>{problema.visualizacoes} visualizações</span>
+                </div>
               </div>
             </div>
 
             {/* Localização */}
-            <div className="flex items-start gap-2 p-4 bg-muted/50 rounded-lg mb-6">
-              <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-              <div>
-                <p className="font-medium text-foreground">
-                  {problema.endereco}
-                </p>
-                {problema.bairro && (
-                  <p className="text-sm text-muted-foreground">
-                    {problema.bairro}
+            <div className="mx-6 mb-6">
+              <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20">
+                <div className="bg-primary/20 p-2 rounded-lg">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-foreground mb-1">
+                    {problema.endereco}
                   </p>
-                )}
+                  {problema.bairro && (
+                    <p className="text-sm text-muted-foreground">
+                      {problema.bairro}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Descrição */}
-            <div className="prose prose-sm max-w-none mb-6">
-              <p className="text-foreground whitespace-pre-wrap">
+            <div className="px-6 mb-6">
+              <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed text-base">
                 {problema.descricao}
               </p>
             </div>
@@ -180,62 +188,97 @@ const ProblemaDetalhes = () => {
             )}
 
             {/* Votos */}
-            <div className="flex items-center gap-4 pt-4 border-t">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleVoto(1)}
-                  disabled={!user}
-                  className="gap-1"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                  {problema.votos_positivos}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleVoto(-1)}
-                  disabled={!user}
-                  className="gap-1"
-                >
-                  <ArrowDown className="w-4 h-4" />
-                  {problema.votos_negativos}
-                </Button>
+            <div className="px-6 pb-6">
+              <div className="flex items-center gap-3 pt-4 border-t">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleVoto(1)}
+                    disabled={!user}
+                    className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary transition-colors"
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                    <span className="font-semibold">{problema.votos_positivos}</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleVoto(-1)}
+                    disabled={!user}
+                    className="gap-2 hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors"
+                  >
+                    <ArrowDown className="w-4 h-4" />
+                    <span className="font-semibold">{problema.votos_negativos}</span>
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={`text-base font-bold ${
+                    problema.votos_positivos - problema.votos_negativos > 0 
+                      ? 'text-primary' 
+                      : 'text-muted-foreground'
+                  }`}>
+                    {problema.votos_positivos - problema.votos_negativos}
+                  </div>
+                  <span className="text-sm text-muted-foreground">pontos</span>
+                </div>
               </div>
-              <span className="text-sm text-muted-foreground">
-                {problema.votos_positivos - problema.votos_negativos} pontos
-              </span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Comentários */}
+        {/* Comentários - Layout responsivo */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">
-            Comentários ({comentarios?.length || 0})
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <span>Comentários</span>
+            <Badge variant="secondary" className="text-sm">
+              {comentarios?.length || 0}
+            </Badge>
           </h2>
 
-          {user && (
-            <div className="mb-6">
-              <ComentarioForm problemaId={problema.id} />
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Lista de comentários - 2/3 no desktop */}
+            <div className="lg:col-span-2 space-y-4">
+              {comentarios && comentarios.length > 0 ? (
+                <ComentariosList 
+                  comentarios={comentarios as any} 
+                  onVotar={handleVotarComentario}
+                  canVote={!!user}
+                />
+              ) : (
+                <Card className="border-dashed">
+                  <CardContent className="py-12 text-center text-muted-foreground">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">Nenhum comentário ainda</p>
+                    <p className="text-sm">Seja o primeiro a comentar!</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
-          )}
 
-          <Separator className="my-6" />
+            {/* Formulário de comentário - 1/3 no desktop, sticky */}
+            {user && (
+              <div className="lg:col-span-1">
+                <ComentarioForm problemaId={problema.id} />
+              </div>
+            )}
+          </div>
 
-          {comentarios && comentarios.length > 0 ? (
-            <ComentariosList 
-              comentarios={comentarios as any} 
-              onVotar={handleVotarComentario}
-              canVote={!!user}
-            />
-          ) : (
-            <p className="text-center text-muted-foreground py-8">
-              Nenhum comentário ainda. Seja o primeiro a comentar!
-            </p>
+          {!user && (
+            <Card className="mt-6 border-primary/20 bg-primary/5">
+              <CardContent className="py-6 text-center">
+                <p className="text-muted-foreground mb-4">
+                  Faça login para comentar e interagir com a comunidade
+                </p>
+                <Button onClick={() => setAuthDialogOpen(true)}>
+                  Entrar
+                </Button>
+              </CardContent>
+            </Card>
           )}
         </div>
+
+        <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
       </div>
   );
 };
