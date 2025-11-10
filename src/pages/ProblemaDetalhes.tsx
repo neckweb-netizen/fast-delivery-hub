@@ -148,7 +148,7 @@ const ProblemaDetalhes = () => {
             </div>
 
             {/* Localização */}
-            <div className="mx-6 mb-6">
+            <div className="mx-6 mb-4">
               <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20">
                 <div className="bg-primary/20 p-2 rounded-lg">
                   <MapPin className="w-5 h-5 text-primary" />
@@ -167,7 +167,7 @@ const ProblemaDetalhes = () => {
             </div>
 
             {/* Descrição */}
-            <div className="px-6 mb-6">
+            <div className="px-6 mb-4">
               <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed text-base">
                 {problema.descricao}
               </p>
@@ -175,15 +175,17 @@ const ProblemaDetalhes = () => {
 
             {/* Imagens */}
             {problema.imagens && problema.imagens.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                {problema.imagens.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt={`Imagem ${idx + 1}`}
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                ))}
+              <div className="px-6 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {problema.imagens.map((img, idx) => (
+                    <img
+                      key={idx}
+                      src={img}
+                      alt={`Imagem ${idx + 1}`}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                  ))}
+                </div>
               </div>
             )}
 
