@@ -229,7 +229,7 @@ const ProblemaDetalhes = () => {
 
         {/* Comentários - Layout responsivo */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-foreground">
             <span>Comentários</span>
             <Badge variant="secondary" className="text-sm">
               {comentarios?.length || 0}
