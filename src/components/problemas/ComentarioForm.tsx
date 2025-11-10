@@ -28,12 +28,12 @@ export const ComentarioForm = ({ problemaId }: ComentarioFormProps) => {
 
   return (
     <Card className="sticky top-4 border-border/50 shadow-md">
-      <CardContent className="p-4">
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex gap-3">
-            <Avatar className="h-10 w-10 bg-primary/10 shrink-0">
+      <CardContent className="p-3">
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div className="flex gap-2">
+            <Avatar className="h-9 w-9 bg-primary/10 shrink-0">
               <AvatarFallback className="text-primary font-semibold">
-                <User className="w-5 h-5" />
+                <User className="w-4 h-4" />
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
@@ -42,7 +42,7 @@ export const ComentarioForm = ({ problemaId }: ComentarioFormProps) => {
                 value={conteudo}
                 onChange={(e) => setConteudo(e.target.value)}
                 rows={3}
-                className="resize-none border-border/50 focus:border-primary transition-colors"
+                className="resize-none border-border/50 focus:border-primary transition-colors text-sm"
               />
             </div>
           </div>
@@ -50,9 +50,10 @@ export const ComentarioForm = ({ problemaId }: ComentarioFormProps) => {
             <Button 
               type="submit" 
               disabled={!conteudo.trim() || criarComentario.isPending}
-              className="gap-2"
+              className="gap-2 h-9"
+              size="sm"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
               {criarComentario.isPending ? 'Enviando...' : 'Comentar'}
             </Button>
           </div>

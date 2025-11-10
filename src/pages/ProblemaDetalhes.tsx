@@ -90,10 +90,10 @@ const ProblemaDetalhes = () => {
     : null;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-4 max-w-4xl">
         <Button
           variant="ghost"
-          className="mb-4"
+          className="mb-3"
           onClick={() => navigate('/reclamacoes')}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -103,8 +103,8 @@ const ProblemaDetalhes = () => {
         <Card className="overflow-hidden shadow-lg border-border/50">
           <CardContent className="p-0">
             {/* Header com badges */}
-            <div className="p-6 pb-4">
-              <div className="flex items-center gap-2 mb-4 flex-wrap">
+            <div className="p-4 pb-3">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
                 {problema.categoria && IconeCategoria && (
                   <div
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold shadow-sm"
@@ -126,7 +126,7 @@ const ProblemaDetalhes = () => {
               </div>
 
               {/* Título */}
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-4 leading-tight">
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-3 leading-tight">
                 {problema.titulo}
               </h1>
 
@@ -148,17 +148,17 @@ const ProblemaDetalhes = () => {
             </div>
 
             {/* Localização */}
-            <div className="mx-6 mb-4">
-              <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20">
+            <div className="mx-4 mb-3">
+              <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20">
                 <div className="bg-primary/20 p-2 rounded-lg">
-                  <MapPin className="w-5 h-5 text-primary" />
+                  <MapPin className="w-4 h-4 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-foreground mb-1">
+                  <p className="font-semibold text-foreground mb-1 text-sm">
                     {problema.endereco}
                   </p>
                   {problema.bairro && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       {problema.bairro}
                     </p>
                   )}
@@ -167,22 +167,22 @@ const ProblemaDetalhes = () => {
             </div>
 
             {/* Descrição */}
-            <div className="px-6 mb-4">
-              <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed text-base">
+            <div className="px-4 mb-3">
+              <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed text-sm">
                 {problema.descricao}
               </p>
             </div>
 
             {/* Imagens */}
             {problema.imagens && problema.imagens.length > 0 && (
-              <div className="px-6 mb-4">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="px-4 mb-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {problema.imagens.map((img, idx) => (
                     <img
                       key={idx}
                       src={img}
                       alt={`Imagem ${idx + 1}`}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-32 object-cover rounded-lg"
                     />
                   ))}
                 </div>
@@ -190,8 +190,8 @@ const ProblemaDetalhes = () => {
             )}
 
             {/* Votos */}
-            <div className="px-6 pb-6">
-              <div className="flex items-center gap-3 pt-4 border-t">
+            <div className="px-4 pb-4">
+              <div className="flex items-center gap-3 pt-3 border-t">
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -230,17 +230,17 @@ const ProblemaDetalhes = () => {
         </Card>
 
         {/* Comentários - Layout responsivo */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-foreground">
+        <div className="mt-4">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
             <span>Comentários</span>
             <Badge variant="secondary" className="text-sm">
               {comentarios?.length || 0}
             </Badge>
           </h2>
 
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-4">
             {/* Lista de comentários - 2/3 no desktop */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 space-y-3">
               {comentarios && comentarios.length > 0 ? (
                 <ComentariosList 
                   comentarios={comentarios as any} 
@@ -249,9 +249,9 @@ const ProblemaDetalhes = () => {
                 />
               ) : (
                 <Card className="border-dashed">
-                  <CardContent className="py-12 text-center text-muted-foreground">
-                    <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg font-medium mb-2">Nenhum comentário ainda</p>
+                  <CardContent className="py-8 text-center text-muted-foreground">
+                    <MessageSquare className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                    <p className="text-base font-medium mb-1">Nenhum comentário ainda</p>
                     <p className="text-sm">Seja o primeiro a comentar!</p>
                   </CardContent>
                 </Card>
@@ -267,7 +267,7 @@ const ProblemaDetalhes = () => {
           </div>
 
           {!user && (
-            <Card className="mt-6 border-primary/20 bg-primary/5">
+            <Card className="mt-4 border-primary/20 bg-primary/5">
               <CardContent className="py-6 text-center">
                 <p className="text-muted-foreground mb-4">
                   Faça login para comentar e interagir com a comunidade

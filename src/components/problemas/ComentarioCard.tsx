@@ -29,20 +29,20 @@ export const ComentarioCard = ({ comentario, onVotar, canVote = false }: Comenta
 
   return (
     <Card className="border-border/50 hover:border-border transition-colors duration-200">
-      <CardContent className="p-4">
-        <div className="flex gap-3">
+      <CardContent className="p-3">
+        <div className="flex gap-2">
           {/* Coluna de votação */}
-          <div className="flex flex-col items-center gap-1 min-w-[40px]">
+          <div className="flex flex-col items-center gap-1 min-w-[36px]">
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 w-8 p-0 rounded-full hover:bg-primary/10 hover:text-primary transition-colors ${
+              className={`h-7 w-7 p-0 rounded-full hover:bg-primary/10 hover:text-primary transition-colors ${
                 canVote ? '' : 'cursor-not-allowed opacity-50'
               }`}
               onClick={() => onVotar?.(comentario.id, 1)}
               disabled={!canVote}
             >
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="w-3.5 h-3.5" />
             </Button>
             <span className={`text-sm font-semibold ${
               totalVotos > 0 ? 'text-primary' : totalVotos < 0 ? 'text-destructive' : 'text-muted-foreground'
@@ -52,20 +52,20 @@ export const ComentarioCard = ({ comentario, onVotar, canVote = false }: Comenta
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 w-8 p-0 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors ${
+              className={`h-7 w-7 p-0 rounded-full hover:bg-destructive/10 hover:text-destructive transition-colors ${
                 canVote ? '' : 'cursor-not-allowed opacity-50'
               }`}
               onClick={() => onVotar?.(comentario.id, -1)}
               disabled={!canVote}
             >
-              <ArrowDown className="w-4 h-4" />
+              <ArrowDown className="w-3.5 h-3.5" />
             </Button>
           </div>
 
           {/* Conteúdo do comentário */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <Avatar className="h-8 w-8 bg-primary/10">
+              <Avatar className="h-7 w-7 bg-primary/10">
                 <AvatarFallback className="text-primary font-semibold text-xs">
                   {iniciaisUsuario}
                 </AvatarFallback>
