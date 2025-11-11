@@ -10,6 +10,7 @@ import { TutorialOverlay } from '@/components/tutorial/TutorialOverlay';
 import { useTutorial } from '@/hooks/useTutorial';
 import { Watermark } from '@/components/ui/watermark';
 import { PWAInstallPrompt } from '@/components/pwa/PWAInstallPrompt';
+import { cn } from '@/lib/utils';
 
 interface MainLayoutProps {
   children?: React.ReactNode;
@@ -17,6 +18,7 @@ interface MainLayoutProps {
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
   const { showTutorial, closeTutorial } = useTutorial();
+  const [sidebarOpen, setSidebarOpen] = React.useState(true);
   
   return (
     <>
@@ -25,11 +27,11 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         <div className="min-h-screen bg-background flex w-full">
           {/* Desktop Sidebar - Fixed */}
           <div className="hidden lg:block fixed left-0 top-0 h-full z-30">
-            <DesktopSidebar isOpen={true} />
+            <DesktopSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
           </div>
           
           {/* Main Content */}
-          <div className="flex-1 flex flex-col min-w-0 w-full lg:ml-64">
+          <div className={cn("flex-1 flex flex-col min-w-0 w-full transition-all duration-300", sidebarOpen ? "lg:ml-64" : "lg:ml-16")}>
             <Header />
             
             <main className="flex-1 pb-16 lg:pb-24 overflow-x-hidden w-full">

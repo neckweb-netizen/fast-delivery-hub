@@ -9,9 +9,11 @@ import { Watermark } from '@/components/ui/watermark';
 import * as Icons from 'lucide-react';
 interface DesktopSidebarProps {
   isOpen: boolean;
+  onToggle: () => void;
 }
 export const DesktopSidebar = ({
-  isOpen
+  isOpen,
+  onToggle
 }: DesktopSidebarProps) => {
   const location = useLocation();
   const {
@@ -144,7 +146,20 @@ export const DesktopSidebar = ({
     }
     return location.pathname === rota || location.pathname.startsWith(rota + '/');
   };
-  return <div className={cn("fixed left-0 top-0 h-full bg-background border-r transition-all duration-300 z-40", isOpen ? "w-64" : "w-16")} data-tutorial="sidebar">
+  return <div className={cn("fixed left-0 top-0 h-full bg-background border-r transition-all duration-300 z-40 group", isOpen ? "w-64" : "w-16")} data-tutorial="sidebar">
+      {/* Toggle Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onToggle}
+        className={cn(
+          "absolute -right-3 top-6 z-50 h-6 w-6 rounded-full border bg-background shadow-md hover:bg-muted transition-all duration-300",
+          "opacity-0 group-hover:opacity-100"
+        )}
+      >
+        <Icons.ChevronLeft className={cn("h-4 w-4 transition-transform duration-300", !isOpen && "rotate-180")} />
+      </Button>
+      
       <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="p-4 border-b">
