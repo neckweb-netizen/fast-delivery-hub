@@ -36,7 +36,7 @@ const Configuracoes = lazy(() => import("./pages/Configuracoes"));
 const ContactPage = lazy(() => import("./pages/ContactPage").then(m => ({ default: m.ContactPage })));
 
 // Lazy load all admin pages
-const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard").then(m => ({ default: m.AdminDashboard })));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminLocais = lazy(() => import("./pages/admin/AdminLocais"));
 const AdminLocaisPendentes = lazy(() => import("./pages/admin/AdminLocaisPendentes"));
 const AdminLocalAdmins = lazy(() => import("./pages/admin/AdminLocalAdmins"));

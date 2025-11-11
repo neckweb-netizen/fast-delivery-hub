@@ -73,3 +73,5 @@ export const AdminDashboard = ({ activeSection = 'dashboard' }: AdminDashboardPr
     </div>
   );
 };
+
+export default AdminDashboard;
