@@ -153,11 +153,10 @@ export const DesktopSidebar = ({
         size="icon"
         onClick={onToggle}
         className={cn(
-          "absolute -right-3 top-6 z-50 h-6 w-6 rounded-full border bg-background shadow-md hover:bg-muted transition-all duration-300",
-          "opacity-0 group-hover:opacity-100"
+          "absolute -right-4 top-1/2 -translate-y-1/2 z-50 h-8 w-8 rounded-full border-2 border-primary/20 bg-primary/10 hover:bg-primary/20 shadow-lg transition-all duration-300"
         )}
       >
-        <Icons.ChevronLeft className={cn("h-4 w-4 transition-transform duration-300", !isOpen && "rotate-180")} />
+        <Icons.ChevronLeft className={cn("h-5 w-5 text-primary transition-transform duration-300", !isOpen && "rotate-180")} />
       </Button>
       
       <div className="flex flex-col h-full">
