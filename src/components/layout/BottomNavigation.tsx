@@ -86,10 +86,10 @@ export const BottomNavigation = () => {
         key={item.path}
         to={item.path}
         className={cn(
-          "flex flex-col items-center gap-1 px-2 py-1 rounded-lg transition-all duration-100 min-w-0 bg-red-600",
+          "flex flex-col items-center gap-1 px-2 py-1 rounded-lg transition-all duration-100 min-w-0",
           isActive 
-            ? "text-primary-foreground transform scale-105" 
-            : "text-primary-foreground/70 hover:text-primary-foreground hover:scale-105"
+            ? "text-secondary-foreground transform scale-105" 
+            : "text-secondary-foreground/70 hover:text-secondary-foreground hover:scale-105"
         )}
         // Preload on hover for instant navigation
         onMouseEnter={() => {
@@ -110,7 +110,7 @@ export const BottomNavigation = () => {
   return (
     <>
       <div 
-        className="fixed bottom-0 left-0 right-0 bg-red-600 border-t border-red-600/30 z-50"
+        className="fixed bottom-0 left-0 right-0 bg-secondary border-t border-secondary/30 z-50"
         data-tutorial="bottom-nav"
       >
         {/* Menu de ações flutuante */}
@@ -161,7 +161,7 @@ export const BottomNavigation = () => {
               <Button
                 size="icon"
                 className={cn(
-                  "w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-600/80 shadow-lg transition-all duration-200 hover:scale-105",
+                  "w-12 h-12 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-200 hover:scale-105",
                   isMenuOpen && "rotate-45 bg-destructive hover:bg-destructive/80"
                 )}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
