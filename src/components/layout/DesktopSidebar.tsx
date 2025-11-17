@@ -152,6 +152,7 @@ export const DesktopSidebar = ({
         variant="ghost"
         size="icon"
         onClick={onToggle}
+        aria-label={isOpen ? "Recolher menu lateral" : "Expandir menu lateral"}
         className={cn(
           "absolute -right-4 top-1/2 -translate-y-1/2 z-50 h-8 w-8 rounded-full border-2 border-primary/20 bg-primary/10 hover:bg-primary/20 shadow-lg transition-all duration-300"
         )}
