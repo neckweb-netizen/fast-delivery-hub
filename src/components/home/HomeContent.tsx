@@ -14,6 +14,7 @@ import { PopularBusinesses } from './PopularBusinesses';
 import { FeaturedProducts } from './FeaturedProducts';
 import { AondeIrButton } from './AondeIrButton';
 import { EnqueteSection } from './EnqueteSection';
+import { VozDoPovoSection } from './VozDoPovoSection';
 import { useCidadePadrao } from '@/hooks/useCidadePadrao';
 import { useHomeSectionsOrder } from "@/hooks/useHomeSectionsOrder";
 
@@ -31,7 +32,8 @@ const sectionComponents = {
   featured_section: (cidadeId?: string) => <FeaturedSection cidadeId={cidadeId || ''} />,
   eventos_slider: (cidadeId?: string) => <EventosSlider />,
   stats_section: (cidadeId?: string) => <StatsSection />,
-  featured_products: (cidadeId?: string) => <FeaturedProducts />
+  featured_products: (cidadeId?: string) => <FeaturedProducts />,
+  voz_do_povo: (cidadeId?: string) => <VozDoPovoSection />
 };
 
 export const HomeContent = () => {
