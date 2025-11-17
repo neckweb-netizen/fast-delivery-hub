@@ -25,7 +25,20 @@ export const VozDoPovoSection = () => {
         </div>
         <div className="grid gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse"></div>
+            <div key={i} className="p-4 border rounded-lg border-l-4">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="h-6 bg-muted rounded w-3/4 animate-pulse"></div>
+                  <div className="h-6 bg-muted rounded w-20 animate-pulse"></div>
+                </div>
+                <div className="h-10 bg-muted rounded animate-pulse"></div>
+                <div className="flex items-center gap-4">
+                  <div className="h-4 bg-muted rounded w-24 animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded w-16 animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded w-20 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
