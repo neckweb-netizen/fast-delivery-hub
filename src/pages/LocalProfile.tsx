@@ -312,7 +312,7 @@ const EmpresaProfile = () => {
         <Card className="shadow-lg bg-white overflow-hidden">
             <Tabs defaultValue={isRadio ? "radio" : "informacoes"} className="w-full">
               <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-t-lg p-1">
-                <TabsList className="bg-transparent border-none w-full h-auto p-1 md:p-2">
+                <TabsList className="bg-secondary border-none w-full h-auto p-1 md:p-2">
                   {isRadio ?
                 // Se for rádio, mostrar apenas a aba de rádio centralizada
                 <div className="flex justify-center">
