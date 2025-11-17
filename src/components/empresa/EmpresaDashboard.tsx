@@ -212,59 +212,59 @@ export const EmpresaDashboard = () => {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className={`grid ${permiteAgendamento ? 'grid-cols-4 grid-rows-3' : 'grid-cols-4 grid-rows-2'} w-full gap-2 p-3 bg-red-600 h-auto`}>
+        <TabsList className={`grid ${permiteAgendamento ? 'grid-cols-4 grid-rows-3' : 'grid-cols-4 grid-rows-2'} w-full gap-2 p-3 bg-secondary h-auto`}>
           <TabsTrigger 
             value="overview" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Building2 className="w-4 h-4" />
             <span className="text-center leading-tight">Visão</span>
           </TabsTrigger>
           <TabsTrigger 
             value="enderecos" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <MapPin className="w-4 h-4" />
             <span className="text-center leading-tight">Endereços</span>
           </TabsTrigger>
           <TabsTrigger 
             value="produtos" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Package className="w-4 h-4" />
             <span className="text-center leading-tight">Produtos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="eventos" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Calendar className="w-4 h-4" />
             <span className="text-center leading-tight">Eventos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="cupons" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Package className="w-4 h-4" />
             <span className="text-center leading-tight">Cupons</span>
           </TabsTrigger>
           <TabsTrigger 
             value="vagas" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Briefcase className="w-4 h-4" />
             <span className="text-center leading-tight">Vagas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="planos" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <CreditCard className="w-4 h-4" />
             <span className="text-center leading-tight">Planos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="configuracoes" 
-            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+            className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
           >
             <Settings className="w-4 h-4" />
             <span className="text-center leading-tight">Config</span>
@@ -272,7 +272,7 @@ export const EmpresaDashboard = () => {
           {permiteAgendamento && (
             <TabsTrigger 
               value="agendamentos" 
-              className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-red-600 hover:bg-red-500 rounded-md h-auto"
+              className="flex flex-col items-center gap-1 text-xs py-2 px-2 text-white border-0 bg-transparent data-[state=active]:bg-white data-[state=active]:text-secondary hover:bg-secondary/80 rounded-md h-auto"
             >
               <CalendarCheck className="w-4 h-4" />
               <span className="text-center leading-tight">Agendamentos</span>
