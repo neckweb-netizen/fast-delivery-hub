@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
       }
     )
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro no gerenciamento de eventos:', error)
     
     return new Response(

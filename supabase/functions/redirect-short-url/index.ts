@@ -49,11 +49,8 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Increment click count
-    await supabaseClient
-      .from('short_urls')
-      .update({ clicks: supabaseClient.sql`clicks + 1` })
-      .eq('short_code', shortCode)
+    // Increment click count using RPC function
+    await supabaseClient.rpc('increment_url_clicks', { code: shortCode })
 
     // Return original URL for redirect
     return new Response(
