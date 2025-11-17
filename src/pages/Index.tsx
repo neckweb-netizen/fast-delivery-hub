@@ -1,40 +1,31 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { HomeContent } from '@/components/home/HomeContent';
-import { SearchContent } from '@/components/search/SearchContent';
-import { CategoriesContent } from '@/components/categories/CategoriesContent';
-import { CouponsContent } from '@/components/coupons/CouponsContent';
-import { ProfileContent } from '@/components/profile/ProfileContent';
+import { HeroSection } from "@/components/HeroSection";
+import { TrustSection } from "@/components/TrustSection";
+import { ProductSection } from "@/components/ProductSection";
+import { IncludedSection } from "@/components/IncludedSection";
+import { BonusSection } from "@/components/BonusSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { UrgencySection } from "@/components/UrgencySection";
+import { GuaranteeSection } from "@/components/GuaranteeSection";
+import { Footer } from "@/components/Footer";
+import { FloatingCTA } from "@/components/FloatingCTA";
+import { UrgencyModal } from "@/components/UrgencyModal";
+import { SalesNotifications } from "@/components/SalesNotifications";
 
 const Index = () => {
-  const [searchParams] = useSearchParams();
-  const tabFromUrl = searchParams.get('tab') || 'home';
-  const [activeTab, setActiveTab] = useState(tabFromUrl);
-
-  useEffect(() => {
-    setActiveTab(tabFromUrl);
-  }, [tabFromUrl]);
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'home':
-        return <HomeContent />;
-      case 'search':
-        return <SearchContent />;
-      case 'categories':
-        return <CategoriesContent />;
-      case 'coupons':
-        return <CouponsContent />;
-      case 'profile':
-        return <ProfileContent />;
-      default:
-        return <HomeContent />;
-    }
-  };
-
   return (
-    <div className="w-full max-w-none overflow-x-hidden">
-      {renderContent()}
+    <div className="min-h-screen">
+      <HeroSection />
+      <TrustSection />
+      <ProductSection />
+      <IncludedSection />
+      <BonusSection />
+      <TestimonialsSection />
+      <UrgencySection />
+      <GuaranteeSection />
+      <Footer />
+      <FloatingCTA />
+      <UrgencyModal />
+      <SalesNotifications />
     </div>
   );
 };
