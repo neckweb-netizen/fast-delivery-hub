@@ -149,7 +149,7 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                             <span className="line-through text-gray-500 text-sm">
                               {formatPrice(produto.preco_original)}
                             </span>
-                            <span className="font-bold text-green-600">
+                            <span className="font-bold text-[hsl(var(--success))]">
                               {formatPrice(produto.preco_promocional)}
                             </span>
                           </>
@@ -193,7 +193,7 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                             variant="outline"
                             size="sm"
                             asChild
-                            className="flex-1 sm:flex-none text-green-600 hover:text-green-700 hover:bg-green-50"
+                            className="flex-1 sm:flex-none text-[hsl(var(--success))] hover:text-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/10"
                           >
                             <a 
                               href={produto.link_whatsapp} 

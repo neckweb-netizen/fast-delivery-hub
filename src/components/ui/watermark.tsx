@@ -13,7 +13,7 @@ export const Watermark: React.FC<WatermarkProps> = ({
   if (variant === 'sidebar') {
     return (
       <div className={cn(
-        "text-xs text-muted-foreground/60 text-center border-t pt-2",
+        "text-xs text-muted-foreground text-center border-t pt-2",
         className
       )}>
         <span className="font-medium">Made By Deivid</span>
@@ -28,9 +28,9 @@ export const Watermark: React.FC<WatermarkProps> = ({
     )}>
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <p className="text-sm text-muted-foreground/80">
+          <p className="text-sm text-muted-foreground">
             Desenvolvido com ❤️ por{' '}
-            <span className="font-semibold text-muted-foreground">
+            <span className="font-semibold text-foreground">
               Deivid
             </span>
           </p>
