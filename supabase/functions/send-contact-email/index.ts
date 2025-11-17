@@ -1,7 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,11 +24,17 @@ const handler = async (req: Request): Promise<Response> => {
     const { nome, email, telefone, assunto, mensagem }: ContactEmailRequest = await req.json();
 
     // Email para o usuário (confirmação)
-    const userEmailResponse = await resend.emails.send({
-      from: "Saj Tem <noreply@sajtem.com>",
-      to: [email],
-      subject: "Recebemos sua mensagem - Saj Tem",
-      html: `
+    const userEmailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Saj Tem <noreply@sajtem.com>",
+        to: [email],
+        subject: "Recebemos sua mensagem - Saj Tem",
+        html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -51,15 +54,24 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           </div>
         </div>
-      `,
+        `,
+      }),
     });
 
+    const userEmailData = await userEmailResponse.json();
+
     // Email para administração (notificação)
-    const adminEmailResponse = await resend.emails.send({
-      from: "Saj Tem <noreply@sajtem.com>",
-      to: ["admin@sajtem.com"], // Alterar para o email da administração
-      subject: `📧 Nova mensagem de contato - ${assunto}`,
-      html: `
+    const adminEmailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Saj Tem <noreply@sajtem.com>",
+        to: ["admin@sajtem.com"],
+        subject: `📧 Nova mensagem de contato - ${assunto}`,
+        html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1>Nova mensagem de contato</h1>
           <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
@@ -78,15 +90,18 @@ const handler = async (req: Request): Promise<Response> => {
             Esta mensagem foi enviada através do formulário de contato do Saj Tem.
           </p>
         </div>
-      `,
+        `,
+      }),
     });
 
-    console.log("Contact emails sent successfully:", { userEmailResponse, adminEmailResponse });
+    const adminEmailData = await adminEmailResponse.json();
+
+    console.log("Contact emails sent successfully:", { userEmailData, adminEmailData });
 
     return new Response(JSON.stringify({ 
       success: true, 
-      userEmail: userEmailResponse,
-      adminEmail: adminEmailResponse 
+      userEmail: userEmailData,
+      adminEmail: adminEmailData
     }), {
       status: 200,
       headers: {
@@ -106,4 +121,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+Deno.serve(handler);

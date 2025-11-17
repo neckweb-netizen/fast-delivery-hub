@@ -113,10 +113,10 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro ao criar pagamento:', error);
     return new Response(
-      JSON.stringify({ error: 'Erro interno do servidor', details: error.message }), 
+      JSON.stringify({ error: 'Erro interno do servidor', details: error.message }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

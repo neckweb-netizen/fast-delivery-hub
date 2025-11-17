@@ -1,7 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -59,11 +56,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { subject, content } = getWelcomeMessage(tipo_conta || 'usuario');
 
-    const emailResponse = await resend.emails.send({
-      from: "Saj Tem <noreply@sajtem.com>",
-      to: [email],
-      subject: subject,
-      html: `
+    const emailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Saj Tem <noreply@sajtem.com>",
+        to: [email],
+        subject: subject,
+        html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <div style="text-align: center; margin-bottom: 30px;">
@@ -75,12 +78,15 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           </div>
         </div>
-      `,
+        `,
+      }),
     });
 
-    console.log("Welcome email sent successfully:", emailResponse);
+    const emailData = await emailResponse.json();
 
-    return new Response(JSON.stringify(emailResponse), {
+    console.log("Welcome email sent successfully:", emailData);
+
+    return new Response(JSON.stringify(emailData), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -99,4 +105,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+Deno.serve(handler);
