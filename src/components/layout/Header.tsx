@@ -78,7 +78,7 @@ export const Header = () => {
             {/* Logo and Mobile Menu */}
             <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
               <MobileHamburger />
-              <div className="flex items-center space-x-1 sm:space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
                   <img 
                     src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" 
@@ -89,6 +89,7 @@ export const Header = () => {
                     width="40"
                     height="40"
                     sizes="40px"
+                    style={{ aspectRatio: '1/1' }}
                   />
                 </div>
                 <div className="hidden sm:block">

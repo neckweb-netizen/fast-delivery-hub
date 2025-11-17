@@ -169,7 +169,7 @@ export const MobileHamburger = () => {
           {/* Logo Section */}
           <div className="p-4 border-b">
             <div className="flex items-center justify-center">
-              <img src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" alt="Saj Tem Logo" className="h-12 w-auto" width="48" height="48" sizes="48px" />
+              <img src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" alt="Saj Tem Logo" className="h-12 w-auto" width="48" height="48" sizes="48px" style={{ aspectRatio: '1/1' }} />
             </div>
           </div>
           
