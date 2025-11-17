@@ -28,7 +28,7 @@ export default function Radios() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Radio className="w-8 h-8 text-red-500" />
+              <Radio className="w-8 h-8 text-secondary" />
               <h1 className="text-3xl font-bold tracking-tight text-foreground">Rádios</h1>
             </div>
             <p className="text-lg text-muted-foreground">
@@ -45,7 +45,7 @@ export default function Radios() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Radio className="w-8 h-8 text-red-500" />
+            <Radio className="w-8 h-8 text-secondary" />
             <h1 className="text-3xl font-bold tracking-tight text-foreground">Rádios</h1>
           </div>
           <p className="text-lg text-muted-foreground">
@@ -80,13 +80,13 @@ export default function Radios() {
           </div>
         )}
 
-        <div className="mt-12 bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 text-center">
-          <Radio className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-red-800 mb-2">Cadastre sua Rádio</h2>
-          <p className="text-red-700 mb-4">
+        <div className="mt-12 bg-gradient-to-br from-secondary/10 to-secondary/20 rounded-xl p-6 text-center">
+          <Radio className="w-12 h-12 text-secondary mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-secondary mb-2">Cadastre sua Rádio</h2>
+          <p className="text-secondary/90 mb-4">
             Empresários do ramo radiofônico podem cadastrar suas rádios na plataforma.
           </p>
-          <div className="text-sm text-red-600">
+          <div className="text-sm text-secondary/80">
             🎵 Streaming ao vivo • 📱 Multiplataforma • 🎧 Divulgação gratuita
           </div>
         </div>

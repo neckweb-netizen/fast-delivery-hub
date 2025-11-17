@@ -111,7 +111,7 @@ export const MuralAvisos = () => {
 
   if (loading) {
     return (
-      <Card className="bg-red-600 border-red-600">
+      <Card className="bg-secondary border-secondary">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export const MuralAvisos = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-red-500 h-8 w-8 p-0"
+              className="text-white hover:bg-secondary/80 h-8 w-8 p-0"
               onClick={() => setIsMinimized(!isMinimized)}
             >
               <Minimize2 className="h-4 w-4" />
@@ -132,9 +132,9 @@ export const MuralAvisos = () => {
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-4 bg-red-400 rounded w-1/3 mb-2"></div>
-                <div className="h-3 bg-red-400 rounded w-full mb-1"></div>
-                <div className="h-3 bg-red-400 rounded w-2/3"></div>
+                <div className="h-4 bg-secondary/60 rounded w-1/3 mb-2"></div>
+                <div className="h-3 bg-secondary/60 rounded w-full mb-1"></div>
+                <div className="h-3 bg-secondary/60 rounded w-2/3"></div>
               </div>
             ))}
           </div>
@@ -145,7 +145,7 @@ export const MuralAvisos = () => {
 
   if (!todosAvisos.length) {
     return (
-      <Card className="bg-red-600 border-red-600">
+      <Card className="bg-secondary border-secondary">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ export const MuralAvisos = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-red-500 h-8 w-8 p-0"
+              className="text-white hover:bg-secondary/80 h-8 w-8 p-0"
               onClick={() => setIsMinimized(!isMinimized)}
             >
               <Minimize2 className="h-4 w-4" />
@@ -167,7 +167,7 @@ export const MuralAvisos = () => {
             <div className="text-center py-8 text-white">
               <Info className="h-12 w-12 mx-auto mb-4 opacity-75" />
               <p className="text-white">Nenhum aviso no momento</p>
-              <p className="text-sm text-red-100">Novidades e atualizações aparecerão aqui</p>
+              <p className="text-sm text-secondary-foreground/80">Novidades e atualizações aparecerão aqui</p>
             </div>
           </CardContent>
         )}
@@ -176,20 +176,20 @@ export const MuralAvisos = () => {
   }
 
   return (
-    <Card className="bg-red-600 border-red-600">
+    <Card className="bg-secondary border-secondary">
       <CardHeader className="pb-3">
         <CardTitle className="text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Info className="h-5 w-5" />
             Mural de Avisos
-            <Badge className="bg-red-800 text-white border-red-700 ml-2">
+            <Badge className="bg-secondary/80 text-white border-secondary/60 ml-2">
               {todosAvisos.length}
             </Badge>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-red-500 h-8 w-8 p-0"
+            className="text-white hover:bg-secondary/80 h-8 w-8 p-0"
             onClick={() => setIsMinimized(!isMinimized)}
           >
             {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
@@ -206,7 +206,7 @@ export const MuralAvisos = () => {
               const botoes = Array.isArray(aviso.botoes) ? aviso.botoes : [];
               
               return (
-                <div key={aviso.id} className="border-l-4 border-red-300 p-4 rounded-r-lg bg-red-500/50">
+                <div key={aviso.id} className="border-l-4 border-secondary/60 p-4 rounded-r-lg bg-secondary/50">
                   <div className="flex items-start gap-3">
                     <IconComponent className="h-5 w-5 mt-1 flex-shrink-0 text-white" />
                     
@@ -214,7 +214,7 @@ export const MuralAvisos = () => {
                       <div className="flex items-center justify-between">
                         <h4 className="font-semibold text-white">{aviso.titulo}</h4>
                         <div className="flex items-center gap-2">
-                          <Badge className="bg-red-800 text-white border-red-700">
+                          <Badge className="bg-secondary/80 text-white border-secondary/60">
                             {aviso.tipo_aviso === 'info' && 'Informação'}
                             {aviso.tipo_aviso === 'warning' && 'Atenção'}
                             {aviso.tipo_aviso === 'success' && 'Sucesso'}
@@ -222,7 +222,7 @@ export const MuralAvisos = () => {
                             {aviso.tipo_aviso === 'update' && 'Atualização'}
                           </Badge>
                           {aviso.prioridade > 0 && (
-                            <Badge className="bg-red-700 text-white border-red-600">
+                            <Badge className="bg-secondary/70 text-white border-secondary/50">
                               Prioridade {aviso.prioridade}
                             </Badge>
                           )}
@@ -230,7 +230,7 @@ export const MuralAvisos = () => {
                       </div>
                       
                       {aviso.conteudo && (
-                        <p className="text-red-100 text-sm leading-relaxed">
+                        <p className="text-secondary-foreground/90 text-sm leading-relaxed">
                           {aviso.conteudo}
                         </p>
                       )}
@@ -242,7 +242,7 @@ export const MuralAvisos = () => {
                               key={index}
                               size="sm"
                               variant="outline"
-                              className="h-8 bg-white text-red-600 border-white hover:bg-red-50 hover:text-red-700"
+                              className="h-8 bg-white text-secondary border-white hover:bg-secondary/10 hover:text-secondary"
                               onClick={() => {
                                 if (botao.texto === 'Renovar Plano') {
                                   handleRenovarPlano();

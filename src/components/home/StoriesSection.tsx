@@ -114,7 +114,7 @@ export const StoriesSection = () => {
               onClick={() => openStory(groupedStory)}
             >
               <div className="relative">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-0.5">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-accent via-secondary to-primary p-0.5">
                   <Avatar className="w-full h-full border-2 border-background">
                     <AvatarImage 
                       src={groupedStory.empresa_imagem || '/placeholder.svg'} 

@@ -234,8 +234,8 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                     <div className="space-y-3">
                       {evento.empresas.endereco && (
                         <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-slate-700 rounded-2xl">
-                          <div className="w-8 h-8 bg-red-100 dark:bg-red-900 rounded-xl flex items-center justify-center">
-                            <MapPin className="w-4 h-4 text-red-600 dark:text-red-400" />
+                          <div className="w-8 h-8 bg-secondary/20 dark:bg-secondary/30 rounded-xl flex items-center justify-center">
+                            <MapPin className="w-4 h-4 text-secondary dark:text-secondary/80" />
                           </div>
                           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                             {evento.empresas.endereco}
@@ -273,7 +273,7 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
             {/* Date Card */}
             <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 border-0 sticky top-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-accent to-secondary rounded-2xl flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Data e Hora</h3>
@@ -282,7 +282,7 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
               <div className="space-y-4">
                 <div>
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">INÍCIO</p>
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-4 rounded-2xl border border-orange-200 dark:border-orange-800">
+                  <div className="bg-gradient-to-r from-accent/10 to-secondary/10 dark:from-accent/20 dark:to-secondary/20 p-4 rounded-2xl border border-secondary/30 dark:border-secondary/50">
                     <p className="text-lg font-bold text-gray-900 dark:text-white">
                       {formatDateTime(evento.data_inicio)}
                     </p>

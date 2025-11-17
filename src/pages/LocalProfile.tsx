@@ -311,12 +311,12 @@ const EmpresaProfile = () => {
         /> : (/* Menu com fundo vermelho - Layout responsivo otimizado */
         <Card className="shadow-lg bg-white overflow-hidden">
             <Tabs defaultValue={isRadio ? "radio" : "informacoes"} className="w-full">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-t-lg p-1">
+              <div className="bg-gradient-to-r from-secondary to-secondary rounded-t-lg p-1">
                 <TabsList className="bg-secondary border-none w-full h-auto p-1 md:p-2">
                   {isRadio ?
                 // Se for rádio, mostrar apenas a aba de rádio centralizada
                 <div className="flex justify-center">
-                      <TabsTrigger value="radio" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-lg font-semibold px-6 py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 min-w-[120px] border border-white/20 data-[state=active]:border-white">
+                      <TabsTrigger value="radio" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-secondary data-[state=active]:shadow-lg font-semibold px-6 py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 min-w-[120px] border border-white/20 data-[state=active]:border-white">
                         <Radio className="h-4 w-4" />
                         <span className="text-sm">Rádio</span>
                       </TabsTrigger>
@@ -324,19 +324,19 @@ const EmpresaProfile = () => {
                 // Layout responsivo otimizado para mobile
                 <div className="w-full overflow-x-auto scrollbar-hide">
                       <div className="flex gap-1 md:grid md:grid-cols-4 md:gap-2 px-1 pb-1">
-                        <TabsTrigger value="informacoes" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
+                        <TabsTrigger value="informacoes" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-secondary data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
                           <Info className="h-4 w-4 md:h-5 md:w-5" />
                           <span className="text-xs md:text-sm">Info</span>
                         </TabsTrigger>
-                        <TabsTrigger value="produtos" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
+                        <TabsTrigger value="produtos" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-secondary data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
                           <Package className="h-4 w-4 md:h-5 md:w-5" />
                           <span className="text-xs md:text-sm">Produtos</span>
                         </TabsTrigger>
-                        <TabsTrigger value="eventos" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
+                        <TabsTrigger value="eventos" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-secondary data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
                           <Calendar className="h-4 w-4 md:h-5 md:w-5" />
                           <span className="text-xs md:text-sm">Eventos</span>
                         </TabsTrigger>
-                        <TabsTrigger value="cupons" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-red-600 data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
+                        <TabsTrigger value="cupons" className="bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 data-[state=active]:bg-white data-[state=active]:text-secondary data-[state=active]:shadow-lg font-medium px-3 py-2.5 md:px-4 md:py-3 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-1 border border-white/20 data-[state=active]:border-white whitespace-nowrap min-w-[60px] md:min-w-0 flex-shrink-0">
                           <Ticket className="h-4 w-4 md:h-5 md:w-5" />
                           <span className="text-xs md:text-sm">Cupons</span>
                         </TabsTrigger>
