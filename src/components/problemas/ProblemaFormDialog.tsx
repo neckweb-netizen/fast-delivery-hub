@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useProblemasCidade, useCategoriasProblema } from '@/hooks/useProblemasCidade';
+import { useProblemasCidade, useCategoriasProblema, ProblemaCidade } from '@/hooks/useProblemasCidade';
 import { useCidadePadrao } from '@/hooks/useCidadePadrao';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -26,12 +26,14 @@ type ProblemaFormData = z.infer<typeof problemaSchema>;
 interface ProblemaFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  problema?: ProblemaCidade;
+  isEdit?: boolean;
 }
 
-export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogProps) => {
+export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = false }: ProblemaFormDialogProps) => {
   const { data: cidadePadrao } = useCidadePadrao();
   const { categorias } = useCategoriasProblema();
-  const { criarProblema } = useProblemasCidade();
+  const { criarProblema, atualizarProblema } = useProblemasCidade();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<ProblemaFormData>({
@@ -46,20 +48,56 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
     },
   });
 
+  useEffect(() => {
+    if (isEdit && problema) {
+      form.reset({
+        titulo: problema.titulo,
+        descricao: problema.descricao,
+        categoria_id: problema.categoria_id || '',
+        endereco: problema.endereco,
+        bairro: problema.bairro || '',
+        prioridade: problema.prioridade,
+      });
+    } else {
+      form.reset({
+        titulo: '',
+        descricao: '',
+        categoria_id: '',
+        endereco: '',
+        bairro: '',
+        prioridade: 'media',
+      });
+    }
+  }, [isEdit, problema, form]);
+
   const onSubmit = async (data: ProblemaFormData) => {
-    if (!cidadePadrao) return;
+    if (!cidadePadrao && !isEdit) return;
 
     setIsSubmitting(true);
     try {
-      await criarProblema.mutateAsync({
-        titulo: data.titulo,
-        descricao: data.descricao,
-        categoria_id: data.categoria_id,
-        endereco: data.endereco,
-        bairro: data.bairro,
-        prioridade: data.prioridade,
-        cidade_id: cidadePadrao.id,
-      });
+      if (isEdit && problema) {
+        await atualizarProblema.mutateAsync({
+          problemaId: problema.id,
+          dados: {
+            titulo: data.titulo,
+            descricao: data.descricao,
+            categoria_id: data.categoria_id,
+            endereco: data.endereco,
+            bairro: data.bairro,
+            prioridade: data.prioridade,
+          },
+        });
+      } else {
+        await criarProblema.mutateAsync({
+          titulo: data.titulo,
+          descricao: data.descricao,
+          categoria_id: data.categoria_id,
+          endereco: data.endereco,
+          bairro: data.bairro,
+          prioridade: data.prioridade,
+          cidade_id: cidadePadrao!.id,
+        });
+      }
       form.reset();
       onOpenChange(false);
     } finally {
@@ -71,7 +109,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Relatar Reclamação</DialogTitle>
+          <DialogTitle>{isEdit ? 'Editar Reclamação' : 'Relatar Reclamação'}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -200,7 +238,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange }: ProblemaFormDialogPro
                 Cancelar
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Publicando...' : 'Publicar Reclamação'}
+                {isSubmitting ? (isEdit ? 'Atualizando...' : 'Publicando...') : (isEdit ? 'Atualizar Reclamação' : 'Publicar Reclamação')}
               </Button>
             </div>
           </form>
