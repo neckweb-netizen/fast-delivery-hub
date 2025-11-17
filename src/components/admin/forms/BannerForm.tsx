@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { Banner } from '@/hooks/useAdminBanners';
 
@@ -53,6 +54,9 @@ const secaoOptions = [
 ];
 
 export const BannerForm = ({ banner, onSubmit, onCancel, isLoading }: BannerFormProps) => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState('');
+  
   const { register, handleSubmit, formState: { errors }, watch, setValue, trigger } = useForm<BannerFormData>({
     resolver: zodResolver(bannerSchema),
     defaultValues: {
@@ -73,12 +77,28 @@ export const BannerForm = ({ banner, onSubmit, onCancel, isLoading }: BannerForm
 
   const handleImageChange = (url: string) => {
     console.log('Image URL changed:', url);
+    setUploadedImageUrl(url);
     setValue('imagem_url', url);
     trigger('imagem_url');
   };
 
   const handleImageRemove = () => {
     console.log('Image removed');
+    setUploadedImageUrl('');
+    setValue('imagem_url', '');
+    trigger('imagem_url');
+  };
+
+  const handleVideoUpload = (url: string) => {
+    console.log('Video URL changed:', url);
+    setUploadedVideoUrl(url);
+    setValue('imagem_url', url);
+    trigger('imagem_url');
+  };
+
+  const handleVideoRemove = () => {
+    console.log('Video removed');
+    setUploadedVideoUrl('');
     setValue('imagem_url', '');
     trigger('imagem_url');
   };
@@ -92,7 +112,9 @@ export const BannerForm = ({ banner, onSubmit, onCancel, isLoading }: BannerForm
   const handleTipoMidiaChange = (value: string) => {
     console.log('Media type changed:', value);
     setValue('tipo_midia', value as any);
-    setValue('imagem_url', ''); // Reset URL when changing type
+    setValue('imagem_url', '');
+    setUploadedImageUrl('');
+    setUploadedVideoUrl('');
     trigger(['tipo_midia', 'imagem_url']);
   };
 
@@ -181,7 +203,7 @@ export const BannerForm = ({ banner, onSubmit, onCancel, isLoading }: BannerForm
           </div>
 
           <div>
-            <Label>{tipoMidia === 'video' ? 'URL do Vídeo *' : 'Imagem do Banner *'}</Label>
+            <Label>{tipoMidia === 'video' ? 'Vídeo do Banner *' : 'Imagem do Banner *'}</Label>
             {tipoMidia === 'imagem' ? (
               <ImageUpload
                 value={imagemUrl}
@@ -193,20 +215,42 @@ export const BannerForm = ({ banner, onSubmit, onCancel, isLoading }: BannerForm
                 className="mt-2"
               />
             ) : (
-              <div className="space-y-2 mt-2">
-                <Input
-                  value={imagemUrl}
-                  onChange={(e) => {
-                    setValue('imagem_url', e.target.value);
-                    trigger('imagem_url');
-                  }}
-                  placeholder="https://youtube.com/watch?v=... ou URL direta do vídeo"
-                  type="url"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Suporta URLs do YouTube, Vimeo ou links diretos para arquivos de vídeo (.mp4, .webm, .ogg)
-                </p>
-              </div>
+              <Tabs defaultValue="link" className="mt-2">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="link">Link/URL</TabsTrigger>
+                  <TabsTrigger value="upload">Upload de Arquivo</TabsTrigger>
+                </TabsList>
+                <TabsContent value="link" className="space-y-2">
+                  <Input
+                    value={uploadedVideoUrl ? '' : imagemUrl}
+                    onChange={(e) => {
+                      setUploadedVideoUrl('');
+                      setValue('imagem_url', e.target.value);
+                      trigger('imagem_url');
+                    }}
+                    placeholder="https://youtube.com/watch?v=... ou URL direta do vídeo"
+                    type="url"
+                    disabled={!!uploadedVideoUrl}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Suporta URLs do YouTube, Vimeo ou links diretos para arquivos de vídeo (.mp4, .webm, .ogg)
+                  </p>
+                </TabsContent>
+                <TabsContent value="upload">
+                  <ImageUpload
+                    value={uploadedVideoUrl}
+                    onChange={handleVideoUpload}
+                    onRemove={handleVideoRemove}
+                    bucket="banners"
+                    accept="video/*"
+                    maxSize={500}
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Faça upload de arquivos de vídeo (MP4, WebM, etc.) • Tamanho máximo: 500MB
+                  </p>
+                </TabsContent>
+              </Tabs>
             )}
             {errors.imagem_url && (
               <p className="text-sm text-destructive mt-1">{errors.imagem_url.message}</p>
