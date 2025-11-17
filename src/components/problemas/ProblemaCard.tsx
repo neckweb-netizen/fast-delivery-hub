@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, MessageCircle, Eye, MapPin, Edit, Trash2, CheckCircle, MoreVertical } from 'lucide-react';
+import { ArrowUp, ArrowDown, MessageCircle, Eye, MapPin, Edit, Trash2, CheckCircle } from 'lucide-react';
 import { ProblemaCidade, useProblemasCidade } from '@/hooks/useProblemasCidade';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -19,13 +19,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import { ProblemaFormDialog } from './ProblemaFormDialog';
 
 interface ProblemaCardProps {
@@ -208,38 +201,38 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
 
             {/* Ações do autor */}
             {isAuthor && (
-              <div onClick={(e) => e.stopPropagation()}>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={handleEdit}>
-                      <Edit className="w-4 h-4 mr-2" />
-                      Editar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={handleResolve} 
-                      disabled={isResolving || problema.status === 'resolvido' || problema.status === 'fechado'}
-                    >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      {isResolving ? 'Marcando...' : 'Marcar como resolvido'}
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowDeleteDialog(true);
-                      }}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Excluir
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleEdit}
+                  className="h-9 px-3 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResolve}
+                  disabled={isResolving || problema.status === 'resolvido' || problema.status === 'fechado'}
+                  className="h-9 px-3 bg-green-500/10 hover:bg-green-500/20 border-green-500/20 text-green-600 disabled:opacity-50"
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  {isResolving ? 'Marcando...' : 'Resolvido'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDeleteDialog(true);
+                  }}
+                  className="h-9 px-3 bg-destructive/10 hover:bg-destructive/20 border-destructive/20 text-destructive"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Excluir
+                </Button>
               </div>
             )}
           </div>
