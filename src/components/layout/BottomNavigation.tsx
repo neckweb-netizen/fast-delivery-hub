@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Building2, MessageCircle, Radio, Briefcase, User, Plus, X, Tag, Package, Calendar, Megaphone } from 'lucide-react';
+import { Home, Building2, MessageCircle, Radio, Briefcase, User, Plus, X, Tag, Package, Calendar, Megaphone, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useMinhaEmpresa } from '@/hooks/useMinhaEmpresa';
@@ -24,7 +24,7 @@ export const BottomNavigation = () => {
 
   const leftMenuItems = [
     { icon: Home, label: 'Início', path: '/' },
-    { icon: Radio, label: 'Canal', path: '/canal-informativo' },
+    { icon: Newspaper, label: 'Canal', path: '/canal-informativo' },
   ];
 
   const rightMenuItems = [
