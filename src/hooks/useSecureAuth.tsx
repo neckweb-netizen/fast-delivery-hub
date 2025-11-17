@@ -239,10 +239,19 @@ export const useSecureAuth = () => {
       if (data.user) {
         const userProfile = await fetchProfile(data.user.id, data.user);
         if (userProfile) {
+          console.log('🔀 Redirecting user after secure login:', {
+            tipoConta: userProfile.tipo_conta,
+            nome: userProfile.nome
+          });
+          
           if (userProfile.tipo_conta === 'empresa') {
+            console.log('🏢 Redirecting empresa user to dashboard');
             setTimeout(() => window.location.href = '/empresa-dashboard', 100);
           } else if (userProfile.tipo_conta === 'admin_geral' || userProfile.tipo_conta === 'admin_cidade') {
+            console.log('👨‍💼 Redirecting admin user to admin panel');
             setTimeout(() => window.location.href = '/admin', 100);
+          } else {
+            console.log('👤 Regular user - no redirect needed');
           }
         }
       }

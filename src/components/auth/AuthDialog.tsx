@@ -10,6 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { CadastrarEmpresaDialog } from '@/components/profile/CadastrarEmpresaDialog';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AuthDialogProps {
   open: boolean;
@@ -23,6 +24,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,17 +32,12 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
 
     try {
       if (isLogin) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+        const { error } = await signIn(email, password);
         
         if (error) throw error;
         
         toast.success('Login realizado com sucesso!');
         onOpenChange(false);
-        
-        // O redirecionamento agora é feito pelo hook useAuth
       } else {
         const { error } = await supabase.auth.signUp({
           email,
