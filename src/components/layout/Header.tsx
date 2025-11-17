@@ -118,6 +118,18 @@ export const Header = () => {
 
             {/* Actions */}
             <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+              {/* Dashboard Button for empresa users */}
+              {user && profile?.tipo_conta === 'empresa' && (
+                <Button
+                  onClick={() => navigate('/empresa-dashboard')}
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-medium text-xs sm:text-sm"
+                >
+                  Painel
+                </Button>
+              )}
+              
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
