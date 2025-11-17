@@ -110,131 +110,96 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
         className="cursor-pointer hover:shadow-lg transition-shadow"
         onClick={() => navigate(`/reclamacoes/${problema.id}`)}
       >
-        <CardContent className="p-6">
-          <div className="flex items-start gap-4">
-            {/* Votos */}
-            <div className="flex flex-col items-center gap-1 min-w-[48px]">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={(e) => handleVoto(e, 1)}
-                disabled={!user}
-              >
-                <ArrowUp className="w-4 h-4" />
-              </Button>
-              <span className="font-bold text-lg">
-                {problema.votos_positivos - problema.votos_negativos}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={(e) => handleVoto(e, -1)}
-                disabled={!user}
-              >
-                <ArrowDown className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="flex-1 min-w-0">
-              {/* Header */}
-              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                {problema.categoria && IconeCategoria && (
-                  <div
-                    className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
-                    style={{
-                      backgroundColor: `${problema.categoria.cor}15`,
-                      color: problema.categoria.cor,
-                    }}
-                  >
-                    <IconeCategoria className="w-3.5 h-3.5" />
-                    {problema.categoria.nome}
-                  </div>
-                )}
-                <Badge className={statusColors[problema.status]}>
-                  {statusLabels[problema.status]}
-                </Badge>
-                <Badge className={prioridadeColors[problema.prioridade]}>
-                  {prioridadeLabels[problema.prioridade]}
-                </Badge>
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-start gap-4">
+            <div className="flex gap-4">
+              {/* Votos */}
+              <div className="flex flex-col items-center gap-1 min-w-[48px]">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => handleVoto(e, 1)}
+                  disabled={!user}
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </Button>
+                <span className="font-bold text-lg">
+                  {problema.votos_positivos - problema.votos_negativos}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => handleVoto(e, -1)}
+                  disabled={!user}
+                >
+                  <ArrowDown className="w-4 h-4" />
+                </Button>
               </div>
 
-              {/* Título */}
-              <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">
-                {problema.titulo}
-              </h3>
+              <div className="flex-1 min-w-0">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  {problema.categoria && IconeCategoria && (
+                    <div
+                      className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
+                      style={{
+                        backgroundColor: `${problema.categoria.cor}15`,
+                        color: problema.categoria.cor,
+                      }}
+                    >
+                      <IconeCategoria className="w-3.5 h-3.5" />
+                      {problema.categoria.nome}
+                    </div>
+                  )}
+                  <Badge className={statusColors[problema.status]}>
+                    {statusLabels[problema.status]}
+                  </Badge>
+                  <Badge className={prioridadeColors[problema.prioridade]}>
+                    {prioridadeLabels[problema.prioridade]}
+                  </Badge>
+                </div>
 
-              {/* Descrição */}
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                {problema.descricao}
-              </p>
+                {/* Título */}
+                <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">
+                  {problema.titulo}
+                </h3>
 
-              {/* Localização */}
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
-                <MapPin className="w-3.5 h-3.5" />
-                {problema.bairro && `${problema.bairro} • `}
-                {problema.endereco}
-              </div>
+                {/* Descrição */}
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  {problema.descricao}
+                </p>
 
-              {/* Footer */}
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span>
-                  Por {problema.usuario?.nome || 'Anônimo'}
-                </span>
-                <span>•</span>
-                <span>
-                  {format(new Date(problema.criado_em), "d 'de' MMMM", { locale: ptBR })}
-                </span>
-                <div className="flex items-center gap-3 ml-auto">
-                  <div className="flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5" />
-                    {problema.visualizacoes}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    {problema.total_comentarios || 0}
+                {/* Localização */}
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {problema.bairro && `${problema.bairro} • `}
+                  {problema.endereco}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                  <span>
+                    Por {problema.usuario?.nome || 'Anônimo'}
+                  </span>
+                  <span>•</span>
+                  <span>
+                    {format(new Date(problema.criado_em), "d 'de' MMMM", { locale: ptBR })}
+                  </span>
+                  <div className="flex items-center gap-3 ml-auto">
+                    <div className="flex items-center gap-1">
+                      <Eye className="w-3.5 h-3.5" />
+                      {problema.visualizacoes}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      {problema.total_comentarios || 0}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Ações do autor */}
-            {isAuthor && (
-              <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleEdit}
-                  className="h-9 px-3 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Editar
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleResolve}
-                  disabled={isResolving || problema.status === 'resolvido' || problema.status === 'fechado'}
-                  className="h-9 px-3 bg-green-500/10 hover:bg-green-500/20 border-green-500/20 text-green-600 disabled:opacity-50"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  {isResolving ? 'Marcando...' : 'Resolvido'}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDeleteDialog(true);
-                  }}
-                  className="h-9 px-3 bg-destructive/10 hover:bg-destructive/20 border-destructive/20 text-destructive"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Excluir
-                </Button>
-              </div>
-            )}
           </div>
 
           {/* Imagens */}
@@ -248,6 +213,46 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   className="w-full h-24 object-cover rounded-md"
                 />
               ))}
+            </div>
+          )}
+
+          {/* Ações do autor - Mobile na parte inferior, Desktop na lateral */}
+          {isAuthor && (
+            <div 
+              onClick={(e) => e.stopPropagation()} 
+              className="mt-4 pt-4 border-t border-border flex flex-row gap-2 md:absolute md:right-4 md:top-4 md:flex-col md:mt-0 md:pt-0 md:border-t-0"
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleEdit}
+                className="flex-1 md:flex-none h-9 px-3 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary"
+              >
+                <Edit className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Editar</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResolve}
+                disabled={isResolving || problema.status === 'resolvido' || problema.status === 'fechado'}
+                className="flex-1 md:flex-none h-9 px-3 bg-green-500/10 hover:bg-green-500/20 border-green-500/20 text-green-600 disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">{isResolving ? 'Marcando...' : 'Resolvido'}</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteDialog(true);
+                }}
+                className="flex-1 md:flex-none h-9 px-3 bg-destructive/10 hover:bg-destructive/20 border-destructive/20 text-destructive"
+              >
+                <Trash2 className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Excluir</span>
+              </Button>
             </div>
           )}
         </CardContent>
