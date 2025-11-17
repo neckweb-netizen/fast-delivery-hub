@@ -16,13 +16,17 @@ export const VozDoPovoSection = () => {
   if (isLoading) {
     return (
       <div className="mx-2 sm:mx-4 lg:mx-6" style={{ minHeight: '450px' }}>
-        <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-muted rounded w-48"></div>
-          <div className="grid gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-32 bg-muted rounded-lg"></div>
-            ))}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 bg-muted rounded animate-pulse"></div>
+            <div className="h-6 bg-muted rounded w-32 animate-pulse"></div>
           </div>
+          <div className="h-5 bg-muted rounded w-20 animate-pulse"></div>
+        </div>
+        <div className="grid gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse"></div>
+          ))}
         </div>
       </div>
     );
