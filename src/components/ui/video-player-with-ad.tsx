@@ -250,9 +250,13 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                 src={videoUrl}
                 controls
                 autoPlay
+                playsInline
                 muted={isMuted}
                 className="w-full h-full object-contain rounded-lg md:rounded-xl"
                 preload="metadata"
+                onError={(e) => {
+                  console.error('Erro ao carregar vídeo:', e);
+                }}
               />
               <Button
                 onClick={toggleMute}
