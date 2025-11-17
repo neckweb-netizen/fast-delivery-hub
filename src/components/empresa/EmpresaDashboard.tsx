@@ -153,61 +153,71 @@ export const EmpresaDashboard = () => {
 
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-4">
-            {empresaAtual.imagem_capa_url && (
-              <img
-                src={empresaAtual.imagem_capa_url}
-                alt={empresaAtual.nome}
-                className="w-16 h-16 rounded-lg object-cover"
-              />
-            )}
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                {empresaAtual.nome}
-                {empresaAtual.verificado && (
-                  <Badge variant="default" className="bg-blue-600">
-                    <Star className="w-3 h-3 mr-1" />
-                    Verificado
-                  </Badge>
+        <Card className="border-border/50 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6">
+            <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+                {empresaAtual.imagem_capa_url && (
+                  <div className="shrink-0">
+                    <img
+                      src={empresaAtual.imagem_capa_url}
+                      alt={empresaAtual.nome}
+                      className="w-20 h-20 rounded-xl object-cover shadow-md ring-2 ring-secondary/20"
+                    />
+                  </div>
                 )}
-              </h1>
-              <div className="flex items-center gap-4 text-muted-foreground mt-1">
-                {empresaAtual.endereco && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    {empresaAtual.endereco}
-                  </span>
-                )}
-                {empresaAtual.telefone && (
-                  <span className="flex items-center gap-1">
-                    <Phone className="w-4 h-4" />
-                    {empresaAtual.telefone}
-                  </span>
-                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+                      {empresaAtual.nome}
+                    </h1>
+                    {empresaAtual.verificado && (
+                      <Badge variant="default" className="bg-blue-600">
+                        <Star className="w-3 h-3 mr-1" />
+                        Verificado
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-muted-foreground">
+                    {empresaAtual.endereco && (
+                      <span className="flex items-start sm:items-center gap-1.5">
+                        <MapPin className="w-4 h-4 shrink-0 mt-0.5 sm:mt-0" />
+                        <span className="break-words">{empresaAtual.endereco}</span>
+                      </span>
+                    )}
+                    {empresaAtual.telefone && (
+                      <span className="flex items-center gap-1.5">
+                        <Phone className="w-4 h-4 shrink-0" />
+                        <span>{empresaAtual.telefone}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-2 lg:shrink-0">
+                <Badge 
+                  variant={
+                    empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
+                    empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
+                    'secondary'
+                  }
+                >
+                  Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
+                          empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
+                          'Pendente'}
+                </Badge>
+                <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
+                  {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
+                </Badge>
               </div>
             </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <Badge 
-              variant={
-                empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                'secondary'
-              }
-            >
-              Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                      empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                      'Pendente'}
-            </Badge>
-            <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
-              {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         
-        <EmpresaActions empresa={empresaAtual} />
+        <div className="mt-4">
+          <EmpresaActions empresa={empresaAtual} />
+        </div>
       </div>
 
       {/* Tabs */}
