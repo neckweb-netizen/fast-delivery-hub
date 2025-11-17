@@ -96,8 +96,10 @@ const App = () => {
           <RoutePreloader />
           <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            {/* Landing page sem layout */}
-            <Route path="/" element={<Index />} />
+            {/* Landing page com MainLayout */}
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Index />} />
+            </Route>
             
             {/* Rotas públicas com layout */}
             <Route element={<PublicLayout />}>
