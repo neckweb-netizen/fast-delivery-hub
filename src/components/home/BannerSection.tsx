@@ -68,19 +68,26 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
     }
   }, [api, shuffledBanners.length]);
 
+  // Preload first banner image for LCP optimization - run as soon as data is available
   useEffect(() => {
-    if (!api || shuffledBanners.length <= 1) return;
-
-    // Preload first banner image for LCP optimization
     if (shuffledBanners.length > 0) {
       const firstBannerUrl = shuffledBanners[0].imagem_url;
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = firstBannerUrl;
-      link.fetchPriority = 'high';
-      document.head.appendChild(link);
+      const existingPreload = document.querySelector(`link[rel="preload"][href="${firstBannerUrl}"]`);
+      
+      if (!existingPreload) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = firstBannerUrl;
+        link.fetchPriority = 'high';
+        document.head.appendChild(link);
+      }
     }
+  }, [shuffledBanners]);
+
+  // Auto-rotation for carousel
+  useEffect(() => {
+    if (!api || shuffledBanners.length <= 1) return;
 
     const interval = setInterval(() => {
       scrollToNext();
