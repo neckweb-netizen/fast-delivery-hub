@@ -48,10 +48,12 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
         .select(`
           *,
           categoria:categorias_problema(nome, icone, cor),
-          usuario:usuarios(nome)
+          usuario:usuarios(nome),
+          comentarios:comentarios_problema(count)
         `)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado');
+        .eq('status_aprovacao', 'aprovado')
+        .eq('comentarios.ativo', true);
 
       if (cidadeId) {
         query = query.eq('cidade_id', cidadeId);
@@ -77,7 +79,14 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data as any[];
+      
+      // Processar dados para incluir contagem de comentários
+      const problemasComContagem = data?.map((problema: any) => ({
+        ...problema,
+        total_comentarios: problema.comentarios?.[0]?.count || 0,
+      })) || [];
+      
+      return problemasComContagem as any[];
     },
   });
 
