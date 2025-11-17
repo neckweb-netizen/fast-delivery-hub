@@ -163,7 +163,7 @@ export const DesktopSidebar = ({
         {/* Logo Section */}
         <div className="p-4 border-b">
           <div className="flex items-center justify-center">
-            <img src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" alt="Saj Tem Logo" className={cn("transition-all duration-300", isOpen ? "h-12 w-auto" : "h-8 w-8")} width={isOpen ? 48 : 32} height={isOpen ? 48 : 32} sizes={isOpen ? "48px" : "32px"} />
+            <img src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" alt="Saj Tem Logo" className={cn("transition-all duration-300", isOpen ? "h-12 w-auto" : "h-8 w-8")} width={isOpen ? 48 : 32} height={isOpen ? 48 : 32} sizes={isOpen ? "48px" : "32px"} style={{ aspectRatio: '1/1' }} />
           </div>
         </div>
 

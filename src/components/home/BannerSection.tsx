@@ -91,7 +91,7 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
 
   if (isLoading) {
     return (
-      <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
+      <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4" style={{ minHeight: '294px' }}>
         <div className="relative">
           <Skeleton className="w-full aspect-[970/250] rounded-lg" />
         </div>
@@ -130,7 +130,7 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
+    <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4" style={{ minHeight: '294px' }}>
       <Carousel 
         className="w-full" 
         opts={{ align: "start", loop: true }}
