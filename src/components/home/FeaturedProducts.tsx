@@ -174,12 +174,12 @@ export const FeaturedProducts = () => {
                     </Button>
                   )}
                   {produto.link_whatsapp && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      asChild
-                      className="flex-1 text-xs px-2 py-1 h-7 text-green-600 hover:text-green-700 hover:bg-green-50"
-                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="flex-1 text-xs px-2 py-1 h-7 text-[hsl(var(--success))] hover:text-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/10"
+                      >
                       <a 
                         href={produto.link_whatsapp} 
                         target="_blank" 

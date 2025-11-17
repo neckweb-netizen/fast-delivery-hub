@@ -111,6 +111,7 @@ const ProblemaDetalhes = () => {
                     style={{
                       backgroundColor: `${problema.categoria.cor}20`,
                       color: problema.categoria.cor,
+                      filter: 'contrast(1.2) saturate(1.1)'
                     }}
                   >
                     <IconeCategoria className="w-4 h-4" />

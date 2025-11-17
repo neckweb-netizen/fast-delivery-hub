@@ -70,7 +70,8 @@ export const VozDoPovoSection = () => {
                       style={{ 
                         backgroundColor: `${problema.categoria.cor}20`,
                         color: problema.categoria.cor,
-                        borderColor: problema.categoria.cor
+                        borderColor: `${problema.categoria.cor}40`,
+                        filter: 'contrast(1.2) saturate(1.1)'
                       }}
                     >
                       {problema.categoria.nome}
