@@ -124,7 +124,7 @@ export const Header = () => {
                   onClick={() => navigate('/empresa-dashboard')}
                   variant="outline"
                   size="sm"
-                  className="hidden sm:flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-medium text-xs sm:text-sm"
+                  className="flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-medium text-xs sm:text-sm"
                 >
                   Painel
                 </Button>
