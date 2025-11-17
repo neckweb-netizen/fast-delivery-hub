@@ -1931,6 +1931,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_sessions: {
         Row: {
           created_at: string | null
@@ -2446,6 +2470,17 @@ export type Database = {
           whatsapp_prestador: string
         }[]
       }
+      get_user_primary_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       increment_url_clicks: { Args: { code: string }; Returns: string }
       incrementar_visualizacao_problema: {
         Args: { problema_id_param: string }
@@ -2459,6 +2494,7 @@ export type Database = {
         Args: { vaga_id: string }
         Returns: undefined
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
       limpar_urls_google: { Args: never; Returns: undefined }
       refresh_empresas_populares: { Args: never; Returns: undefined }
       usar_cupom: { Args: { cupom_id_param: string }; Returns: boolean }
@@ -2488,6 +2524,12 @@ export type Database = {
       }
     }
     Enums: {
+      app_role:
+        | "usuario"
+        | "criador_empresa"
+        | "empresa"
+        | "admin_cidade"
+        | "admin_geral"
       prioridade_problema: "baixa" | "media" | "alta" | "urgente"
       status_aprovacao: "pendente" | "aprovado" | "rejeitado" | "finalizado"
       status_problema: "aberto" | "em_analise" | "resolvido" | "fechado"
@@ -2636,6 +2678,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: [
+        "usuario",
+        "criador_empresa",
+        "empresa",
+        "admin_cidade",
+        "admin_geral",
+      ],
       prioridade_problema: ["baixa", "media", "alta", "urgente"],
       status_aprovacao: ["pendente", "aprovado", "rejeitado", "finalizado"],
       status_problema: ["aberto", "em_analise", "resolvido", "fechado"],
