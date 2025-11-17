@@ -9,6 +9,7 @@ import { lazy, Suspense } from "react";
 
 // Import critical pages immediately
 import Index from "./pages/Index";
+import { HomeContent } from "./components/home/HomeContent";
 
 // Lazy load non-critical pages
 const Search = lazy(() => import("./pages/Search"));
@@ -95,8 +96,11 @@ const App = () => {
           <RoutePreloader />
           <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route path="/" element={<PublicLayout />}>
-              <Route index element={<Index />} />
+            {/* Landing page sem layout */}
+            <Route path="/" element={<Index />} />
+            
+            {/* Rotas públicas com layout */}
+            <Route element={<PublicLayout />}>
               <Route path="profile" element={<Profile />} />
               <Route path="configuracoes" element={<Configuracoes />} />
               <Route path="busca" element={<Busca />} />
@@ -121,6 +125,7 @@ const App = () => {
               <Route path="privacy" element={<PrivacyPolicy />} />
               <Route path="reclamacoes" element={<Reclamacoes />} />
               <Route path="reclamacoes/:id" element={<ReclamacaoDetalhes />} />
+              <Route path="home" element={<HomeContent />} />
               <Route path="unauthorized" element={<UnauthorizedPage />} />
               <Route path=":shortCode" element={<ShortUrlRedirect />} />
             </Route>
