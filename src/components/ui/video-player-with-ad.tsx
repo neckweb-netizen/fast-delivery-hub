@@ -23,7 +23,7 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
   const [adCountdown, setAdCountdown] = useState(5);
   const [canSkip, setCanSkip] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Iniciar mudo para autoplay funcionar
   const videoRef = useRef<HTMLVideoElement | HTMLIFrameElement>(null);
 
   // Buscar banners para vídeos do canal
