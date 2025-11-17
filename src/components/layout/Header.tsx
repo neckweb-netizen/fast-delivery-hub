@@ -122,9 +122,8 @@ export const Header = () => {
               {user && profile?.tipo_conta === 'empresa' && (
                 <Button
                   onClick={() => navigate('/empresa-dashboard')}
-                  variant="outline"
                   size="sm"
-                  className="flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-primary/10 hover:bg-primary/20 border-primary/20 text-primary font-medium text-xs sm:text-sm"
+                  className="flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium text-xs sm:text-sm shadow-sm"
                 >
                   Painel
                 </Button>
