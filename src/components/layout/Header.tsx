@@ -74,11 +74,11 @@ export const Header = () => {
     <div className="sticky top-0 z-40 w-full">
       <header className="bg-background/95 backdrop-blur-sm border-b border-border shadow-sm w-full">
         <div className="w-full px-2 sm:px-4 py-2 sm:py-3 lg:px-6">
-          <div className="flex items-center justify-between w-full min-w-0 gap-4">
+          <div className="flex items-center justify-between w-full gap-1 sm:gap-2 md:gap-4">
             {/* Logo and Mobile Menu */}
-            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-shrink-0">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
               <MobileHamburger />
-              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
                   <img 
                     src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" 
@@ -91,7 +91,7 @@ export const Header = () => {
                     sizes="40px"
                   />
                 </div>
-                <div className="min-w-0">
+                <div className="hidden sm:block">
                   <h1 className="text-sm sm:text-lg font-bold text-primary truncate">
                     Saj Tem
                   </h1>
@@ -102,7 +102,7 @@ export const Header = () => {
 
             {/* Search Bar - only visible on non-homepage */}
             {!isHomePage && (
-              <div className="flex-1 max-w-xs sm:max-w-md mx-2 sm:mx-4">
+              <div className="flex-1 max-w-xs sm:max-w-md mx-1 sm:mx-2 md:mx-4 hidden md:block">
                 <form onSubmit={handleSearch} className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -117,15 +117,16 @@ export const Header = () => {
             )}
 
             {/* Actions */}
-            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+            <div className="flex items-center gap-1 flex-shrink-0">
               {/* Dashboard Button for empresa users */}
               {user && profile?.tipo_conta === 'empresa' && (
                 <Button
                   onClick={() => navigate('/empresa-dashboard')}
                   size="sm"
-                  className="flex h-10 sm:h-12 rounded-full px-3 sm:px-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium text-xs sm:text-sm shadow-sm"
+                  className="h-9 sm:h-10 md:h-12 rounded-full px-2 sm:px-3 md:px-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium text-xs sm:text-sm shadow-sm"
                 >
-                  Painel
+                  <span className="hidden sm:inline">Painel</span>
+                  <span className="sm:hidden">📊</span>
                 </Button>
               )}
               
@@ -134,12 +135,12 @@ export const Header = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full p-0 hover:bg-accent flex-shrink-0"
+                className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full p-0 hover:bg-accent flex-shrink-0"
               >
                 {theme === 'light' ? (
-                  <Moon className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-foreground" />
+                  <Moon className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-foreground" />
                 ) : (
-                  <Sun className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-foreground" />
+                  <Sun className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-foreground" />
                 )}
               </Button>
               
@@ -147,19 +148,19 @@ export const Header = () => {
               {user && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" size="sm" className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full p-0 relative hover:bg-accent flex-shrink-0">
+                     <Button variant="ghost" size="sm" className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full p-0 relative hover:bg-accent flex-shrink-0">
                        {totalUnread > 0 ? (
                          <>
-                           <BellRing className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-primary" />
+                           <BellRing className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
                            <Badge 
                              variant="destructive" 
-                             className="absolute -top-1 -right-1 h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center p-0 text-xs animate-pulse"
+                             className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center p-0 text-[10px] sm:text-xs animate-pulse"
                            >
                              {totalUnread}
                            </Badge>
                          </>
                        ) : (
-                         <Bell className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-primary" />
+                         <Bell className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />
                        )}
                     </Button>
                   </DropdownMenuTrigger>
@@ -232,13 +233,13 @@ export const Header = () => {
               {user && profile ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-10 px-2 sm:h-12 sm:px-3 lg:h-14 lg:px-4 rounded-full hover:bg-accent flex-shrink-0">
-                      <Avatar className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-sm sm:text-base lg:text-lg font-semibold">
+                    <Button variant="ghost" className="h-9 px-1 sm:h-10 sm:px-2 md:h-12 md:px-3 rounded-full hover:bg-accent flex-shrink-0">
+                      <Avatar className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10">
+                        <AvatarFallback className="bg-primary text-primary-foreground text-xs sm:text-sm md:text-base font-semibold">
                           {profile.nome?.charAt(0)?.toUpperCase() || 'U'}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="ml-1 sm:ml-2 text-xs sm:text-sm lg:text-base font-medium hidden md:block truncate max-w-20 lg:max-w-none">
+                      <span className="ml-1 sm:ml-2 text-xs sm:text-sm font-medium hidden lg:block truncate max-w-16 xl:max-w-none">
                         {profile.nome || 'Usuário'}
                       </span>
                     </Button>
@@ -271,7 +272,7 @@ export const Header = () => {
                 <Button 
                   onClick={() => setAuthDialogOpen(true)}
                   size="sm"
-                  className="h-10 sm:h-12 lg:h-14 rounded-full px-3 sm:px-4 lg:px-6 bg-primary hover:bg-primary/90 shadow-md text-xs sm:text-sm lg:text-base flex-shrink-0"
+                  className="h-9 sm:h-10 md:h-12 rounded-full px-2 sm:px-3 md:px-4 bg-primary hover:bg-primary/90 shadow-md text-xs sm:text-sm flex-shrink-0"
                   data-tutorial="auth-button"
                 >
                   Entrar
