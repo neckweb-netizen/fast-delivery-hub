@@ -136,7 +136,7 @@ export const RadioPlayer: React.FC<RadioPlayerProps> = ({
   };
 
   return (
-    <Card className={`w-full max-w-md mx-auto bg-gradient-to-br from-red-500 to-red-700 text-white shadow-2xl ${className}`}>
+    <Card className={`w-full max-w-md mx-auto bg-gradient-to-br from-secondary to-secondary/90 text-white shadow-2xl ${className}`}>
       <CardHeader className="text-center pb-4">
         <CardTitle className="flex items-center justify-center gap-2 text-xl font-bold text-white">
           <Radio className="w-6 h-6 text-white" />
@@ -160,7 +160,7 @@ export const RadioPlayer: React.FC<RadioPlayerProps> = ({
 
         {/* Error display */}
         {error && (
-          <div className="bg-red-800/50 border border-red-600 rounded-lg p-3 text-sm text-white">
+          <div className="bg-secondary/50 border border-secondary rounded-lg p-3 text-sm text-white">
             {error}
           </div>
         )}
