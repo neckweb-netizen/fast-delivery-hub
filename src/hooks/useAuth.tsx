@@ -97,16 +97,15 @@ export const useAuth = () => {
     // Só redireciona se for um login explícito (não automático)
     if (!isExplicitLogin) return;
     
-    const currentPath = window.location.pathname;
-    
-    // Só redireciona se estiver na página inicial
-    if (currentPath !== '/') return;
-    
     // Redireciona usuários com empresas para o dashboard
     if (userProfile.tipo_conta === 'empresa') {
-      window.location.href = '/empresa-dashboard';
+      setTimeout(() => {
+        window.location.href = '/empresa-dashboard';
+      }, 100);
     } else if (userProfile.tipo_conta === 'admin_geral' || userProfile.tipo_conta === 'admin_cidade') {
-      window.location.href = '/admin';
+      setTimeout(() => {
+        window.location.href = '/admin';
+      }, 100);
     }
     // Usuários normais ficam na página atual
   }, []);
