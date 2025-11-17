@@ -46,6 +46,20 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
     ? banners[Math.floor(Math.random() * banners.length)]
     : null;
 
+  const isAdVideo = selectedBanner?.tipo_midia === 'video' && selectedBanner?.imagem_url;
+
+  useEffect(() => {
+    if (selectedBanner) {
+      console.log('Banner selecionado:', {
+        id: selectedBanner.id,
+        titulo: selectedBanner.titulo,
+        tipo_midia: selectedBanner.tipo_midia,
+        imagem_url: selectedBanner.imagem_url,
+        isAdVideo
+      });
+    }
+  }, [selectedBanner, isAdVideo]);
+
   useEffect(() => {
     if (isPlaying && selectedBanner) {
       setShowAd(true);
@@ -120,10 +134,9 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
     return videoExtensions.some(ext => url.toLowerCase().includes(ext)) || 
            isYouTubeUrl(url) ||
            url.includes('blob:') ||
-           url.includes('data:video/');
+           url.includes('data:video/') ||
+           url.includes('supabase.co/storage') && url.includes('/banners/');
   };
-
-  const isAdVideo = selectedBanner?.tipo_midia === 'video' && selectedBanner?.imagem_url && isVideoUrl(selectedBanner.imagem_url);
 
   return (
     <div className={`relative w-full aspect-video rounded-lg md:rounded-xl overflow-hidden bg-black shadow-lg md:shadow-2xl border border-primary/20 ${className}`}>
@@ -155,8 +168,9 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                       loop
                       playsInline
                       className="w-full h-full object-cover rounded-lg md:rounded-xl"
+                      onLoadedData={() => console.log('✅ Vídeo do banner carregado:', selectedBanner.imagem_url)}
                       onError={(e) => {
-                        console.error('Erro ao carregar vídeo do banner:', e);
+                        console.error('❌ Erro ao carregar vídeo do banner:', selectedBanner.imagem_url, e);
                         const videoElement = e.target as HTMLVideoElement;
                         const img = document.createElement('img');
                         img.src = selectedBanner.imagem_url;
