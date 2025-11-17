@@ -13,6 +13,17 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
+    // Plugin to make CSS non-blocking
+    {
+      name: 'non-blocking-css',
+      transformIndexHtml(html: string) {
+        // Add media="print" to CSS links and convert to all after load
+        return html.replace(
+          /<link rel="stylesheet" crossorigin href="([^"]+\.css)"/g,
+          '<link rel="stylesheet" crossorigin href="$1" media="print" onload="this.media=\'all\'"'
+        );
+      },
+    },
   ].filter(Boolean),
   resolve: {
     alias: {
