@@ -1,13 +1,32 @@
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, MessageCircle, Eye, MapPin } from 'lucide-react';
+import { ArrowUp, ArrowDown, MessageCircle, Eye, MapPin, Edit, Trash2, CheckCircle, MoreVertical } from 'lucide-react';
 import { ProblemaCidade, useProblemasCidade } from '@/hooks/useProblemasCidade';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import * as LucideIcons from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { ProblemaFormDialog } from './ProblemaFormDialog';
 
 interface ProblemaCardProps {
   problema: ProblemaCidade;
@@ -16,7 +35,13 @@ interface ProblemaCardProps {
 export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { votarProblema } = useProblemasCidade();
+  const { votarProblema, excluirProblema, atualizarProblema } = useProblemasCidade();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
+
+  const isAuthor = user?.id === problema.usuario_id;
 
   const statusColors = {
     aberto: 'bg-red-500/10 text-red-500 border-red-500/20',
@@ -54,119 +79,216 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
     await votarProblema.mutateAsync({ problemaId: problema.id, tipoVoto });
   };
 
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await excluirProblema.mutateAsync(problema.id);
+      setShowDeleteDialog(false);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleResolve = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsResolving(true);
+    try {
+      await atualizarProblema.mutateAsync({
+        problemaId: problema.id,
+        dados: { status: 'resolvido' },
+      });
+    } finally {
+      setIsResolving(false);
+    }
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowEditDialog(true);
+  };
+
   const IconeCategoria = problema.categoria?.icone
     ? (LucideIcons as any)[problema.categoria.icone]
     : null;
 
   return (
-    <Card 
-      className="cursor-pointer hover:shadow-lg transition-shadow"
-      onClick={() => navigate(`/reclamacoes/${problema.id}`)}
-    >
-      <CardContent className="p-6">
-        <div className="flex items-start gap-4">
-          {/* Votos */}
-          <div className="flex flex-col items-center gap-1 min-w-[48px]">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={(e) => handleVoto(e, 1)}
-              disabled={!user}
-            >
-              <ArrowUp className="w-4 h-4" />
-            </Button>
-            <span className="font-bold text-lg">
-              {problema.votos_positivos - problema.votos_negativos}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={(e) => handleVoto(e, -1)}
-              disabled={!user}
-            >
-              <ArrowDown className="w-4 h-4" />
-            </Button>
-          </div>
-
-          <div className="flex-1 min-w-0">
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              {problema.categoria && IconeCategoria && (
-                <div
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
-                  style={{
-                    backgroundColor: `${problema.categoria.cor}15`,
-                    color: problema.categoria.cor,
-                  }}
-                >
-                  <IconeCategoria className="w-3.5 h-3.5" />
-                  {problema.categoria.nome}
-                </div>
-              )}
-              <Badge className={statusColors[problema.status]}>
-                {statusLabels[problema.status]}
-              </Badge>
-              <Badge className={prioridadeColors[problema.prioridade]}>
-                {prioridadeLabels[problema.prioridade]}
-              </Badge>
+    <>
+      <Card 
+        className="cursor-pointer hover:shadow-lg transition-shadow"
+        onClick={() => navigate(`/reclamacoes/${problema.id}`)}
+      >
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            {/* Votos */}
+            <div className="flex flex-col items-center gap-1 min-w-[48px]">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={(e) => handleVoto(e, 1)}
+                disabled={!user}
+              >
+                <ArrowUp className="w-4 h-4" />
+              </Button>
+              <span className="font-bold text-lg">
+                {problema.votos_positivos - problema.votos_negativos}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={(e) => handleVoto(e, -1)}
+                disabled={!user}
+              >
+                <ArrowDown className="w-4 h-4" />
+              </Button>
             </div>
 
-            {/* Título */}
-            <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">
-              {problema.titulo}
-            </h3>
+            <div className="flex-1 min-w-0">
+              {/* Header */}
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                {problema.categoria && IconeCategoria && (
+                  <div
+                    className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
+                    style={{
+                      backgroundColor: `${problema.categoria.cor}15`,
+                      color: problema.categoria.cor,
+                    }}
+                  >
+                    <IconeCategoria className="w-3.5 h-3.5" />
+                    {problema.categoria.nome}
+                  </div>
+                )}
+                <Badge className={statusColors[problema.status]}>
+                  {statusLabels[problema.status]}
+                </Badge>
+                <Badge className={prioridadeColors[problema.prioridade]}>
+                  {prioridadeLabels[problema.prioridade]}
+                </Badge>
+              </div>
 
-            {/* Descrição */}
-            <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-              {problema.descricao}
-            </p>
+              {/* Título */}
+              <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">
+                {problema.titulo}
+              </h3>
 
-            {/* Localização */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
-              <MapPin className="w-3.5 h-3.5" />
-              {problema.bairro && `${problema.bairro} • `}
-              {problema.endereco}
-            </div>
+              {/* Descrição */}
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                {problema.descricao}
+              </p>
 
-            {/* Footer */}
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span>
-                Por {problema.usuario?.nome || 'Anônimo'}
-              </span>
-              <span>•</span>
-              <span>
-                {format(new Date(problema.criado_em), "d 'de' MMMM", { locale: ptBR })}
-              </span>
-              <div className="flex items-center gap-3 ml-auto">
-                <div className="flex items-center gap-1">
-                  <Eye className="w-3.5 h-3.5" />
-                  {problema.visualizacoes}
-                </div>
-                <div className="flex items-center gap-1">
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  {problema.total_comentarios || 0}
+              {/* Localização */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                <MapPin className="w-3.5 h-3.5" />
+                {problema.bairro && `${problema.bairro} • `}
+                {problema.endereco}
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span>
+                  Por {problema.usuario?.nome || 'Anônimo'}
+                </span>
+                <span>•</span>
+                <span>
+                  {format(new Date(problema.criado_em), "d 'de' MMMM", { locale: ptBR })}
+                </span>
+                <div className="flex items-center gap-3 ml-auto">
+                  <div className="flex items-center gap-1">
+                    <Eye className="w-3.5 h-3.5" />
+                    {problema.visualizacoes}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    {problema.total_comentarios || 0}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Imagens */}
-        {problema.imagens && problema.imagens.length > 0 && (
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            {problema.imagens.slice(0, 3).map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`Imagem ${idx + 1}`}
-                className="w-full h-24 object-cover rounded-md"
-              />
-            ))}
+            {/* Ações do autor */}
+            {isAuthor && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <MoreVertical className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleEdit}>
+                      <Edit className="w-4 h-4 mr-2" />
+                      Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={handleResolve} 
+                      disabled={isResolving || problema.status === 'resolvido' || problema.status === 'fechado'}
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      {isResolving ? 'Marcando...' : 'Marcar como resolvido'}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDeleteDialog(true);
+                      }}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Imagens */}
+          {problema.imagens && problema.imagens.length > 0 && (
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {problema.imagens.slice(0, 3).map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`Imagem ${idx + 1}`}
+                  className="w-full h-24 object-cover rounded-md"
+                />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Dialog de exclusão */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta reclamação? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Dialog de edição */}
+      <ProblemaFormDialog
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        problema={problema}
+        isEdit={true}
+      />
+    </>
   );
 };

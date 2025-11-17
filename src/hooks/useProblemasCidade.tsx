@@ -160,12 +160,76 @@ export const useProblemasCidade = (cidadeId?: string, filters?: {
     },
   });
 
+  const atualizarProblema = useMutation({
+    mutationFn: async ({
+      problemaId,
+      dados
+    }: {
+      problemaId: string;
+      dados: {
+        titulo?: string;
+        descricao?: string;
+        categoria_id?: string;
+        bairro?: string;
+        endereco?: string;
+        imagens?: string[];
+        prioridade?: 'baixa' | 'media' | 'alta' | 'urgente';
+        status?: 'aberto' | 'em_analise' | 'resolvido' | 'fechado';
+      };
+    }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
+      const { data, error } = await supabase
+        .from('problemas_cidade')
+        .update(dados)
+        .eq('id', problemaId)
+        .eq('usuario_id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['problemas-cidade'] });
+      toast.success('Reclamação atualizada com sucesso!');
+    },
+    onError: () => {
+      toast.error('Erro ao atualizar reclamação');
+    },
+  });
+
+  const excluirProblema = useMutation({
+    mutationFn: async (problemaId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Usuário não autenticado');
+
+      const { error } = await supabase
+        .from('problemas_cidade')
+        .update({ ativo: false })
+        .eq('id', problemaId)
+        .eq('usuario_id', user.id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['problemas-cidade'] });
+      toast.success('Reclamação excluída com sucesso!');
+    },
+    onError: () => {
+      toast.error('Erro ao excluir reclamação');
+    },
+  });
+
   return {
     problemas,
     isLoading,
     criarProblema,
     votarProblema,
     incrementarVisualizacao,
+    atualizarProblema,
+    excluirProblema,
   };
 };
 
