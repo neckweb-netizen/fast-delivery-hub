@@ -255,7 +255,7 @@ const EmpresaProfile = () => {
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
-                    <h1 className="text-3xl font-bold text-foreground">{empresa.nome}</h1>
+                    <h1 className="text-3xl font-bold text-white bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg inline-block">{empresa.nome}</h1>
                     <div className="flex items-center flex-wrap gap-2">
                       <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                         {empresa.categorias?.nome}
