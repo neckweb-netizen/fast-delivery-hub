@@ -235,18 +235,14 @@ export const useSecureAuth = () => {
       console.log('✅ Secure sign in successful');
       updateActivity();
       
-      // Buscar perfil do usuário para possível redirecionamento apenas no login explícito
+      // Redirecionar usuários empresa/admin após login explícito
       if (data.user) {
         const userProfile = await fetchProfile(data.user.id, data.user);
         if (userProfile) {
-          // Redirecionar apenas usuários empresa/admin da página inicial
-          const currentPath = window.location.pathname;
-          if (currentPath === '/') {
-            if (userProfile.tipo_conta === 'empresa') {
-              setTimeout(() => window.location.href = '/empresa-dashboard', 100);
-            } else if (userProfile.tipo_conta === 'admin_geral' || userProfile.tipo_conta === 'admin_cidade') {
-              setTimeout(() => window.location.href = '/admin', 100);
-            }
+          if (userProfile.tipo_conta === 'empresa') {
+            setTimeout(() => window.location.href = '/empresa-dashboard', 100);
+          } else if (userProfile.tipo_conta === 'admin_geral' || userProfile.tipo_conta === 'admin_cidade') {
+            setTimeout(() => window.location.href = '/admin', 100);
           }
         }
       }
