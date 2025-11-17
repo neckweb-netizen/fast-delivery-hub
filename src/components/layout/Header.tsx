@@ -136,6 +136,7 @@ export const Header = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                aria-label={theme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro'}
                 className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full p-0 hover:bg-accent flex-shrink-0"
               >
                 {theme === 'light' ? (
@@ -149,7 +150,12 @@ export const Header = () => {
               {user && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" size="sm" className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full p-0 relative hover:bg-accent flex-shrink-0">
+                     <Button 
+                       variant="ghost" 
+                       size="sm" 
+                       aria-label={totalUnread > 0 ? `Notificações (${totalUnread} não lidas)` : 'Notificações'}
+                       className="h-9 w-9 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full p-0 relative hover:bg-accent flex-shrink-0"
+                     >
                        {totalUnread > 0 ? (
                          <>
                            <BellRing className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-primary" />

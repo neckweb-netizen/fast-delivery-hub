@@ -102,6 +102,7 @@ export const CategoriesGrid = () => {
           <Button
             variant="outline"
             size="icon"
+            aria-label="Rolar categorias para a esquerda"
             className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-10 bg-background/90 backdrop-blur-sm shadow-lg border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200"
             onClick={scrollLeft}
           >
@@ -111,6 +112,7 @@ export const CategoriesGrid = () => {
           <Button
             variant="outline"
             size="icon"
+            aria-label="Rolar categorias para a direita"
             className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-10 bg-background/90 backdrop-blur-sm shadow-lg border-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200"
             onClick={scrollRight}
           >
