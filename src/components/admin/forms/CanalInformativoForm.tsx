@@ -45,6 +45,7 @@ export const CanalInformativoForm = () => {
   const { createItem } = useCanalInformativo();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string>('');
   const [dataSorteio, setDataSorteio] = useState<string>('');
   const [premios, setPremios] = useState(premiosIniciais);
 
@@ -72,7 +73,7 @@ export const CanalInformativoForm = () => {
         titulo: values.titulo,
         conteudo: values.conteudo || undefined,
         tipo_conteudo: values.tipo_conteudo,
-        url_midia: uploadedImageUrl || values.url_midia || undefined,
+        url_midia: uploadedVideoUrl || uploadedImageUrl || values.url_midia || undefined,
         link_externo: values.link_externo || undefined,
       };
 
@@ -89,6 +90,7 @@ export const CanalInformativoForm = () => {
       createItem(data);
       form.reset();
       setUploadedImageUrl('');
+      setUploadedVideoUrl('');
       setDataSorteio('');
       setPremios(premiosIniciais);
     } catch (error) {
@@ -111,10 +113,20 @@ export const CanalInformativoForm = () => {
   const handleUrlChange = (url: string) => {
     console.log('🔗 URL de mídia alterada:', url);
     if (url) {
-      console.log('🔄 Limpando imagem uploadada pois URL foi inserida');
       setUploadedImageUrl('');
+      setUploadedVideoUrl('');
     }
     form.setValue('url_midia', url);
+  };
+
+  const handleVideoUpload = (url: string) => {
+    console.log('📹 Upload de vídeo realizado, URL recebida:', url);
+    setUploadedVideoUrl(url);
+    form.setValue('url_midia', '');
+  };
+
+  const handleVideoRemove = () => {
+    setUploadedVideoUrl('');
   };
 
   return (
@@ -190,46 +202,91 @@ export const CanalInformativoForm = () => {
                   )}
                 />
 
-                <div className="space-y-2">
-                  <FormLabel>Mídia (Opcional)</FormLabel>
-                  <Tabs defaultValue="upload" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="upload">Enviar do Dispositivo</TabsTrigger>
-                      <TabsTrigger value="url">URL da Mídia</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="upload" className="space-y-2">
-                      <ImageUpload
-                        value={uploadedImageUrl}
-                        onChange={handleImageUpload}
-                        onRemove={handleImageRemove}
-                        bucket="imagens_eventos"
-                        folder="canal-informativo"
-                        maxSize={10}
-                        accept="image/*,video/*"
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="url" className="space-y-2">
-                      <FormField
-                        control={form.control}
-                        name="url_midia"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input 
-                                placeholder="https://exemplo.com/imagem.jpg ou https://youtube.com/watch?v=..." 
-                                {...field}
-                                onChange={(e) => handleUrlChange(e.target.value)}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </div>
+                {tipoConteudo === 'imagem' && (
+                  <div className="space-y-2">
+                    <FormLabel>Imagem</FormLabel>
+                    <Tabs defaultValue="upload" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="upload">Upload</TabsTrigger>
+                        <TabsTrigger value="url">URL</TabsTrigger>
+                      </TabsList>
+                      
+                      <TabsContent value="upload" className="space-y-2">
+                        <ImageUpload
+                          value={uploadedImageUrl}
+                          onChange={handleImageUpload}
+                          onRemove={handleImageRemove}
+                          bucket="imagens_eventos"
+                          folder="canal-informativo"
+                          maxSize={10}
+                          accept="image/*"
+                        />
+                      </TabsContent>
+                      
+                      <TabsContent value="url" className="space-y-2">
+                        <FormField
+                          control={form.control}
+                          name="url_midia"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input 
+                                  placeholder="URL da imagem" 
+                                  {...field}
+                                  onChange={(e) => handleUrlChange(e.target.value)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                )}
+
+                {tipoConteudo === 'video' && (
+                  <div className="space-y-2">
+                    <FormLabel>Vídeo</FormLabel>
+                    <Tabs defaultValue="upload" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="upload">Upload</TabsTrigger>
+                        <TabsTrigger value="url">URL</TabsTrigger>
+                      </TabsList>
+                      
+                      <TabsContent value="upload" className="space-y-2">
+                        <ImageUpload
+                          value={uploadedVideoUrl}
+                          onChange={handleVideoUpload}
+                          onRemove={handleVideoRemove}
+                          bucket="videos_canal"
+                          folder="videos"
+                          maxSize={500}
+                          accept="video/*"
+                        />
+                      </TabsContent>
+                      
+                      <TabsContent value="url" className="space-y-2">
+                        <FormField
+                          control={form.control}
+                          name="url_midia"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input 
+                                  placeholder="URL do vídeo (YouTube ou link direto)" 
+                                  {...field}
+                                  onChange={(e) => handleUrlChange(e.target.value)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                )}
 
                 <FormField
                   control={form.control}
