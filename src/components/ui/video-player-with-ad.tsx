@@ -126,24 +126,23 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
   const isAdVideo = selectedBanner?.tipo_midia === 'video' && selectedBanner?.imagem_url && isVideoUrl(selectedBanner.imagem_url);
 
   return (
-    <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-black ${className}`}>
+    <div className={`relative w-full aspect-video rounded-lg md:rounded-xl overflow-hidden bg-black shadow-lg md:shadow-2xl border border-primary/20 ${className}`}>
       {/* Banner Publicitário - Totalmente Responsivo */}
       {showAd && selectedBanner && (
-        <div className="absolute inset-0 z-50 bg-black rounded-xl overflow-hidden">
+        <div className="absolute inset-0 z-50 bg-black rounded-lg md:rounded-xl overflow-hidden">
           <div className="relative w-full h-full">
             {/* Banner Content - Encaixa perfeitamente no container */}
             <div 
-              className="w-full h-full cursor-pointer group relative overflow-hidden rounded-xl"
+              className="w-full h-full cursor-pointer group relative overflow-hidden rounded-lg md:rounded-xl"
               onClick={handleAdClick}
             >
               {isAdVideo ? (
                 // Vídeo como banner - mantém aspect ratio do container
-                <div className="w-full h-full relative rounded-xl overflow-hidden">
+                <div className="w-full h-full relative rounded-lg md:rounded-xl overflow-hidden">
                   {isYouTubeUrl(selectedBanner.imagem_url) ? (
                     <iframe
-                      src={getYouTubeEmbedUrl(selectedBanner.imagem_url) + '&autoplay=1&mute=1&loop=1'}
-                      className="w-full h-full rounded-xl"
-                      style={{ objectFit: 'cover' }}
+                      src={getYouTubeEmbedUrl(selectedBanner.imagem_url) + '&mute=1&loop=1&playlist=' + (selectedBanner.imagem_url.split('v=')[1]?.split('&')[0] || selectedBanner.imagem_url.split('youtu.be/')[1]?.split('?')[0])}
+                      className="w-full h-full rounded-lg md:rounded-xl"
                       allowFullScreen
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       title="Banner publicitário"
@@ -155,45 +154,43 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                       muted
                       loop
                       playsInline
-                      className="w-full h-full object-cover rounded-xl"
+                      className="w-full h-full object-cover rounded-lg md:rounded-xl"
                       onError={(e) => {
                         console.error('Erro ao carregar vídeo do banner:', e);
-                        // Fallback para imagem se o vídeo não carregar
                         const videoElement = e.target as HTMLVideoElement;
                         const img = document.createElement('img');
                         img.src = selectedBanner.imagem_url;
-                        img.className = 'w-full h-full object-cover rounded-xl';
+                        img.className = 'w-full h-full object-cover rounded-lg md:rounded-xl';
                         img.alt = 'Banner publicitário';
                         videoElement.parentNode?.replaceChild(img, videoElement);
                       }}
                     />
                   )}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300 rounded-xl" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300 rounded-lg md:rounded-xl" />
                 </div>
               ) : (
-                // Imagem como banner - otimizada para 16:9
-                <div className="w-full h-full relative rounded-xl overflow-hidden">
+                // Imagem como banner - otimizada
+                <div className="w-full h-full relative rounded-lg md:rounded-xl overflow-hidden">
                   <img
                     src={selectedBanner.imagem_url}
                     alt="Banner publicitário"
-                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 rounded-xl"
-                    style={{ aspectRatio: '16/9' }}
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 rounded-lg md:rounded-xl"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 group-hover:from-black/40 transition-all duration-300 rounded-xl" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 group-hover:from-black/40 transition-all duration-300 rounded-lg md:rounded-xl" />
                 </div>
               )}
             </div>
 
             {/* Ad Info Badge - Responsivo */}
-            <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-black/90 backdrop-blur-sm rounded-full px-3 py-1.5 md:px-4 md:py-2">
-              <p className="text-white text-xs md:text-sm font-semibold tracking-wide">PUBLICIDADE</p>
+            <div className="absolute top-2 left-2 md:top-4 md:left-4 bg-black/90 backdrop-blur-sm rounded-full px-2.5 py-1 md:px-4 md:py-2">
+              <p className="text-white text-[10px] md:text-sm font-semibold tracking-wide">PUBLICIDADE</p>
             </div>
 
             {/* Skip Button - Layout responsivo otimizado */}
-            <div className="absolute top-3 right-3 md:top-4 md:right-4 flex flex-col gap-2">
+            <div className="absolute top-2 right-2 md:top-4 md:right-4 flex flex-col gap-1.5 md:gap-2">
               {!canSkip && (
-                <div className="bg-black/90 backdrop-blur-sm rounded-full px-3 py-1.5 md:px-4 md:py-2 min-w-[80px] text-center">
-                  <p className="text-white text-xs md:text-sm font-medium">
+                <div className="bg-black/90 backdrop-blur-sm rounded-full px-2.5 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-[80px] text-center">
+                  <p className="text-white text-[10px] md:text-sm font-medium">
                     {adCountdown}s
                   </p>
                 </div>
@@ -203,7 +200,7 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                   onClick={handleSkipAd}
                   variant="secondary"
                   size="sm"
-                  className="bg-white/95 text-black hover:bg-white shadow-lg text-xs md:text-sm px-3 py-2 h-auto rounded-full font-semibold min-w-[80px] transition-all duration-200 hover:scale-105"
+                  className="bg-white/95 text-black hover:bg-white shadow-lg text-[10px] md:text-sm px-2.5 py-1.5 md:px-3 md:py-2 h-auto rounded-full font-semibold min-w-[60px] md:min-w-[80px] transition-all duration-200 hover:scale-105"
                 >
                   <X className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                   Pular
@@ -217,31 +214,31 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
 
       {/* Video Content */}
       {!isPlaying ? (
-        <div className="relative w-full h-full bg-black flex items-center justify-center group cursor-pointer">
+        <div className="relative w-full h-full bg-black flex items-center justify-center group cursor-pointer rounded-lg md:rounded-xl">
           <div 
-            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"
+            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 rounded-lg md:rounded-xl"
             onClick={handlePlay}
           />
           <Button
             onClick={handlePlay}
-            className="absolute z-10 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/90 hover:bg-white text-black hover:scale-110 transition-all duration-300"
+            className="absolute z-10 w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-white/90 hover:bg-white text-black hover:scale-110 transition-all duration-300 shadow-xl"
             size="icon"
           >
-            <Play className="w-6 h-6 sm:w-8 sm:h-8 ml-1" fill="currentColor" />
+            <Play className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 ml-1" fill="currentColor" />
           </Button>
-          <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-10">
-            <h4 className="text-white text-xs sm:text-sm font-medium drop-shadow-lg line-clamp-2">
+          <div className="absolute bottom-2 left-2 right-2 md:bottom-4 md:left-4 md:right-4 z-10">
+            <h4 className="text-white text-xs md:text-sm lg:text-base font-medium drop-shadow-lg line-clamp-2">
               {videoTitle}
             </h4>
           </div>
         </div>
       ) : !showAd ? (
-        <div className="w-full h-full relative">
+        <div className="w-full h-full relative rounded-lg md:rounded-xl overflow-hidden bg-black">
           {isYouTubeUrl(videoUrl) ? (
             <iframe
               ref={videoRef as React.RefObject<HTMLIFrameElement>}
               src={getYouTubeEmbedUrl(videoUrl)}
-              className="w-full h-full"
+              className="w-full h-full rounded-lg md:rounded-xl"
               allowFullScreen
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               title={videoTitle}
@@ -254,15 +251,15 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
                 controls
                 autoPlay
                 muted={isMuted}
-                className="w-full h-full"
+                className="w-full h-full object-contain rounded-lg md:rounded-xl"
                 preload="metadata"
               />
               <Button
                 onClick={toggleMute}
-                className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/50 hover:bg-black/70 text-white"
+                className="absolute top-2 right-2 md:top-4 md:right-4 bg-black/50 hover:bg-black/70 text-white rounded-full w-8 h-8 md:w-10 md:h-10 p-0"
                 size="icon"
               >
-                {isMuted ? <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" /> : <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />}
+                {isMuted ? <VolumeX className="w-4 h-4 md:w-5 md:h-5" /> : <Volume2 className="w-4 h-4 md:w-5 md:h-5" />}
               </Button>
             </>
           )}
