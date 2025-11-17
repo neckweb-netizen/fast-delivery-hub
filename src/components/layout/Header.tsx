@@ -83,7 +83,7 @@ export const Header = () => {
                   <img 
                     src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" 
                     alt="Saj Tem Logo" 
-                    className="w-full h-full object-contain"
+                    className="w-10 h-10 object-contain"
                     loading="eager"
                     decoding="async"
                     width="40"
