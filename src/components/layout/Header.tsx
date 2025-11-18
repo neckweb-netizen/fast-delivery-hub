@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Bell, BellRing, Moon, Sun, Check, Search } from 'lucide-react';
-import logoImage from '@/assets/logo.png';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { useTheme } from '@/components/ui/theme-provider';
@@ -82,7 +81,7 @@ export const Header = () => {
             <div className="flex items-center space-x-1 sm:space-x-2">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0">
                   <img 
-                    src={logoImage}
+                    src="/logo.png"
                     alt="Saj Tem Logo" 
                     className="w-10 h-10 object-contain"
                     loading="eager"

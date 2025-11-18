@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom';
-import logoImage from '@/assets/logo.png';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useMenuConfiguracoes } from '@/hooks/useMenuConfiguracoes';
@@ -165,7 +164,7 @@ export const DesktopSidebar = ({
         {/* Logo Section */}
         <div className="p-4 border-b">
           <div className="flex items-center justify-center">
-            <img src={logoImage} alt="Saj Tem Logo" className={cn("transition-all duration-300", isOpen ? "h-12 w-12" : "h-8 w-8")} width={isOpen ? 48 : 32} height={isOpen ? 48 : 32} sizes={isOpen ? "48px" : "32px"} style={{ aspectRatio: '1/1' }} />
+            <img src="/logo.png" alt="Saj Tem Logo" className={cn("transition-all duration-300", isOpen ? "h-12 w-12" : "h-8 w-8")} width={isOpen ? 48 : 32} height={isOpen ? 48 : 32} sizes={isOpen ? "48px" : "32px"} style={{ aspectRatio: '1/1' }} />
           </div>
         </div>
 
