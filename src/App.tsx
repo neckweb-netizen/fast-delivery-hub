@@ -44,6 +44,7 @@ const AdminLocalAdmins = lazy(() => import("./pages/admin/AdminLocalAdmins"));
 const AdminEventos = lazy(() => import("./pages/admin/AdminEventos").then(m => ({ default: m.AdminEventos })));
 const AdminCidades = lazy(() => import("./pages/admin/AdminCidades").then(m => ({ default: m.AdminCidades })));
 const AdminCategorias = lazy(() => import("./pages/admin/AdminCategorias").then(m => ({ default: m.AdminCategorias })));
+const AdminCategoriasOportunidades = lazy(() => import("./pages/admin/AdminCategoriasOportunidades"));
 const AdminUsuarios = lazy(() => import("./pages/admin/AdminUsuarios").then(m => ({ default: m.AdminUsuarios })));
 const AdminBanners = lazy(() => import("./pages/admin/AdminBanners").then(m => ({ default: m.AdminBanners })));
 const AdminCanalInformativo = lazy(() => import("./pages/admin/AdminCanalInformativo").then(m => ({ default: m.AdminCanalInformativo })));
@@ -144,6 +145,7 @@ const App = () => {
               <Route path="eventos" element={<AdminEventos />} />
               <Route path="cidades" element={<AdminCidades />} />
               <Route path="categorias" element={<AdminCategorias />} />
+              <Route path="categorias-oportunidades" element={<AdminCategoriasOportunidades />} />
               <Route path="usuarios" element={<AdminUsuarios />} />
               <Route path="banners" element={<AdminBanners />} />
               <Route path="canal-informativo" element={<AdminCanalInformativo />} />

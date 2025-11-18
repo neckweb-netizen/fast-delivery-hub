@@ -74,6 +74,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
       items: [
         { icon: Briefcase, label: 'Vagas de Emprego', path: '/admin/vagas', section: 'vagas' },
         { icon: Wrench, label: 'Serviços Autônomos', path: '/admin/servicos', section: 'servicos' },
+        { icon: Tag, label: 'Categorias de Oportunidades', path: '/admin/categorias-oportunidades', section: 'categorias-oportunidades' },
       ]
     },
     {
