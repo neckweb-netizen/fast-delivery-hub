@@ -101,7 +101,7 @@ const Oportunidades = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground mb-6 text-base">
+                <p className="text-white mb-6 text-base">
                   Divulgue seus serviços profissionais e alcance novos clientes
                 </p>
                 <div className="flex items-center text-secondary-foreground font-semibold group-hover:gap-3 transition-all duration-300">
