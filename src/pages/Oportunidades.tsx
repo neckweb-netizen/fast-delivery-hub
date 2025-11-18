@@ -90,7 +90,7 @@ const Oportunidades = () => {
             </Link>
           </Card>
 
-          <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 shadow-lg hover:-translate-y-2 bg-gradient-to-br from-secondary via-card to-accent/20">
+          <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-0 shadow-lg hover:-translate-y-2 bg-secondary">
             <Link to="/oportunidades/anunciar-servico">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-3 text-secondary-foreground group-hover:scale-105 transition-transform duration-300">
