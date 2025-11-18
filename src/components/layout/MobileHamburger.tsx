@@ -2,6 +2,7 @@ import React from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import logoImage from '@/assets/logo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useMenuConfiguracoes } from '@/hooks/useMenuConfiguracoes';
@@ -169,7 +170,7 @@ export const MobileHamburger = () => {
           {/* Logo Section */}
           <div className="p-4 border-b">
             <div className="flex items-center justify-center">
-              <img src="/lovable-uploads/e4435ab0-198f-4ab7-b4d2-83024c9490fc.png" alt="Saj Tem Logo" className="h-12 w-12" width="48" height="48" sizes="48px" style={{ aspectRatio: '1/1' }} />
+              <img src={logoImage} alt="Saj Tem Logo" className="h-12 w-12" width="48" height="48" sizes="48px" style={{ aspectRatio: '1/1' }} />
             </div>
           </div>
           
