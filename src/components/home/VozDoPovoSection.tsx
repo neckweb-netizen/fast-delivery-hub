@@ -15,7 +15,7 @@ export const VozDoPovoSection = () => {
 
   if (isLoading) {
     return (
-      <div className="mx-2 sm:mx-4 lg:mx-6" style={{ minHeight: '450px' }}>
+      <div className="mx-2 sm:mx-4 lg:mx-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 bg-muted rounded animate-pulse"></div>
@@ -52,7 +52,7 @@ export const VozDoPovoSection = () => {
   const problemasRecentes = problemas.slice(0, 3);
 
   return (
-    <div className="mx-2 sm:mx-4 lg:mx-6" style={{ minHeight: '450px' }}>
+    <div className="mx-2 sm:mx-4 lg:mx-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-secondary" />
