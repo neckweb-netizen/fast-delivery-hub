@@ -8,10 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { VagaFormModal } from '@/components/forms/VagaFormModal';
+import { useCategoriasOportunidades } from '@/hooks/useCategoriasOportunidades';
 
 const Oportunidades = () => {
   const { profile } = useAuth();
   const [isVagaModalOpen, setIsVagaModalOpen] = useState(false);
+  const { data: categoriasVagas } = useCategoriasOportunidades('vaga');
   
   const isEmpresa = profile?.tipo_conta === 'empresa';
 
@@ -152,16 +154,13 @@ const Oportunidades = () => {
             Categorias Populares
           </h2>
           <div className="flex flex-wrap gap-3">
-            {[
-              'Vendas', 'Limpeza', 'Administrativo', 'Saúde', 'Construção',
-              'Beleza e Estética', 'Eletricista', 'Cuidadora', 'Manicure'
-            ].map((categoria) => (
+            {categoriasVagas?.slice(0, 12).map((categoria) => (
               <Badge 
-                key={categoria} 
+                key={categoria.id} 
                 variant="secondary" 
                 className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all duration-300 px-4 py-2 text-sm font-medium hover:scale-105 hover:shadow-md"
               >
-                {categoria}
+                {categoria.nome}
               </Badge>
             ))}
           </div>
