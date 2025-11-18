@@ -98,7 +98,7 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
 
   if (isLoading) {
     return (
-      <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4" style={{ minHeight: '294px' }}>
+      <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
         <div className="w-full">
           <div className="-ml-2">
             <div className="pl-2">
@@ -141,7 +141,7 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4" style={{ minHeight: '294px' }}>
+    <section className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
       <Carousel 
         className="w-full" 
         opts={{ align: "start", loop: true }}
