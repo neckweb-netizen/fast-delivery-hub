@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { populateCategorias } from '@/scripts/populateCategorias';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -126,6 +127,17 @@ export default function AdminCategoriasOportunidades() {
 
   const vagasCount = categorias.filter(c => c.tipo === 'vaga').length;
   const servicosCount = categorias.filter(c => c.tipo === 'servico').length;
+
+  // Executar população de categorias na primeira montagem
+  useEffect(() => {
+    const shouldPopulate = localStorage.getItem('categorias_populated');
+    if (!shouldPopulate) {
+      populateCategorias().then(() => {
+        localStorage.setItem('categorias_populated', 'true');
+        window.location.reload();
+      });
+    }
+  }, []);
 
   if (isLoading) {
     return <div className="p-6">Carregando...</div>;
