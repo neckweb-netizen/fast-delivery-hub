@@ -176,13 +176,13 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              {usuarios && (
+              {usuarios && usuarios.length > 0 && (
                 <PopoverContent className="w-[500px] p-0" align="start">
-                  <Command>
+                  <Command shouldFilter={true}>
                     <CommandInput placeholder="Pesquisar local..." />
                     <CommandEmpty>Nenhum local encontrado.</CommandEmpty>
                     <CommandGroup className="max-h-64 overflow-auto">
-                      {usuarios.map((item) => (
+                      {(usuarios || []).map((item) => (
                         <CommandItem
                           key={item.id}
                           value={`${item.nome} ${item.usuarios?.nome || ''} ${item.usuarios?.email || ''}`}
