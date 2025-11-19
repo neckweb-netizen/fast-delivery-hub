@@ -8,6 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { Trophy, Target, TrendingUp, Star, Zap, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { AuthDialog } from '@/components/auth/AuthDialog';
+import { useState } from 'react';
 
 export default function Conquistas() {
   const { user } = useAuth();
@@ -22,6 +24,7 @@ export default function Conquistas() {
     calculateLevelProgress,
     loadingStats,
   } = useGamification();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   // CTA para usuários não logados
   if (!user) {
@@ -73,7 +76,7 @@ export default function Conquistas() {
                 <Button 
                   size="lg" 
                   className="gap-2"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => setAuthDialogOpen(true)}
                 >
                   <Award className="h-5 w-5" />
                   Criar Conta Grátis
@@ -82,7 +85,7 @@ export default function Conquistas() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => setAuthDialogOpen(true)}
                 >
                   Já tenho conta
                 </Button>
@@ -93,6 +96,11 @@ export default function Conquistas() {
               </p>
             </CardContent>
           </Card>
+
+          <AuthDialog 
+            open={authDialogOpen} 
+            onOpenChange={setAuthDialogOpen}
+          />
         </div>
       </div>
     );
