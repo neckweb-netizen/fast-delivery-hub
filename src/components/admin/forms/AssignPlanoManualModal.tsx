@@ -14,11 +14,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, User, CreditCard, Clock } from 'lucide-react';
+import { Calendar, User, CreditCard, Clock, Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AssignPlanoManualModalProps {
   open: boolean;
@@ -31,6 +44,7 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
   const [selectedPlano, setSelectedPlano] = useState<string>('');
   const [dias, setDias] = useState<string>('30');
   const [isLoading, setIsLoading] = useState(false);
+  const [openCombobox, setOpenCombobox] = useState(false);
   const { toast } = useToast();
 
   // Buscar usuários com empresas
@@ -143,18 +157,47 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
               <User className="h-4 w-4" />
               Local/Usuário
             </Label>
-            <Select value={selectedUser} onValueChange={setSelectedUser}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione um local" />
-              </SelectTrigger>
-              <SelectContent>
-                {usuarios?.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.nome} - {item.usuarios?.nome} ({item.usuarios?.email})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openCombobox}
+                  className="w-full justify-between"
+                >
+                  {selectedUser
+                    ? usuarios?.find((item) => item.id === selectedUser)?.nome
+                    : "Selecione um local"}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Pesquisar local..." />
+                  <CommandEmpty>Nenhum local encontrado.</CommandEmpty>
+                  <CommandGroup className="max-h-64 overflow-auto">
+                    {usuarios?.map((item) => (
+                      <CommandItem
+                        key={item.id}
+                        value={`${item.nome} ${item.usuarios?.nome} ${item.usuarios?.email}`}
+                        onSelect={() => {
+                          setSelectedUser(item.id);
+                          setOpenCombobox(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedUser === item.id ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {item.nome} - {item.usuarios?.nome} ({item.usuarios?.email})
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
