@@ -29,13 +29,24 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
+  const [sdkLoaded, setSdkLoaded] = useState(false);
+  const [sdkError, setSdkError] = useState(false);
   
   const { toast } = useToast();
   const { profile } = useAuth();
 
   // Inicializar Mercado Pago SDK
   React.useEffect(() => {
-    initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7');
+    try {
+      initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
+        locale: 'pt-BR'
+      });
+      // Dar tempo para o SDK carregar
+      setTimeout(() => setSdkLoaded(true), 1000);
+    } catch (error) {
+      console.error('Erro ao inicializar Mercado Pago:', error);
+      setSdkError(true);
+    }
   }, []);
 
   const formatCPF = (value: string) => {
@@ -212,6 +223,8 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
+    setSdkLoaded(false);
+    setSdkError(false);
     onClose();
   };
 
@@ -372,14 +385,30 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               </div>
 
               <div className="bg-muted/30 p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-4">
-                  Preencha os dados do cartão abaixo:
-                </p>
-                <CardPayment
-                  initialization={{ amount: plano.preco_mensal }}
-                  onSubmit={handleCardPayment}
-                  locale="pt-BR"
-                />
+                {sdkError ? (
+                  <div className="text-center py-8">
+                    <p className="text-destructive mb-2">Erro ao carregar sistema de pagamento</p>
+                    <p className="text-sm text-muted-foreground">
+                      Por favor, recarregue a página e tente novamente
+                    </p>
+                  </div>
+                ) : !sdkLoaded ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                    <p className="text-sm text-muted-foreground">Carregando formulário de pagamento...</p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Preencha os dados do cartão abaixo:
+                    </p>
+                    <CardPayment
+                      initialization={{ amount: plano.preco_mensal }}
+                      onSubmit={handleCardPayment}
+                      locale="pt-BR"
+                    />
+                  </>
+                )}
               </div>
 
               {cardPaymentLoading && (
