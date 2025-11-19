@@ -25,7 +25,8 @@ import {
   Download,
   Vote,
   Megaphone,
-  MessagesSquare
+  MessagesSquare,
+  Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -55,6 +56,7 @@ export const AdminSidebar = ({ activeSection, onSectionChange }: AdminSidebarPro
       items: [
         { icon: Home, label: 'Dashboard', path: '/admin', section: 'dashboard' },
         { icon: BarChart3, label: 'Estatísticas', path: '/admin/estatisticas', section: 'estatisticas' },
+        { icon: Activity, label: 'Tracking & Analytics', path: '/admin/tracking', section: 'tracking' },
       ]
     },
     {
