@@ -607,6 +607,90 @@ export type Database = {
         }
         Relationships: []
       }
+      conversion_events: {
+        Row: {
+          attribution_model: string | null
+          conversion_type: string
+          conversion_value: number | null
+          created_at: string | null
+          empresa_id: string | null
+          evento_id: string | null
+          first_touch_source: string | null
+          id: string
+          last_touch_source: string | null
+          metadata: Json | null
+          produto_id: string | null
+          session_id: string
+          user_id: string | null
+        }
+        Insert: {
+          attribution_model?: string | null
+          conversion_type: string
+          conversion_value?: number | null
+          created_at?: string | null
+          empresa_id?: string | null
+          evento_id?: string | null
+          first_touch_source?: string | null
+          id?: string
+          last_touch_source?: string | null
+          metadata?: Json | null
+          produto_id?: string | null
+          session_id: string
+          user_id?: string | null
+        }
+        Update: {
+          attribution_model?: string | null
+          conversion_type?: string
+          conversion_value?: number | null
+          created_at?: string | null
+          empresa_id?: string | null
+          evento_id?: string | null
+          first_touch_source?: string | null
+          id?: string
+          last_touch_source?: string | null
+          metadata?: Json | null
+          produto_id?: string | null
+          session_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversion_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversion_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "mv_empresas_populares"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversion_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "view_empresas_estatisticas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversion_events_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversion_events_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cupons: {
         Row: {
           ativo: boolean
@@ -2107,6 +2191,48 @@ export type Database = {
           },
         ]
       }
+      user_journey: {
+        Row: {
+          action_taken: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          page_title: string | null
+          page_url: string
+          session_id: string
+          step_number: number
+          time_from_previous_step: number | null
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          page_title?: string | null
+          page_url: string
+          session_id: string
+          step_number: number
+          time_from_previous_step?: number | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          page_title?: string | null
+          page_url?: string
+          session_id?: string
+          step_number?: number
+          time_from_previous_step?: number | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_missions: {
         Row: {
           completed: boolean | null
@@ -2264,6 +2390,164 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_tracking_events: {
+        Row: {
+          browser: string | null
+          cidade_id: string | null
+          click_position: Json | null
+          created_at: string | null
+          cupom_id: string | null
+          device_type: string | null
+          element_class: string | null
+          element_id: string | null
+          element_text: string | null
+          empresa_id: string | null
+          event_name: string
+          event_type: string
+          evento_id: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          os: string | null
+          page_load_time: number | null
+          page_title: string | null
+          page_url: string
+          produto_id: string | null
+          referrer: string | null
+          screen_resolution: string | null
+          scroll_depth: number | null
+          session_id: string
+          time_on_page: number | null
+          user_agent: string | null
+          user_id: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          browser?: string | null
+          cidade_id?: string | null
+          click_position?: Json | null
+          created_at?: string | null
+          cupom_id?: string | null
+          device_type?: string | null
+          element_class?: string | null
+          element_id?: string | null
+          element_text?: string | null
+          empresa_id?: string | null
+          event_name: string
+          event_type: string
+          evento_id?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          os?: string | null
+          page_load_time?: number | null
+          page_title?: string | null
+          page_url: string
+          produto_id?: string | null
+          referrer?: string | null
+          screen_resolution?: string | null
+          scroll_depth?: number | null
+          session_id: string
+          time_on_page?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          browser?: string | null
+          cidade_id?: string | null
+          click_position?: Json | null
+          created_at?: string | null
+          cupom_id?: string | null
+          device_type?: string | null
+          element_class?: string | null
+          element_id?: string | null
+          element_text?: string | null
+          empresa_id?: string | null
+          event_name?: string
+          event_type?: string
+          evento_id?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          os?: string | null
+          page_load_time?: number | null
+          page_title?: string | null
+          page_url?: string
+          produto_id?: string | null
+          referrer?: string | null
+          screen_resolution?: string | null
+          scroll_depth?: number | null
+          session_id?: string
+          time_on_page?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tracking_events_cidade_id_fkey"
+            columns: ["cidade_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_cupom_id_fkey"
+            columns: ["cupom_id"]
+            isOneToOne: false
+            referencedRelation: "cupons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "mv_empresas_populares"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "view_empresas_estatisticas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_tracking_events_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       usuario_empresa_admin: {
         Row: {

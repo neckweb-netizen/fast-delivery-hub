@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
 import { SecurityHeaders } from "@/components/security/SecurityHeaders";
+import { TrackingProvider } from "@/components/tracking/TrackingProvider";
 import { lazy, Suspense } from "react";
 
 // Import critical pages immediately
@@ -53,6 +54,7 @@ const AdminCupons = lazy(() => import("./pages/admin/AdminCupons").then(m => ({ 
 const AdminPlanos = lazy(() => import("./pages/admin/AdminPlanos").then(m => ({ default: m.AdminPlanos })));
 const AdminAvaliacoes = lazy(() => import("./pages/admin/AdminAvaliacoes").then(m => ({ default: m.AdminAvaliacoes })));
 const AdminEstatisticas = lazy(() => import("./pages/admin/AdminEstatisticas").then(m => ({ default: m.AdminEstatisticas })));
+const AdminTracking = lazy(() => import("./pages/admin/AdminTracking"));
 const AdminConfiguracoes = lazy(() => import("./pages/admin/AdminConfiguracoes").then(m => ({ default: m.AdminConfiguracoes })));
 const AdminHomeSections = lazy(() => import("./pages/admin/AdminHomeSections").then(m => ({ default: m.AdminHomeSections })));
 const AdminMenu = lazy(() => import("./pages/admin/AdminMenu").then(m => ({ default: m.AdminMenu })));
@@ -96,6 +98,7 @@ const App = () => {
         <PWAInstallPrompt />
         <Toaster />
         <Sonner />
+        <TrackingProvider>
         <BrowserRouter>
           <RoutePreloader />
           <Suspense fallback={<LoadingFallback />}>
@@ -159,6 +162,7 @@ const App = () => {
               <Route path="planos" element={<AdminPlanos />} />
               <Route path="avaliacoes" element={<AdminAvaliacoes />} />
               <Route path="estatisticas" element={<AdminEstatisticas />} />
+              <Route path="tracking" element={<AdminTracking />} />
               <Route path="configuracoes" element={<AdminConfiguracoes />} />
               <Route path="home-sections" element={<AdminHomeSections />} />
               <Route path="menu" element={<AdminMenu />} />
@@ -179,6 +183,7 @@ const App = () => {
           </Routes>
           </Suspense>
         </BrowserRouter>
+        </TrackingProvider>
       </TooltipProvider>
     </ThemeProvider>
   );
