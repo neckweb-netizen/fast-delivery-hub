@@ -2357,39 +2357,95 @@ export type Database = {
       }
       user_sessions: {
         Row: {
+          browser: string | null
+          cidade_id: string | null
+          conversion_type: string | null
+          conversion_value: number | null
+          converted: boolean | null
           created_at: string | null
-          expires_at: string | null
+          device_type: string | null
+          duration_seconds: number | null
+          ended_at: string | null
+          entry_referrer: string | null
+          entry_url: string | null
+          exit_url: string | null
           id: string
           ip_address: string | null
-          is_active: boolean | null
-          last_activity: string | null
-          session_token: string
-          user_agent: string | null
+          os: string | null
+          pages_visited: number | null
+          session_id: string
+          started_at: string | null
+          total_clicks: number | null
+          total_scrolls: number | null
+          updated_at: string | null
           user_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
         }
         Insert: {
+          browser?: string | null
+          cidade_id?: string | null
+          conversion_type?: string | null
+          conversion_value?: number | null
+          converted?: boolean | null
           created_at?: string | null
-          expires_at?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          entry_referrer?: string | null
+          entry_url?: string | null
+          exit_url?: string | null
           id?: string
           ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          session_token: string
-          user_agent?: string | null
+          os?: string | null
+          pages_visited?: number | null
+          session_id: string
+          started_at?: string | null
+          total_clicks?: number | null
+          total_scrolls?: number | null
+          updated_at?: string | null
           user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
         Update: {
+          browser?: string | null
+          cidade_id?: string | null
+          conversion_type?: string | null
+          conversion_value?: number | null
+          converted?: boolean | null
           created_at?: string | null
-          expires_at?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          ended_at?: string | null
+          entry_referrer?: string | null
+          entry_url?: string | null
+          exit_url?: string | null
           id?: string
           ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          session_token?: string
-          user_agent?: string | null
+          os?: string | null
+          pages_visited?: number | null
+          session_id?: string
+          started_at?: string | null
+          total_clicks?: number | null
+          total_scrolls?: number | null
+          updated_at?: string | null
           user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_sessions_cidade_id_fkey"
+            columns: ["cidade_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_tracking_events: {
         Row: {

@@ -90,12 +90,9 @@ export const useTrackingAnalytics = (dateRange: { from: Date; to: Date }) => {
         return acc;
       }, {} as Record<string, number>) || {};
 
-      // Average session duration (calculate from created_at to expires_at)
+      // Average session duration
       const avgSessionDuration = sessions?.reduce((sum, s) => {
-        const created = new Date(s.created_at).getTime();
-        const expires = new Date(s.expires_at).getTime();
-        const duration = (expires - created) / 1000; // Convert to seconds
-        return sum + duration;
+        return sum + (s.duration_seconds || 0);
       }, 0) / (sessions?.length || 1);
 
       // Traffic sources (UTM)
