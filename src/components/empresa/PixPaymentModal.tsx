@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { initMercadoPago, CardPayment } from '@mercadopago/sdk-react';
+
+// Inicializar SDK do Mercado Pago FORA do componente
+initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
+  locale: 'pt-BR'
+});
 
 interface PixPaymentModalProps {
   isOpen: boolean;
@@ -29,24 +34,15 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
-  const [sdkLoaded, setSdkLoaded] = useState(false);
-  const [sdkError, setSdkError] = useState(false);
   
   const { toast } = useToast();
   const { profile } = useAuth();
 
-  // Inicializar Mercado Pago SDK
-  React.useEffect(() => {
-    try {
-      initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
-        locale: 'pt-BR'
-      });
-      // Dar tempo para o SDK carregar
-      setTimeout(() => setSdkLoaded(true), 1000);
-    } catch (error) {
-      console.error('Erro ao inicializar Mercado Pago:', error);
-      setSdkError(true);
-    }
+  // Cleanup do brick quando desmontar
+  useEffect(() => {
+    return () => {
+      (window as any).cardPaymentBrickController?.unmount();
+    };
   }, []);
 
   const formatCPF = (value: string) => {
@@ -159,13 +155,15 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setCardPaymentLoading(true);
 
     try {
+      console.log('Dados do formulário de pagamento:', formData);
+
       const { data, error } = await supabase.functions.invoke('create-card-payment', {
         body: {
           planoId: plano.id,
           userInfo: {
-            email: profile.email,
-            docType: formData.identificationType,
-            docNumber: formData.identificationNumber,
+            email: formData.payer?.email || profile.email,
+            docType: formData.payer?.identification?.type || 'CPF',
+            docNumber: formData.payer?.identification?.number || '',
           },
           cardToken: formData.token,
           installments: formData.installments || 1,
@@ -194,7 +192,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
         });
       }
     } catch (error: any) {
-      console.error('Error processing card payment:', error);
+      console.error('Erro ao processar pagamento com cartão:', error);
       toast({
         title: 'Erro ao processar pagamento',
         description: error.message || 'Tente novamente mais tarde.',
@@ -223,8 +221,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
-    setSdkLoaded(false);
-    setSdkError(false);
+    (window as any).cardPaymentBrickController?.unmount();
     onClose();
   };
 
@@ -385,30 +382,19 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               </div>
 
               <div className="bg-muted/30 p-4 rounded-lg">
-                {sdkError ? (
-                  <div className="text-center py-8">
-                    <p className="text-destructive mb-2">Erro ao carregar sistema de pagamento</p>
-                    <p className="text-sm text-muted-foreground">
-                      Por favor, recarregue a página e tente novamente
-                    </p>
-                  </div>
-                ) : !sdkLoaded ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                    <p className="text-sm text-muted-foreground">Carregando formulário de pagamento...</p>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Preencha os dados do cartão abaixo:
-                    </p>
-                    <CardPayment
-                      initialization={{ amount: plano.preco_mensal }}
-                      onSubmit={handleCardPayment}
-                      locale="pt-BR"
-                    />
-                  </>
-                )}
+                <p className="text-sm text-muted-foreground mb-4">
+                  Preencha os dados do cartão abaixo:
+                </p>
+                <CardPayment
+                  initialization={{ 
+                    amount: plano.preco_mensal,
+                    payer: {
+                      email: profile?.email || ''
+                    }
+                  }}
+                  onSubmit={handleCardPayment}
+                  locale="pt-BR"
+                />
               </div>
 
               {cardPaymentLoading && (
