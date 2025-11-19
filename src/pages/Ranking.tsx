@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 import { useState } from 'react';
 
 export default function Ranking() {
@@ -25,6 +26,7 @@ export default function Ranking() {
   const userRank = leaderboard?.find((entry) => entry.user_id === user?.id);
   const userWeeklyRank = weeklyLeaderboard?.find((entry) => entry.user_id === user?.id);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   // CTA para usuários não logados
   if (!user) {
@@ -76,7 +78,7 @@ export default function Ranking() {
                 <Button 
                   size="lg" 
                   className="gap-2"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => setAuthDialogOpen(true)}
                 >
                   <Trophy className="h-5 w-5" />
                   Criar Conta Grátis
@@ -85,7 +87,7 @@ export default function Ranking() {
                 <Button 
                   size="lg" 
                   variant="outline"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => setAuthDialogOpen(true)}
                 >
                   Já tenho conta
                 </Button>
@@ -96,6 +98,11 @@ export default function Ranking() {
               </p>
             </CardContent>
           </Card>
+
+          <AuthDialog 
+            open={authDialogOpen} 
+            onOpenChange={setAuthDialogOpen}
+          />
         </div>
       </div>
     );
