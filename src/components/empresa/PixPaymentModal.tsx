@@ -30,14 +30,6 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
   
-  // Estados do cartão
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardExpiry, setCardExpiry] = useState('');
-  const [cardCvc, setCardCvc] = useState('');
-  const [cardDocType, setCardDocType] = useState<'CPF' | 'CNPJ'>('CPF');
-  const [cardDoc, setCardDoc] = useState('');
-  const [installments, setInstallments] = useState('1');
-  
   const { toast } = useToast();
   const { profile } = useAuth();
 
@@ -143,7 +135,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     }
   };
 
-  const handleCardPayment = async () => {
+  const handleCardPayment = async (formData: any) => {
     if (!profile) {
       toast({
         title: 'Erro de autenticação',
@@ -153,32 +145,19 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       return;
     }
 
-    // Validar campos
-    if (!cardNumber || !cardExpiry || !cardCvc || !cardDoc) {
-      toast({
-        title: 'Campos obrigatórios',
-        description: 'Preencha todos os campos do cartão',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setCardPaymentLoading(true);
 
     try {
-      // Simular tokenização do cartão (em produção, usar SDK do Mercado Pago)
-      const cardToken = `card_token_${Date.now()}`;
-      
       const { data, error } = await supabase.functions.invoke('create-card-payment', {
         body: {
           planoId: plano.id,
           userInfo: {
             email: profile.email,
-            docType: cardDocType,
-            docNumber: cardDoc.replace(/\D/g, ''),
+            docType: formData.identificationType,
+            docNumber: formData.identificationNumber,
           },
-          cardToken: cardToken,
-          installments: parseInt(installments),
+          cardToken: formData.token,
+          installments: formData.installments || 1,
         },
       });
 
@@ -233,12 +212,6 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
-    setCardNumber('');
-    setCardExpiry('');
-    setCardCvc('');
-    setCardDocType('CPF');
-    setCardDoc('');
-    setInstallments('1');
     onClose();
   };
 
@@ -380,121 +353,41 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                 <h4 className="text-sm font-medium mb-4">Informações do Pagamento:</h4>
                 
                 <div className="space-y-2">
-                  <Label>Nome completo do titular *</Label>
+                  <Label>Nome completo do titular</Label>
                   <Input 
                     value={profile?.nome || ''} 
                     readOnly 
                     className="bg-background" 
-                    placeholder="Nome como está no cartão"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>E-mail *</Label>
+                  <Label>E-mail</Label>
                   <Input 
                     value={profile?.email || ''} 
                     readOnly 
                     className="bg-background"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardNumber">Número do Cartão *</Label>
-                  <Input
-                    id="cardNumber"
-                    placeholder="0000 0000 0000 0000"
-                    value={cardNumber}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
-                      setCardNumber(formatted);
-                    }}
-                    maxLength={19}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cardExpiry">Validade *</Label>
-                    <Input
-                      id="cardExpiry"
-                      placeholder="MM/AA"
-                      value={cardExpiry}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, '');
-                        if (value.length >= 2) {
-                          setCardExpiry(value.slice(0, 2) + '/' + value.slice(2, 4));
-                        } else {
-                          setCardExpiry(value);
-                        }
-                      }}
-                      maxLength={5}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cardCvc">CVV *</Label>
-                    <Input
-                      id="cardCvc"
-                      placeholder="123"
-                      value={cardCvc}
-                      onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, ''))}
-                      maxLength={4}
-                      type="password"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardDocType">Tipo de Documento *</Label>
-                  <Select value={cardDocType} onValueChange={(val) => setCardDocType(val as 'CPF' | 'CNPJ')}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CPF">CPF</SelectItem>
-                      <SelectItem value="CNPJ">CNPJ</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardDoc">Documento do Titular *</Label>
-                  <Input
-                    id="cardDoc"
-                    placeholder={cardDocType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
-                    value={cardDoc}
-                    onChange={(e) => {
-                      const formatted = cardDocType === 'CPF' 
-                        ? formatCPF(e.target.value) 
-                        : formatCNPJ(e.target.value);
-                      setCardDoc(formatted);
-                    }}
-                    maxLength={cardDocType === 'CPF' ? 14 : 18}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="installments">Parcelas *</Label>
-                  <Select value={installments} onValueChange={setInstallments}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1x de {formatCurrency(plano.preco_mensal)} sem juros</SelectItem>
-                      <SelectItem value="2">2x de {formatCurrency(plano.preco_mensal / 2)} sem juros</SelectItem>
-                      <SelectItem value="3">3x de {formatCurrency(plano.preco_mensal / 3)} sem juros</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
-              <Button 
-                className="w-full" 
-                disabled={cardPaymentLoading || !cardNumber || !cardExpiry || !cardCvc || !cardDoc}
-                onClick={handleCardPayment}
-              >
-                {cardPaymentLoading ? 'Processando...' : 'Pagar com Cartão'}
-              </Button>
+              <div className="bg-muted/30 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground mb-4">
+                  Preencha os dados do cartão abaixo:
+                </p>
+                <CardPayment
+                  initialization={{ amount: plano.preco_mensal }}
+                  onSubmit={handleCardPayment}
+                  locale="pt-BR"
+                />
+              </div>
+
+              {cardPaymentLoading && (
+                <div className="flex items-center justify-center p-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <span className="ml-2">Processando pagamento...</span>
+                </div>
+              )}
 
               <p className="text-xs text-muted-foreground text-center">
                 Pagamento seguro processado pelo Mercado Pago
