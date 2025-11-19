@@ -29,6 +29,15 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
+  
+  // Estados do cartão
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
+  const [cardDocType, setCardDocType] = useState<'CPF' | 'CNPJ'>('CPF');
+  const [cardDoc, setCardDoc] = useState('');
+  const [installments, setInstallments] = useState('1');
+  
   const { toast } = useToast();
   const { profile } = useAuth();
 
@@ -134,7 +143,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     }
   };
 
-  const handleCardPayment = async (formData: any) => {
+  const handleCardPayment = async () => {
     if (!profile) {
       toast({
         title: 'Erro de autenticação',
@@ -144,19 +153,32 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       return;
     }
 
+    // Validar campos
+    if (!cardNumber || !cardExpiry || !cardCvc || !cardDoc) {
+      toast({
+        title: 'Campos obrigatórios',
+        description: 'Preencha todos os campos do cartão',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setCardPaymentLoading(true);
 
     try {
+      // Simular tokenização do cartão (em produção, usar SDK do Mercado Pago)
+      const cardToken = `card_token_${Date.now()}`;
+      
       const { data, error } = await supabase.functions.invoke('create-card-payment', {
         body: {
           planoId: plano.id,
           userInfo: {
             email: profile.email,
-            docType: formData.identificationType,
-            docNumber: formData.identificationNumber,
+            docType: cardDocType,
+            docNumber: cardDoc.replace(/\D/g, ''),
           },
-          cardToken: formData.token,
-          installments: formData.installments || 1,
+          cardToken: cardToken,
+          installments: parseInt(installments),
         },
       });
 
@@ -173,6 +195,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
           title: 'Pagamento em análise',
           description: 'Seu pagamento está sendo processado.',
         });
+        handleClose();
       } else {
         toast({
           title: 'Pagamento não aprovado',
@@ -210,6 +233,12 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
+    setCardNumber('');
+    setCardExpiry('');
+    setCardCvc('');
+    setCardDocType('CPF');
+    setCardDoc('');
+    setInstallments('1');
     onClose();
   };
 
@@ -374,6 +403,12 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                   <Input
                     id="cardNumber"
                     placeholder="0000 0000 0000 0000"
+                    value={cardNumber}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+                      setCardNumber(formatted);
+                    }}
                     maxLength={19}
                   />
                 </div>
@@ -384,6 +419,15 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                     <Input
                       id="cardExpiry"
                       placeholder="MM/AA"
+                      value={cardExpiry}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        if (value.length >= 2) {
+                          setCardExpiry(value.slice(0, 2) + '/' + value.slice(2, 4));
+                        } else {
+                          setCardExpiry(value);
+                        }
+                      }}
                       maxLength={5}
                     />
                   </div>
@@ -392,6 +436,8 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                     <Input
                       id="cardCvc"
                       placeholder="123"
+                      value={cardCvc}
+                      onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, ''))}
                       maxLength={4}
                       type="password"
                     />
@@ -400,7 +446,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
 
                 <div className="space-y-2">
                   <Label htmlFor="cardDocType">Tipo de Documento *</Label>
-                  <Select defaultValue="CPF">
+                  <Select value={cardDocType} onValueChange={(val) => setCardDocType(val as 'CPF' | 'CNPJ')}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -415,14 +461,21 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                   <Label htmlFor="cardDoc">Documento do Titular *</Label>
                   <Input
                     id="cardDoc"
-                    placeholder="000.000.000-00"
-                    maxLength={14}
+                    placeholder={cardDocType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
+                    value={cardDoc}
+                    onChange={(e) => {
+                      const formatted = cardDocType === 'CPF' 
+                        ? formatCPF(e.target.value) 
+                        : formatCNPJ(e.target.value);
+                      setCardDoc(formatted);
+                    }}
+                    maxLength={cardDocType === 'CPF' ? 14 : 18}
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="installments">Parcelas *</Label>
-                  <Select defaultValue="1">
+                  <Select value={installments} onValueChange={setInstallments}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -437,14 +490,8 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
 
               <Button 
                 className="w-full" 
-                disabled={cardPaymentLoading}
-                onClick={() => {
-                  toast({
-                    title: 'Em desenvolvimento',
-                    description: 'O pagamento com cartão estará disponível em breve. Use PIX por enquanto.',
-                    variant: 'default',
-                  });
-                }}
+                disabled={cardPaymentLoading || !cardNumber || !cardExpiry || !cardCvc || !cardDoc}
+                onClick={handleCardPayment}
               >
                 {cardPaymentLoading ? 'Processando...' : 'Pagar com Cartão'}
               </Button>
