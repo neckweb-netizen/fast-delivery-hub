@@ -4,9 +4,8 @@ import { LevelDisplay } from '@/components/gamification/LevelDisplay';
 import { useGamification } from '@/hooks/useGamification';
 import { useAuth } from '@/hooks/useAuth';
 import { Trophy, TrendingUp, Calendar, Star, Zap, Award, Target, Info, ChevronDown } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -232,12 +231,17 @@ export default function Ranking() {
               </AccordionItem>
             </Accordion>
 
-                <Alert className="mt-4 border-primary/20 bg-primary/5">
-                  <Trophy className="h-4 w-4 text-primary" />
-                  <AlertDescription className="text-sm">
-                    <strong>Dica Pro:</strong> Seja ativo na comunidade! Quanto mais você participa, avalia e ajuda outros usuários, mais rápido você sobe no ranking e desbloqueia recompensas exclusivas.
-                  </AlertDescription>
-                </Alert>
+            <div className="mt-4 p-4 rounded-lg border border-primary/20 bg-primary/5">
+              <div className="flex items-start gap-3">
+                <Trophy className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                <div className="text-sm">
+                  <strong className="text-foreground">Dica Pro:</strong>{' '}
+                  <span className="text-muted-foreground">
+                    Seja ativo na comunidade! Quanto mais você participa, avalia e ajuda outros usuários, mais rápido você sobe no ranking e desbloqueia recompensas exclusivas.
+                  </span>
+                </div>
+              </div>
+            </div>
               </CardContent>
             </CollapsibleContent>
           </Card>
