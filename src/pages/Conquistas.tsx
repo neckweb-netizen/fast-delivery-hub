@@ -4,10 +4,13 @@ import { MissionCard } from '@/components/gamification/MissionCard';
 import { PointsHistory } from '@/components/gamification/PointsHistory';
 import { LevelDisplay } from '@/components/gamification/LevelDisplay';
 import { useGamification } from '@/hooks/useGamification';
-import { Trophy, Target, TrendingUp } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Trophy, Target, TrendingUp, Star, Zap, Award } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function Conquistas() {
+  const { user } = useAuth();
   const {
     userStats,
     levelInfo,
@@ -19,6 +22,81 @@ export default function Conquistas() {
     calculateLevelProgress,
     loadingStats,
   } = useGamification();
+
+  // CTA para usuários não logados
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 pb-20 md:pb-4">
+        <div className="container max-w-4xl mx-auto px-4 py-8">
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/5">
+            <CardContent className="p-8 md:p-12 text-center space-y-6">
+              <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                <Award className="h-12 w-12 text-primary" />
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold">
+                Comece Sua Jornada de Conquistas!
+              </h1>
+              
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Desbloqueie medalhas exclusivas, complete missões diárias e semanais, 
+                e acompanhe todo seu progresso na plataforma.
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-3 max-w-3xl mx-auto my-8">
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <Award className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Medalhas Únicas</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Desbloqueie conquistas especiais
+                  </p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <Target className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Missões</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Complete desafios diários e semanais
+                  </p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <TrendingUp className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Progresso</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Acompanhe toda sua evolução
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Button 
+                  size="lg" 
+                  className="gap-2"
+                  onClick={() => window.location.href = '/'}
+                >
+                  <Award className="h-5 w-5" />
+                  Criar Conta Grátis
+                </Button>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  onClick={() => window.location.href = '/'}
+                >
+                  Já tenho conta
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground pt-4">
+                Junte-se à comunidade e comece a ganhar recompensas agora!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   // Separar badges conquistados e não conquistados
   const earnedBadgeIds = new Set(userBadges?.map((b) => b.id) || []);
