@@ -92,7 +92,7 @@ export const useAdminStats = () => {
       // Serviços Autônomos
       const { data: servicos } = await supabase
         .from('servicos_autonomos')
-        .select('id, criado_em, ativo, status_aprovacao');
+        .select('id, criado_em, status_aprovacao');
 
       // Enquetes
       const { data: enquetes } = await supabase
@@ -222,7 +222,7 @@ export const useAdminStats = () => {
       const vagasAtivas = vagas?.filter(v => v.ativo).length || 0;
 
       const totalServicos = servicos?.length || 0;
-      const servicosAtivos = servicos?.filter(s => s.status_aprovacao === 'aprovado' && s.ativo).length || 0;
+      const servicosAtivos = servicos?.filter(s => s.status_aprovacao === 'aprovado').length || 0;
 
       const totalEnquetes = enquetes?.length || 0;
       const totalRespostasEnquete = respostasEnquete?.length || 0;
