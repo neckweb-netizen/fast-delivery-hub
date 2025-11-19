@@ -29,7 +29,7 @@ export const BottomNavigation = () => {
 
   const rightMenuItems = [
     { icon: Trophy, label: 'Ranking', path: '/ranking' },
-    { icon: Briefcase, label: 'Oportunidades', path: '/oportunidades' },
+    { icon: Megaphone, label: 'Voz do Povo', path: '/problemas-cidade' },
   ];
 
 
