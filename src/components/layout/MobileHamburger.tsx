@@ -79,6 +79,18 @@ export const MobileHamburger = () => {
     rota: '/reclamacoes',
     categoria: 'principal'
   }, {
+    id: 'ranking',
+    nome_item: 'Ranking',
+    icone: 'Trophy',
+    rota: '/ranking',
+    categoria: 'principal'
+  }, {
+    id: 'conquistas',
+    nome_item: 'Conquistas',
+    icone: 'Award',
+    rota: '/conquistas',
+    categoria: 'principal'
+  }, {
     id: 'buscar',
     nome_item: 'Buscar',
     icone: 'Search',
