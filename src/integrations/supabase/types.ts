@@ -1596,6 +1596,80 @@ export type Database = {
         }
         Relationships: []
       }
+      pagamentos_planos: {
+        Row: {
+          atualizado_em: string
+          comprovante_url: string | null
+          criado_em: string
+          data_pagamento: string
+          data_vencimento: string
+          empresa_id: string
+          forma_pagamento: string
+          id: string
+          observacoes: string | null
+          plano_id: string
+          status: string
+          valor: number
+        }
+        Insert: {
+          atualizado_em?: string
+          comprovante_url?: string | null
+          criado_em?: string
+          data_pagamento?: string
+          data_vencimento: string
+          empresa_id: string
+          forma_pagamento: string
+          id?: string
+          observacoes?: string | null
+          plano_id: string
+          status?: string
+          valor: number
+        }
+        Update: {
+          atualizado_em?: string
+          comprovante_url?: string | null
+          criado_em?: string
+          data_pagamento?: string
+          data_vencimento?: string
+          empresa_id?: string
+          forma_pagamento?: string
+          id?: string
+          observacoes?: string | null
+          plano_id?: string
+          status?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagamentos_planos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagamentos_planos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "mv_empresas_populares"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagamentos_planos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "view_empresas_estatisticas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagamentos_planos_plano_id_fkey"
+            columns: ["plano_id"]
+            isOneToOne: false
+            referencedRelation: "planos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planos: {
         Row: {
           acesso_eventos: boolean

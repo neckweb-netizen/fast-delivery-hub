@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -10,11 +12,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Building2, Calendar, CreditCard, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Building2, Calendar, CreditCard, CheckCircle, XCircle, Clock, Edit, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { EditarPlanoEmpresaModal } from '../forms/EditarPlanoEmpresaModal';
+import { RegistrarPagamentoModal } from '../forms/RegistrarPagamentoModal';
 
 export const EmpresasComPlanos = () => {
+  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [pagamentoModalOpen, setPagamentoModalOpen] = useState(false);
+  
   const { data: empresasComPlanos, isLoading } = useQuery({
     queryKey: ['empresas-com-planos'],
     queryFn: async () => {
@@ -99,73 +107,105 @@ export const EmpresasComPlanos = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Building2 className="w-5 h-5" />
-          Empresas com Planos Ativos ({empresasComPlanos.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Empresa</TableHead>
-              <TableHead>Plano</TableHead>
-              <TableHead>Valor Mensal</TableHead>
-              <TableHead>Vencimento</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {empresasComPlanos.map((empresa) => {
-              const status = getStatusPlano(empresa.plano_data_vencimento);
-              const StatusIcon = status.icon;
-              
-              return (
-                <TableRow key={empresa.id}>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{empresa.nome}</p>
-                      {empresa.telefone && (
-                        <p className="text-sm text-muted-foreground">{empresa.telefone}</p>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 text-muted-foreground" />
-                      {empresa.planos?.nome || 'N/A'}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {empresa.planos?.preco_mensal 
-                      ? formatarPreco(Number(empresa.planos.preco_mensal))
-                      : 'N/A'
-                    }
-                  </TableCell>
-                  <TableCell>
-                    {empresa.plano_data_vencimento ? (
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-muted-foreground" />
-                        {format(new Date(empresa.plano_data_vencimento), 'dd/MM/yyyy', { locale: ptBR })}
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              Empresas com Planos Ativos ({empresasComPlanos.length})
+            </CardTitle>
+            <Button onClick={() => setPagamentoModalOpen(true)} size="sm">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Registrar Pagamento
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Empresa</TableHead>
+                <TableHead>Plano</TableHead>
+                <TableHead>Valor Mensal</TableHead>
+                <TableHead>Vencimento</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {empresasComPlanos.map((empresa) => {
+                const status = getStatusPlano(empresa.plano_data_vencimento);
+                const StatusIcon = status.icon;
+                
+                return (
+                  <TableRow key={empresa.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{empresa.nome}</p>
+                        {empresa.telefone && (
+                          <p className="text-sm text-muted-foreground">{empresa.telefone}</p>
+                        )}
                       </div>
-                    ) : (
-                      <span className="text-muted-foreground">Sem vencimento</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={status.variant} className="flex items-center gap-1 w-fit">
-                      <StatusIcon className="w-3 h-3" />
-                      {status.label}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="w-4 h-4 text-muted-foreground" />
+                        {empresa.planos?.nome || 'N/A'}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {empresa.planos?.preco_mensal 
+                        ? formatarPreco(Number(empresa.planos.preco_mensal))
+                        : 'N/A'
+                      }
+                    </TableCell>
+                    <TableCell>
+                      {empresa.plano_data_vencimento ? (
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          {format(new Date(empresa.plano_data_vencimento), 'dd/MM/yyyy', { locale: ptBR })}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">Sem vencimento</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={status.variant} className="flex items-center gap-1 w-fit">
+                        <StatusIcon className="w-3 h-3" />
+                        {status.label}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEmpresaSelecionada(empresa.id);
+                          setEditModalOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <EditarPlanoEmpresaModal
+        empresaId={empresaSelecionada}
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+      />
+
+      <RegistrarPagamentoModal
+        open={pagamentoModalOpen}
+        onOpenChange={setPagamentoModalOpen}
+      />
+    </>
   );
 };

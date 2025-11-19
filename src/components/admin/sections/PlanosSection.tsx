@@ -27,6 +27,7 @@ import { PlanoForm } from '@/components/admin/forms/PlanoForm';
 import { AssignPlanoModal } from '@/components/admin/forms/AssignPlanoModal';
 import { AssignPlanoManualModal } from '@/components/admin/forms/AssignPlanoManualModal';
 import { EmpresasComPlanos } from './EmpresasComPlanos';
+import { HistoricoPagamentos } from './HistoricoPagamentos';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Plano = Tables<'planos'>;
@@ -230,6 +231,8 @@ export const PlanosSection = () => {
       </Card>
 
       <EmpresasComPlanos />
+
+      <HistoricoPagamentos />
 
       <PlanoForm
         open={dialogOpen}
