@@ -26,6 +26,7 @@ interface AssignPlanoManualModalProps {
   onSuccess?: () => void;
 }
 
+// Atribuir plano manualmente a empresas
 export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: AssignPlanoManualModalProps) => {
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [selectedPlano, setSelectedPlano] = useState<string>('');
