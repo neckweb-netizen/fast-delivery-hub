@@ -11,9 +11,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   initMercadoPago, 
-  CardNumber, 
-  SecurityCode, 
-  ExpirationDate,
   createCardToken 
 } from '@mercadopago/sdk-react';
 
@@ -44,6 +41,9 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [cardholderEmail, setCardholderEmail] = useState('');
   const [identificationType, setIdentificationType] = useState<'CPF' | 'CNPJ'>('CPF');
   const [identificationNumber, setIdentificationNumber] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
   
   const { toast } = useToast();
   const { profile } = useAuth();
@@ -64,6 +64,9 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       setCardholderName('');
       setCardholderEmail('');
       setIdentificationNumber('');
+      setCardNumber('');
+      setCardExpiry('');
+      setCardCvv('');
     };
   }, []);
 
@@ -164,6 +167,24 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     }
   };
 
+  const formatCardNumber = (value: string) => {
+    const cleaned = value.replace(/\D/g, '');
+    const formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
+    return formatted.slice(0, 19); // 16 digits + 3 spaces
+  };
+
+  const formatExpiry = (value: string) => {
+    const cleaned = value.replace(/\D/g, '');
+    if (cleaned.length >= 2) {
+      return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}`;
+    }
+    return cleaned;
+  };
+
+  const formatCvv = (value: string) => {
+    return value.replace(/\D/g, '').slice(0, 4);
+  };
+
   const handleCardPayment = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -179,8 +200,46 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     // Validações
     if (!cardholderName || !cardholderEmail || !identificationNumber) {
       toast({
-        title: 'Preencha todos os campos',
-        description: 'Todos os campos são obrigatórios',
+        title: 'Preencha os dados do titular',
+        description: 'Todos os campos do titular são obrigatórios',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!cardNumber || !cardExpiry || !cardCvv) {
+      toast({
+        title: 'Preencha os dados do cartão',
+        description: 'Todos os campos do cartão são obrigatórios',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const cardNumberClean = cardNumber.replace(/\D/g, '');
+    if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
+      toast({
+        title: 'Número do cartão inválido',
+        description: 'Verifique o número do cartão',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const [month, year] = cardExpiry.split('/');
+    if (!month || !year || parseInt(month) < 1 || parseInt(month) > 12) {
+      toast({
+        title: 'Data de validade inválida',
+        description: 'Use o formato MM/AA',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (cardCvv.length < 3) {
+      toast({
+        title: 'CVV inválido',
+        description: 'Digite o código de segurança completo',
         variant: 'destructive',
       });
       return;
@@ -191,7 +250,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     try {
       console.log('[MP] Criando token do cartão...');
       
-      // Criar token do cartão
+      // Criar token do cartão usando os dados
       const cardToken = await createCardToken({
         cardholderName,
         identificationType,
@@ -199,7 +258,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       });
 
       if (!cardToken || !cardToken.id) {
-        throw new Error('Não foi possível criar o token do cartão. Verifique os dados e tente novamente.');
+        throw new Error('Não foi possível processar o cartão. Verifique os dados e tente novamente.');
       }
 
       console.log('[MP] Token criado com sucesso:', cardToken.id);
@@ -242,7 +301,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       console.error('[MP] Erro ao processar pagamento:', error);
       toast({
         title: 'Erro ao processar pagamento',
-        description: error.message || 'Tente novamente mais tarde.',
+        description: error.message || 'Verifique os dados do cartão e tente novamente.',
         variant: 'destructive',
       });
     } finally {
@@ -289,6 +348,9 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setCardholderName('');
     setCardholderEmail('');
     setIdentificationNumber('');
+    setCardNumber('');
+    setCardExpiry('');
+    setCardCvv('');
     onClose();
   };
 
@@ -488,18 +550,40 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                 <h4 className="text-sm font-medium mb-4">Dados do cartão:</h4>
                 
                 <div className="space-y-2">
-                  <Label>Número do cartão *</Label>
-                  <CardNumber placeholder="0000 0000 0000 0000" />
+                  <Label htmlFor="cardNumber">Número do cartão *</Label>
+                  <Input 
+                    id="cardNumber"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                    placeholder="0000 0000 0000 0000"
+                    maxLength={19}
+                    required
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Validade *</Label>
-                    <ExpirationDate placeholder="MM/AA" />
+                    <Label htmlFor="cardExpiry">Validade *</Label>
+                    <Input 
+                      id="cardExpiry"
+                      value={cardExpiry}
+                      onChange={(e) => setCardExpiry(formatExpiry(e.target.value))}
+                      placeholder="MM/AA"
+                      maxLength={5}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label>CVV *</Label>
-                    <SecurityCode placeholder="123" />
+                    <Label htmlFor="cardCvv">CVV *</Label>
+                    <Input 
+                      id="cardCvv"
+                      value={cardCvv}
+                      onChange={(e) => setCardCvv(formatCvv(e.target.value))}
+                      placeholder="123"
+                      maxLength={4}
+                      type="password"
+                      required
+                    />
                   </div>
                 </div>
               </div>
@@ -507,7 +591,15 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               <Button 
                 type="submit"
                 className="w-full" 
-                disabled={cardPaymentLoading || !cardholderName || !cardholderEmail || !identificationNumber}
+                disabled={
+                  cardPaymentLoading || 
+                  !cardholderName || 
+                  !cardholderEmail || 
+                  !identificationNumber ||
+                  !cardNumber ||
+                  !cardExpiry ||
+                  !cardCvv
+                }
               >
                 {cardPaymentLoading ? 'Processando...' : 'Pagar com Cartão'}
               </Button>
