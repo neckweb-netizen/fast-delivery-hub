@@ -5,16 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, CheckCircle, QrCode, CreditCard } from 'lucide-react';
+import { Copy, CheckCircle, QrCode, CreditCard, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { initMercadoPago, CardPayment } from '@mercadopago/sdk-react';
-
-// Inicializar SDK do Mercado Pago FORA do componente
-initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
-  locale: 'pt-BR'
-});
 
 interface PixPaymentModalProps {
   isOpen: boolean;
@@ -34,9 +29,39 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
+  const [sdkLoaded, setSdkLoaded] = useState(false);
+  const [sdkError, setSdkError] = useState<string | null>(null);
   
   const { toast } = useToast();
   const { profile } = useAuth();
+
+  // Inicializar SDK quando a aba de cartão for ativada
+  useEffect(() => {
+    if (activeTab === 'card' && !sdkLoaded && !sdkError) {
+      console.log('[MP SDK] Iniciando carregamento do SDK...');
+      try {
+        initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
+          locale: 'pt-BR'
+        });
+        
+        // Verificar se o SDK carregou após um tempo
+        const checkSDK = setTimeout(() => {
+          if ((window as any).MercadoPago) {
+            console.log('[MP SDK] SDK carregado com sucesso!');
+            setSdkLoaded(true);
+          } else {
+            console.error('[MP SDK] SDK não carregou no tempo esperado');
+            setSdkError('O sistema de pagamento não conseguiu carregar. Verifique sua conexão com a internet.');
+          }
+        }, 3000);
+
+        return () => clearTimeout(checkSDK);
+      } catch (error) {
+        console.error('[MP SDK] Erro ao inicializar:', error);
+        setSdkError('Erro ao carregar o sistema de pagamento.');
+      }
+    }
+  }, [activeTab, sdkLoaded, sdkError]);
 
   // Cleanup do brick quando desmontar
   useEffect(() => {
@@ -221,6 +246,8 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
+    setSdkLoaded(false);
+    setSdkError(null);
     (window as any).cardPaymentBrickController?.unmount();
     onClose();
   };
@@ -382,19 +409,58 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               </div>
 
               <div className="bg-muted/30 p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-4">
-                  Preencha os dados do cartão abaixo:
-                </p>
-                <CardPayment
-                  initialization={{ 
-                    amount: plano.preco_mensal,
-                    payer: {
-                      email: profile?.email || ''
-                    }
-                  }}
-                  onSubmit={handleCardPayment}
-                  locale="pt-BR"
-                />
+                {sdkError ? (
+                  <div className="text-center py-8 space-y-4">
+                    <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
+                    <div>
+                      <p className="text-destructive font-medium mb-2">Erro ao carregar pagamento</p>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {sdkError}
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          setSdkError(null);
+                          setSdkLoaded(false);
+                        }}
+                      >
+                        Tentar novamente
+                      </Button>
+                    </div>
+                  </div>
+                ) : !sdkLoaded ? (
+                  <div className="text-center py-8 space-y-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                    <p className="text-sm text-muted-foreground">
+                      Carregando formulário de pagamento...
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Preencha os dados do cartão abaixo:
+                    </p>
+                    <div id="cardPaymentBrick_container">
+                      <CardPayment
+                        initialization={{ 
+                          amount: plano.preco_mensal,
+                          payer: {
+                            email: profile?.email || ''
+                          }
+                        }}
+                        onSubmit={handleCardPayment}
+                        onError={(error) => {
+                          console.error('[MP Brick] Erro no componente:', error);
+                          setSdkError('Erro ao inicializar o formulário de pagamento.');
+                        }}
+                        onReady={() => {
+                          console.log('[MP Brick] Componente pronto!');
+                        }}
+                        locale="pt-BR"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
 
               {cardPaymentLoading && (
