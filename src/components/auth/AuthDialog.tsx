@@ -130,6 +130,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                   placeholder="Seu nome completo"
                   required
                   className="h-10"
+                  autoFocus={false}
                 />
               </div>
             )}
@@ -144,6 +145,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 placeholder="seu@email.com"
                 required
                 className="h-10"
+                autoFocus={false}
               />
             </div>
 
@@ -158,6 +160,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                   placeholder="Digite sua senha"
                   required
                   className="h-10 pr-10"
+                  autoFocus={false}
                 />
                 <button
                   type="button"
