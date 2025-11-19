@@ -98,8 +98,8 @@ const App = () => {
         <PWAInstallPrompt />
         <Toaster />
         <Sonner />
-        <TrackingProvider>
         <BrowserRouter>
+          <TrackingProvider>
           <RoutePreloader />
           <Suspense fallback={<LoadingFallback />}>
           <Routes>
@@ -182,8 +182,8 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
           </Suspense>
+          </TrackingProvider>
         </BrowserRouter>
-        </TrackingProvider>
       </TooltipProvider>
     </ThemeProvider>
   );
