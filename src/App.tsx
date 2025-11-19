@@ -71,6 +71,7 @@ const Conquistas = lazy(() => import("./pages/Conquistas"));
 const AdminReclamacoes = lazy(() => import("./pages/admin/AdminProblemasCidade"));
 const AdminComentariosProblema = lazy(() => import("./pages/admin/AdminComentariosProblema"));
 const ShortUrlRedirect = lazy(() => import("./pages/ShortUrlRedirect"));
+const AdminGamificacao = lazy(() => import("./pages/admin/AdminGamificacao"));
 
 import { MainLayout } from "./components/layout/MainLayout";
 import { PublicLayout } from "./components/layout/PublicLayout";
@@ -130,6 +131,8 @@ const App = () => {
               <Route path="privacy" element={<PrivacyPolicy />} />
               <Route path="reclamacoes" element={<Reclamacoes />} />
               <Route path="reclamacoes/:id" element={<ReclamacaoDetalhes />} />
+              <Route path="ranking" element={<Ranking />} />
+              <Route path="conquistas" element={<Conquistas />} />
               <Route path="home" element={<HomeContent />} />
               <Route path="unauthorized" element={<UnauthorizedPage />} />
               <Route path=":shortCode" element={<ShortUrlRedirect />} />
@@ -169,6 +172,7 @@ const App = () => {
               <Route path="enquetes" element={<AdminEnquetes />} />
               <Route path="reclamacoes" element={<AdminReclamacoes />} />
               <Route path="comentarios-problema" element={<AdminComentariosProblema />} />
+              <Route path="gamificacao" element={<AdminGamificacao />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Building2, MessageCircle, Radio, Briefcase, User, Plus, X, Tag, Package, Calendar, Megaphone, Newspaper } from 'lucide-react';
+import { Home, Building2, MessageCircle, Radio, Briefcase, User, Plus, X, Tag, Package, Calendar, Megaphone, Newspaper, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useMinhaEmpresa } from '@/hooks/useMinhaEmpresa';
@@ -28,7 +28,7 @@ export const BottomNavigation = () => {
   ];
 
   const rightMenuItems = [
-    { icon: Megaphone, label: 'Voz do Povo', path: '/reclamacoes' },
+    { icon: Trophy, label: 'Ranking', path: '/ranking' },
     { icon: Briefcase, label: 'Oportunidades', path: '/oportunidades' },
   ];
 
