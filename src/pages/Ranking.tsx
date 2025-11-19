@@ -26,6 +26,81 @@ export default function Ranking() {
   const userWeeklyRank = weeklyLeaderboard?.find((entry) => entry.user_id === user?.id);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
 
+  // CTA para usuários não logados
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 pb-20 md:pb-4">
+        <div className="container max-w-4xl mx-auto px-4 py-8">
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/5">
+            <CardContent className="p-8 md:p-12 text-center space-y-6">
+              <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                <Trophy className="h-12 w-12 text-primary" />
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold">
+                Entre para o Ranking!
+              </h1>
+              
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Ganhe pontos por suas atividades, suba de nível, desbloqueie medalhas exclusivas 
+                e compete com outros usuários da comunidade.
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-3 max-w-3xl mx-auto my-8">
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <Star className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Ganhe Pontos</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Por avaliações, relatos e interações
+                  </p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <Zap className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Suba de Nível</h3>
+                  <p className="text-sm text-muted-foreground">
+                    De Novato a Líder da Comunidade
+                  </p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-background/50 border border-border/50">
+                  <Award className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                  <h3 className="font-semibold mb-1">Conquiste Medalhas</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Desbloqueie conquistas exclusivas
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Button 
+                  size="lg" 
+                  className="gap-2"
+                  onClick={() => window.location.href = '/'}
+                >
+                  <Trophy className="h-5 w-5" />
+                  Criar Conta Grátis
+                </Button>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  onClick={() => window.location.href = '/'}
+                >
+                  Já tenho conta
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground pt-4">
+                É rápido, grátis e você já começa ganhando pontos!
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 pb-20 md:pb-4">
       <div className="container max-w-7xl mx-auto px-4 py-8 space-y-6">
