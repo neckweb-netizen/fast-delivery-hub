@@ -1,7 +1,7 @@
-import { SearchContent } from '@/components/search/SearchContent';
+import { UnifiedSearchContent } from '@/components/search/UnifiedSearchContent';
 
 export const Busca = () => {
-  return <SearchContent />;
+  return <UnifiedSearchContent />;
 };
 
 export default Busca;
