@@ -66,6 +66,8 @@ const AdminLugaresPublicos = lazy(() => import("./pages/admin/AdminLugaresPublic
 const AdminEnquetes = lazy(() => import("./pages/admin/AdminEnquetes"));
 const Reclamacoes = lazy(() => import("./pages/ProblemasCidade"));
 const ReclamacaoDetalhes = lazy(() => import("./pages/ProblemaDetalhes"));
+const Ranking = lazy(() => import("./pages/Ranking"));
+const Conquistas = lazy(() => import("./pages/Conquistas"));
 const AdminReclamacoes = lazy(() => import("./pages/admin/AdminProblemasCidade"));
 const AdminComentariosProblema = lazy(() => import("./pages/admin/AdminComentariosProblema"));
 const ShortUrlRedirect = lazy(() => import("./pages/ShortUrlRedirect"));
