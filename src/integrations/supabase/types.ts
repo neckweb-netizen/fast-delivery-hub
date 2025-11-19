@@ -215,6 +215,54 @@ export type Database = {
           },
         ]
       }
+      badges: {
+        Row: {
+          category: string | null
+          color: string | null
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          key: string
+          name: string
+          points_reward: number | null
+          rarity: string | null
+          requirement_count: number | null
+          requirement_type: string | null
+        }
+        Insert: {
+          category?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          key: string
+          name: string
+          points_reward?: number | null
+          rarity?: string | null
+          requirement_count?: number | null
+          requirement_type?: string | null
+        }
+        Update: {
+          category?: string | null
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          key?: string
+          name?: string
+          points_reward?: number | null
+          rarity?: string | null
+          requirement_count?: number | null
+          requirement_type?: string | null
+        }
+        Relationships: []
+      }
       bairros: {
         Row: {
           ativo: boolean
@@ -1158,6 +1206,39 @@ export type Database = {
           },
         ]
       }
+      gamification_levels: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          icon: string | null
+          id: string
+          level: number
+          max_points: number | null
+          min_points: number
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          level: number
+          max_points?: number | null
+          min_points: number
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          level?: number
+          max_points?: number | null
+          min_points?: number
+          name?: string
+        }
+        Relationships: []
+      }
       home_sections_order: {
         Row: {
           ativo: boolean
@@ -1185,6 +1266,42 @@ export type Database = {
           id?: string
           ordem?: number
           section_name?: string
+        }
+        Relationships: []
+      }
+      leaderboard_cache: {
+        Row: {
+          badges_count: number | null
+          current_level: number | null
+          last_updated: string | null
+          monthly_points: number | null
+          rank_position: number | null
+          total_points: number | null
+          user_id: string
+          weekly_points: number | null
+          weekly_rank_position: number | null
+        }
+        Insert: {
+          badges_count?: number | null
+          current_level?: number | null
+          last_updated?: string | null
+          monthly_points?: number | null
+          rank_position?: number | null
+          total_points?: number | null
+          user_id: string
+          weekly_points?: number | null
+          weekly_rank_position?: number | null
+        }
+        Update: {
+          badges_count?: number | null
+          current_level?: number | null
+          last_updated?: string | null
+          monthly_points?: number | null
+          rank_position?: number | null
+          total_points?: number | null
+          user_id?: string
+          weekly_points?: number | null
+          weekly_rank_position?: number | null
         }
         Relationships: []
       }
@@ -1278,6 +1395,54 @@ export type Database = {
           posicao_desktop?: string
           posicao_mobile?: string
           rota?: string
+        }
+        Relationships: []
+      }
+      missions: {
+        Row: {
+          action_key: string
+          color: string | null
+          created_at: string | null
+          description: string
+          end_date: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          points: number
+          start_date: string | null
+          target_count: number | null
+          title: string
+          type: string
+        }
+        Insert: {
+          action_key: string
+          color?: string | null
+          created_at?: string | null
+          description: string
+          end_date?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          points?: number
+          start_date?: string | null
+          target_count?: number | null
+          title: string
+          type?: string
+        }
+        Update: {
+          action_key?: string
+          color?: string | null
+          created_at?: string | null
+          description?: string
+          end_date?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          points?: number
+          start_date?: string | null
+          target_count?: number | null
+          title?: string
+          type?: string
         }
         Relationships: []
       }
@@ -1910,6 +2075,115 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string | null
+          id: string
+          progress: number | null
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string | null
+          id?: string
+          progress?: number | null
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string | null
+          id?: string
+          progress?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_missions: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          mission_id: string
+          period_start: string | null
+          progress: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          mission_id: string
+          period_start?: string | null
+          progress?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          mission_id?: string
+          period_start?: string | null
+          progress?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_points: {
+        Row: {
+          action_description: string | null
+          action_type: string
+          created_at: string | null
+          id: string
+          points: number
+          reference_id: string | null
+          reference_type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_description?: string | null
+          action_type: string
+          created_at?: string | null
+          id?: string
+          points?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_description?: string | null
+          action_type?: string
+          created_at?: string | null
+          id?: string
+          points?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_push_tokens: {
         Row: {
           created_at: string | null
@@ -2024,36 +2298,54 @@ export type Database = {
       usuarios: {
         Row: {
           atualizado_em: string
+          badges_count: number | null
           cidade_id: string | null
           criado_em: string
+          current_level: number | null
           email: string
           id: string
+          last_activity_date: string | null
+          monthly_points: number | null
           nome: string
           plano_id: string | null
           telefone: string | null
           tipo_conta: Database["public"]["Enums"]["tipo_conta"]
+          total_points: number | null
+          weekly_points: number | null
         }
         Insert: {
           atualizado_em?: string
+          badges_count?: number | null
           cidade_id?: string | null
           criado_em?: string
+          current_level?: number | null
           email: string
           id: string
+          last_activity_date?: string | null
+          monthly_points?: number | null
           nome: string
           plano_id?: string | null
           telefone?: string | null
           tipo_conta?: Database["public"]["Enums"]["tipo_conta"]
+          total_points?: number | null
+          weekly_points?: number | null
         }
         Update: {
           atualizado_em?: string
+          badges_count?: number | null
           cidade_id?: string | null
           criado_em?: string
+          current_level?: number | null
           email?: string
           id?: string
+          last_activity_date?: string | null
+          monthly_points?: number | null
           nome?: string
           plano_id?: string | null
           telefone?: string | null
           tipo_conta?: Database["public"]["Enums"]["tipo_conta"]
+          total_points?: number | null
+          weekly_points?: number | null
         }
         Relationships: [
           {
@@ -2333,6 +2625,17 @@ export type Database = {
       }
     }
     Functions: {
+      add_user_points: {
+        Args: {
+          p_action_description?: string
+          p_action_type: string
+          p_points: number
+          p_reference_id?: string
+          p_reference_type?: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       atualizar_estatisticas_empresa: {
         Args: { empresa_id_param: string }
         Returns: undefined
@@ -2419,9 +2722,18 @@ export type Database = {
           premios: Json
         }[]
       }
+      calculate_user_level: { Args: { p_points: number }; Returns: number }
+      calculate_user_total_points: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
       can_assign_role: {
         Args: { target_role: Database["public"]["Enums"]["tipo_conta"] }
         Returns: boolean
+      }
+      check_and_award_badges: {
+        Args: { p_user_id: string }
+        Returns: undefined
       }
       cleanup_expired_sessions: { Args: never; Returns: undefined }
       cleanup_rate_limits: { Args: never; Returns: undefined }
@@ -2497,6 +2809,9 @@ export type Database = {
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       limpar_urls_google: { Args: never; Returns: undefined }
       refresh_empresas_populares: { Args: never; Returns: undefined }
+      reset_monthly_points: { Args: never; Returns: undefined }
+      reset_weekly_points: { Args: never; Returns: undefined }
+      update_leaderboard: { Args: never; Returns: undefined }
       usar_cupom: { Args: { cupom_id_param: string }; Returns: boolean }
       user_has_permission: {
         Args: { target_cidade_id?: string; target_user_id?: string }
