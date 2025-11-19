@@ -98,19 +98,19 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="w-[95vw] max-w-[400px] p-4 sm:p-6">
         <VisuallyHidden>
           <DialogTitle>
             {isLogin ? 'Entrar na conta' : 'Criar nova conta'}
           </DialogTitle>
         </VisuallyHidden>
         
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-xl sm:text-2xl font-bold">
               {isLogin ? 'Entrar' : 'Criar Conta'}
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {isLogin 
                 ? 'Acesse sua conta para continuar' 
                 : 'Crie sua conta para começar'
@@ -118,10 +118,10 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="name">Nome</Label>
+                <Label htmlFor="name" className="text-sm">Nome</Label>
                 <Input
                   id="name"
                   type="text"
@@ -129,12 +129,13 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Seu nome completo"
                   required
+                  className="h-10"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -142,11 +143,12 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
+                className="h-10"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password" className="text-sm">Senha</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -155,27 +157,28 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Digite sua senha"
                   required
+                  className="h-10 pr-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full h-10" disabled={loading}>
               {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
             </Button>
           </form>
 
           {/* Login/Signup toggle and password reset */}
-          <div className="text-center space-y-3">
+          <div className="text-center space-y-2">
             <button
               onClick={toggleMode}
-              className="text-primary hover:underline"
+              className="text-sm text-primary hover:underline"
               data-tutorial="create-account"
             >
               {isLogin 
@@ -188,7 +191,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               <div>
                 <button
                   onClick={handlePasswordReset}
-                  className="text-sm text-muted-foreground hover:text-primary hover:underline"
+                  className="text-xs sm:text-sm text-muted-foreground hover:text-primary hover:underline"
                   disabled={loading}
                 >
                   Esqueceu sua senha?
@@ -197,11 +200,11 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
             )}
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <Separator />
             
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                 Tem uma empresa?
               </p>
               <CadastrarEmpresaDialog 
