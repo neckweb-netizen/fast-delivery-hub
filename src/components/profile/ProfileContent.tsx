@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { NeonCard } from '@/components/ui/neon-card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,8 @@ import { AvaliacoesDialog } from './AvaliacoesDialog';
 import { ConfiguracoesDialog } from './ConfiguracoesDialog';
 import { CadastrarEmpresaDialog } from './CadastrarEmpresaDialog';
 import { CreateNotificationTest } from '@/components/test/CreateNotificationTest';
+import { LevelDisplay } from '@/components/gamification/LevelDisplay';
+import { useGamification } from '@/hooks/useGamification';
 import { 
   User, 
   Heart, 
@@ -22,11 +25,15 @@ import {
   Phone,
   Calendar,
   Building2,
-  Plus
+  Plus,
+  Trophy,
+  Target
 } from 'lucide-react';
 
 export const ProfileContent = () => {
   const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { userStats, levelInfo, nextLevel, calculateLevelProgress } = useGamification();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [favoritosDialogOpen, setFavoritosDialogOpen] = useState(false);
   const [avaliacoesDialogOpen, setAvaliacoesDialogOpen] = useState(false);
@@ -169,6 +176,46 @@ export const ProfileContent = () => {
             />
           </CardContent>
         </NeonCard>
+
+        {/* Gamificação */}
+        {userStats && levelInfo && (
+          <NeonCard className="hover:shadow-md transition-shadow col-span-full">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Trophy className="h-6 w-6 text-amber-500" />
+                <h3 className="font-semibold">Gamificação</h3>
+              </div>
+              
+              <LevelDisplay
+                level={userStats.current_level}
+                levelName={levelInfo.name}
+                currentPoints={userStats.total_points}
+                nextLevelPoints={nextLevel?.min_points}
+                progress={calculateLevelProgress()}
+                compact
+              />
+              
+              <div className="grid gap-3 sm:grid-cols-2 mt-4">
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => navigate('/conquistas')}
+                >
+                  <Trophy className="h-4 w-4" />
+                  Ver Conquistas ({userStats.badges_count})
+                </Button>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => navigate('/ranking')}
+                >
+                  <Target className="h-4 w-4" />
+                  Ver Ranking
+                </Button>
+              </div>
+            </CardContent>
+          </NeonCard>
+        )}
 
         {/* Configurações */}
         <NeonCard className="hover:shadow-md transition-shadow">
