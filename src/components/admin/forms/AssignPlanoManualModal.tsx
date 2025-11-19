@@ -157,27 +157,32 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
               <User className="h-4 w-4" />
               Local/Usuário
             </Label>
-            <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
+            <Popover open={openCombobox && !!usuarios} onOpenChange={(open) => {
+              if (usuarios) {
+                setOpenCombobox(open);
+              }
+            }}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   role="combobox"
                   aria-expanded={openCombobox}
                   className="w-full justify-between"
+                  disabled={!usuarios}
                 >
                   {selectedUser
                     ? usuarios?.find((item) => item.id === selectedUser)?.nome
-                    : "Selecione um local"}
+                    : usuarios ? "Selecione um local" : "Carregando..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[500px] p-0" align="start">
-                <Command>
-                  <CommandInput placeholder="Pesquisar local..." />
-                  <CommandEmpty>Nenhum local encontrado.</CommandEmpty>
-                  <CommandGroup className="max-h-64 overflow-auto">
-                    {usuarios && usuarios.length > 0 ? (
-                      usuarios.map((item) => (
+              {usuarios && (
+                <PopoverContent className="w-[500px] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Pesquisar local..." />
+                    <CommandEmpty>Nenhum local encontrado.</CommandEmpty>
+                    <CommandGroup className="max-h-64 overflow-auto">
+                      {usuarios.map((item) => (
                         <CommandItem
                           key={item.id}
                           value={`${item.nome} ${item.usuarios?.nome || ''} ${item.usuarios?.email || ''}`}
@@ -194,15 +199,11 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
                           />
                           {item.nome} - {item.usuarios?.nome || 'Sem usuário'} ({item.usuarios?.email || 'Sem email'})
                         </CommandItem>
-                      ))
-                    ) : (
-                      <div className="p-4 text-sm text-muted-foreground">
-                        Carregando...
-                      </div>
-                    )}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              )}
             </Popover>
           </div>
 
