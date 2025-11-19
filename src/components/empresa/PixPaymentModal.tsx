@@ -348,22 +348,110 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               </div>
 
               <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
-                <h4 className="text-sm font-medium">Dados do titular:</h4>
+                <h4 className="text-sm font-medium mb-4">Informações do Pagamento:</h4>
+                
                 <div className="space-y-2">
-                  <Label>Nome completo</Label>
-                  <Input value={profile?.nome || ''} readOnly className="bg-background" />
+                  <Label>Nome completo do titular *</Label>
+                  <Input 
+                    value={profile?.nome || ''} 
+                    readOnly 
+                    className="bg-background" 
+                    placeholder="Nome como está no cartão"
+                  />
                 </div>
+                
                 <div className="space-y-2">
-                  <Label>E-mail</Label>
-                  <Input value={profile?.email || ''} readOnly className="bg-background" />
+                  <Label>E-mail *</Label>
+                  <Input 
+                    value={profile?.email || ''} 
+                    readOnly 
+                    className="bg-background"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cardNumber">Número do Cartão *</Label>
+                  <Input
+                    id="cardNumber"
+                    placeholder="0000 0000 0000 0000"
+                    maxLength={19}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cardExpiry">Validade *</Label>
+                    <Input
+                      id="cardExpiry"
+                      placeholder="MM/AA"
+                      maxLength={5}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cardCvc">CVV *</Label>
+                    <Input
+                      id="cardCvc"
+                      placeholder="123"
+                      maxLength={4}
+                      type="password"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cardDocType">Tipo de Documento *</Label>
+                  <Select defaultValue="CPF">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CPF">CPF</SelectItem>
+                      <SelectItem value="CNPJ">CNPJ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cardDoc">Documento do Titular *</Label>
+                  <Input
+                    id="cardDoc"
+                    placeholder="000.000.000-00"
+                    maxLength={14}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="installments">Parcelas *</Label>
+                  <Select defaultValue="1">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1x de {formatCurrency(plano.preco_mensal)} sem juros</SelectItem>
+                      <SelectItem value="2">2x de {formatCurrency(plano.preco_mensal / 2)} sem juros</SelectItem>
+                      <SelectItem value="3">3x de {formatCurrency(plano.preco_mensal / 3)} sem juros</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              <CardPayment
-                initialization={{ amount: plano.preco_mensal }}
-                onSubmit={handleCardPayment}
-                locale="pt-BR"
-              />
+              <Button 
+                className="w-full" 
+                disabled={cardPaymentLoading}
+                onClick={() => {
+                  toast({
+                    title: 'Em desenvolvimento',
+                    description: 'O pagamento com cartão estará disponível em breve. Use PIX por enquanto.',
+                    variant: 'default',
+                  });
+                }}
+              >
+                {cardPaymentLoading ? 'Processando...' : 'Pagar com Cartão'}
+              </Button>
+
+              <p className="text-xs text-muted-foreground text-center">
+                Pagamento seguro processado pelo Mercado Pago
+              </p>
             </div>
           </TabsContent>
         </Tabs>
