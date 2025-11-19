@@ -98,7 +98,10 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-[400px] p-4 sm:p-6">
+      <DialogContent 
+        className="w-[95vw] max-w-[400px] p-4 sm:p-6"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <VisuallyHidden>
           <DialogTitle>
             {isLogin ? 'Entrar na conta' : 'Criar nova conta'}
