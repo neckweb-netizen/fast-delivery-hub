@@ -5,11 +5,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, CheckCircle, QrCode, CreditCard, AlertCircle } from 'lucide-react';
+import { Copy, CheckCircle, QrCode, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { initMercadoPago, CardPayment } from '@mercadopago/sdk-react';
+import { 
+  initMercadoPago, 
+  CardNumber, 
+  SecurityCode, 
+  ExpirationDate,
+  createCardToken 
+} from '@mercadopago/sdk-react';
+
+// Inicializar SDK do Mercado Pago
+initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
+  locale: 'pt-BR'
+});
 
 interface PixPaymentModalProps {
   isOpen: boolean;
@@ -29,44 +40,30 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
   const [cardPaymentLoading, setCardPaymentLoading] = useState(false);
-  const [sdkLoaded, setSdkLoaded] = useState(false);
-  const [sdkError, setSdkError] = useState<string | null>(null);
+  const [cardholderName, setCardholderName] = useState('');
+  const [cardholderEmail, setCardholderEmail] = useState('');
+  const [identificationType, setIdentificationType] = useState<'CPF' | 'CNPJ'>('CPF');
+  const [identificationNumber, setIdentificationNumber] = useState('');
   
   const { toast } = useToast();
   const { profile } = useAuth();
 
-  // Inicializar SDK quando a aba de cartão for ativada
+  // Preencher email automaticamente
   useEffect(() => {
-    if (activeTab === 'card' && !sdkLoaded && !sdkError) {
-      console.log('[MP SDK] Iniciando carregamento do SDK...');
-      try {
-        initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
-          locale: 'pt-BR'
-        });
-        
-        // Verificar se o SDK carregou após um tempo
-        const checkSDK = setTimeout(() => {
-          if ((window as any).MercadoPago) {
-            console.log('[MP SDK] SDK carregado com sucesso!');
-            setSdkLoaded(true);
-          } else {
-            console.error('[MP SDK] SDK não carregou no tempo esperado');
-            setSdkError('O sistema de pagamento não conseguiu carregar. Verifique sua conexão com a internet.');
-          }
-        }, 3000);
-
-        return () => clearTimeout(checkSDK);
-      } catch (error) {
-        console.error('[MP SDK] Erro ao inicializar:', error);
-        setSdkError('Erro ao carregar o sistema de pagamento.');
-      }
+    if (profile?.email) {
+      setCardholderEmail(profile.email);
     }
-  }, [activeTab, sdkLoaded, sdkError]);
+    if (profile?.nome) {
+      setCardholderName(profile.nome);
+    }
+  }, [profile]);
 
-  // Cleanup do brick quando desmontar
+  // Cleanup
   useEffect(() => {
     return () => {
-      (window as any).cardPaymentBrickController?.unmount();
+      setCardholderName('');
+      setCardholderEmail('');
+      setIdentificationNumber('');
     };
   }, []);
 
@@ -167,7 +164,9 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     }
   };
 
-  const handleCardPayment = async (formData: any) => {
+  const handleCardPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     if (!profile) {
       toast({
         title: 'Erro de autenticação',
@@ -177,21 +176,44 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
       return;
     }
 
+    // Validações
+    if (!cardholderName || !cardholderEmail || !identificationNumber) {
+      toast({
+        title: 'Preencha todos os campos',
+        description: 'Todos os campos são obrigatórios',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setCardPaymentLoading(true);
 
     try {
-      console.log('Dados do formulário de pagamento:', formData);
+      console.log('[MP] Criando token do cartão...');
+      
+      // Criar token do cartão
+      const cardToken = await createCardToken({
+        cardholderName,
+        identificationType,
+        identificationNumber: identificationNumber.replace(/\D/g, ''),
+      });
+
+      if (!cardToken || !cardToken.id) {
+        throw new Error('Não foi possível criar o token do cartão. Verifique os dados e tente novamente.');
+      }
+
+      console.log('[MP] Token criado com sucesso:', cardToken.id);
 
       const { data, error } = await supabase.functions.invoke('create-card-payment', {
         body: {
           planoId: plano.id,
           userInfo: {
-            email: formData.payer?.email || profile.email,
-            docType: formData.payer?.identification?.type || 'CPF',
-            docNumber: formData.payer?.identification?.number || '',
+            email: cardholderEmail,
+            docType: identificationType,
+            docNumber: identificationNumber.replace(/\D/g, ''),
           },
-          cardToken: formData.token,
-          installments: formData.installments || 1,
+          cardToken: cardToken.id,
+          installments: 1,
         },
       });
 
@@ -217,7 +239,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
         });
       }
     } catch (error: any) {
-      console.error('Erro ao processar pagamento com cartão:', error);
+      console.error('[MP] Erro ao processar pagamento:', error);
       toast({
         title: 'Erro ao processar pagamento',
         description: error.message || 'Tente novamente mais tarde.',
@@ -240,15 +262,33 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     }
   };
 
+  const formatDocument = (value: string, type: 'CPF' | 'CNPJ') => {
+    const cleaned = value.replace(/\D/g, '');
+    if (type === 'CPF') {
+      return cleaned
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+        .slice(0, 14);
+    } else {
+      return cleaned
+        .replace(/(\d{2})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1/$2')
+        .replace(/(\d{4})(\d{1,2})$/, '$1-$2')
+        .slice(0, 18);
+    }
+  };
+
   const handleClose = () => {
     setPaymentData(null);
     setDocumento('');
     setTipoDocumento('CPF');
     setCopied(false);
     setActiveTab('pix');
-    setSdkLoaded(false);
-    setSdkError(null);
-    (window as any).cardPaymentBrickController?.unmount();
+    setCardholderName('');
+    setCardholderEmail('');
+    setIdentificationNumber('');
     onClose();
   };
 
@@ -378,7 +418,7 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
           </TabsContent>
 
           <TabsContent value="card" className="space-y-6 mt-6">
-            <div className="space-y-4">
+            <form onSubmit={handleCardPayment} className="space-y-4">
               <div className="space-y-2">
                 <h3 className="font-semibold">{plano.nome}</h3>
                 <p className="text-2xl font-bold text-primary">
@@ -387,93 +427,95 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
               </div>
 
               <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
-                <h4 className="text-sm font-medium mb-4">Informações do Pagamento:</h4>
+                <h4 className="text-sm font-medium mb-4">Dados do titular:</h4>
                 
                 <div className="space-y-2">
-                  <Label>Nome completo do titular</Label>
+                  <Label htmlFor="cardholderName">Nome completo do titular *</Label>
                   <Input 
-                    value={profile?.nome || ''} 
-                    readOnly 
-                    className="bg-background" 
+                    id="cardholderName"
+                    value={cardholderName}
+                    onChange={(e) => setCardholderName(e.target.value)}
+                    placeholder="Nome como está no cartão"
+                    required
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>E-mail</Label>
+                  <Label htmlFor="cardholderEmail">E-mail *</Label>
                   <Input 
-                    value={profile?.email || ''} 
-                    readOnly 
-                    className="bg-background"
+                    id="cardholderEmail"
+                    type="email"
+                    value={cardholderEmail}
+                    onChange={(e) => setCardholderEmail(e.target.value)}
+                    placeholder="email@exemplo.com"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="identificationType">Tipo de Documento *</Label>
+                  <Select 
+                    value={identificationType} 
+                    onValueChange={(value: 'CPF' | 'CNPJ') => {
+                      setIdentificationType(value);
+                      setIdentificationNumber('');
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CPF">CPF</SelectItem>
+                      <SelectItem value="CNPJ">CNPJ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="identificationNumber">{identificationType} *</Label>
+                  <Input 
+                    id="identificationNumber"
+                    value={identificationNumber}
+                    onChange={(e) => setIdentificationNumber(formatDocument(e.target.value, identificationType))}
+                    placeholder={identificationType === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
+                    maxLength={identificationType === 'CPF' ? 14 : 18}
+                    required
                   />
                 </div>
               </div>
 
-              <div className="bg-muted/30 p-4 rounded-lg">
-                {sdkError ? (
-                  <div className="text-center py-8 space-y-4">
-                    <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
-                    <div>
-                      <p className="text-destructive font-medium mb-2">Erro ao carregar pagamento</p>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {sdkError}
-                      </p>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          setSdkError(null);
-                          setSdkLoaded(false);
-                        }}
-                      >
-                        Tentar novamente
-                      </Button>
-                    </div>
+              <div className="space-y-4 bg-muted/30 p-4 rounded-lg">
+                <h4 className="text-sm font-medium mb-4">Dados do cartão:</h4>
+                
+                <div className="space-y-2">
+                  <Label>Número do cartão *</Label>
+                  <CardNumber placeholder="0000 0000 0000 0000" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Validade *</Label>
+                    <ExpirationDate placeholder="MM/AA" />
                   </div>
-                ) : !sdkLoaded ? (
-                  <div className="text-center py-8 space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                    <p className="text-sm text-muted-foreground">
-                      Carregando formulário de pagamento...
-                    </p>
+                  <div className="space-y-2">
+                    <Label>CVV *</Label>
+                    <SecurityCode placeholder="123" />
                   </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Preencha os dados do cartão abaixo:
-                    </p>
-                    <div id="cardPaymentBrick_container">
-                      <CardPayment
-                        initialization={{ 
-                          amount: plano.preco_mensal,
-                          payer: {
-                            email: profile?.email || ''
-                          }
-                        }}
-                        onSubmit={handleCardPayment}
-                        onError={(error) => {
-                          console.error('[MP Brick] Erro no componente:', error);
-                          setSdkError('Erro ao inicializar o formulário de pagamento.');
-                        }}
-                        onReady={() => {
-                          console.log('[MP Brick] Componente pronto!');
-                        }}
-                        locale="pt-BR"
-                      />
-                    </div>
-                  </>
-                )}
+                </div>
               </div>
 
-              {cardPaymentLoading && (
-                <div className="flex items-center justify-center p-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  <span className="ml-2">Processando pagamento...</span>
-                </div>
-              )}
+              <Button 
+                type="submit"
+                className="w-full" 
+                disabled={cardPaymentLoading || !cardholderName || !cardholderEmail || !identificationNumber}
+              >
+                {cardPaymentLoading ? 'Processando...' : 'Pagar com Cartão'}
+              </Button>
 
               <p className="text-xs text-muted-foreground text-center">
                 Pagamento seguro processado pelo Mercado Pago
               </p>
-            </div>
+            </form>
           </TabsContent>
         </Tabs>
       </DialogContent>
