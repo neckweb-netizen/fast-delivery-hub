@@ -3,10 +3,13 @@ import { LeaderboardTable } from '@/components/gamification/LeaderboardTable';
 import { LevelDisplay } from '@/components/gamification/LevelDisplay';
 import { useGamification } from '@/hooks/useGamification';
 import { useAuth } from '@/hooks/useAuth';
-import { Trophy, TrendingUp, Calendar, Star, Zap, Award, Target, Info } from 'lucide-react';
+import { Trophy, TrendingUp, Calendar, Star, Zap, Award, Target, Info, ChevronDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 export default function Ranking() {
   const { user } = useAuth();
@@ -22,6 +25,7 @@ export default function Ranking() {
 
   const userRank = leaderboard?.find((entry) => entry.user_id === user?.id);
   const userWeeklyRank = weeklyLeaderboard?.find((entry) => entry.user_id === user?.id);
+  const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 pb-20 md:pb-4">
@@ -80,18 +84,31 @@ export default function Ranking() {
           </div>
         )}
 
-        {/* How It Works Section */}
-        <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Info className="h-5 w-5 text-primary" />
-              <CardTitle>Como Funciona o Ranking?</CardTitle>
-            </div>
-            <CardDescription>
-              Entenda como você pode subir no ranking e se tornar um líder da comunidade
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+        {/* How It Works Section - Collapsible */}
+        <Collapsible open={isHowItWorksOpen} onOpenChange={setIsHowItWorksOpen}>
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5">
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className="w-full p-6 h-auto flex items-center justify-between hover:bg-primary/5"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Info className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold">Como Funciona o Ranking?</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {isHowItWorksOpen ? 'Clique para ocultar' : 'Clique para entender o sistema de pontuação'}
+                    </p>
+                  </div>
+                </div>
+                <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${isHowItWorksOpen ? 'rotate-180' : ''}`} />
+              </Button>
+            </CollapsibleTrigger>
+            
+            <CollapsibleContent>
+              <CardContent className="pt-0">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="points">
                 <AccordionTrigger className="hover:text-primary">
@@ -215,14 +232,16 @@ export default function Ranking() {
               </AccordionItem>
             </Accordion>
 
-            <Alert className="mt-4 border-primary/20 bg-primary/5">
-              <Trophy className="h-4 w-4 text-primary" />
-              <AlertDescription className="text-sm">
-                <strong>Dica Pro:</strong> Seja ativo na comunidade! Quanto mais você participa, avalia e ajuda outros usuários, mais rápido você sobe no ranking e desbloqueia recompensas exclusivas.
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-        </Card>
+                <Alert className="mt-4 border-primary/20 bg-primary/5">
+                  <Trophy className="h-4 w-4 text-primary" />
+                  <AlertDescription className="text-sm">
+                    <strong>Dica Pro:</strong> Seja ativo na comunidade! Quanto mais você participa, avalia e ajuda outros usuários, mais rápido você sobe no ranking e desbloqueia recompensas exclusivas.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
 
         {/* Leaderboards */}
         <Tabs defaultValue="total" className="w-full">
