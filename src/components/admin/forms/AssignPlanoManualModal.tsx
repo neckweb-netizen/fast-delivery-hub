@@ -14,24 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, User, CreditCard, Clock, Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Calendar, User, CreditCard, Clock } from 'lucide-react';
 
 interface AssignPlanoManualModalProps {
   open: boolean;
@@ -44,7 +31,7 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
   const [selectedPlano, setSelectedPlano] = useState<string>('');
   const [dias, setDias] = useState<string>('30');
   const [isLoading, setIsLoading] = useState(false);
-  const [openCombobox, setOpenCombobox] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
   // Buscar usuários com empresas
@@ -157,54 +144,30 @@ export const AssignPlanoManualModal = ({ open, onOpenChange, onSuccess }: Assign
               <User className="h-4 w-4" />
               Local/Usuário
             </Label>
-            <Popover open={openCombobox && !!usuarios} onOpenChange={(open) => {
-              if (usuarios) {
-                setOpenCombobox(open);
-              }
-            }}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={openCombobox}
-                  className="w-full justify-between"
-                  disabled={!usuarios}
-                >
-                  {selectedUser
-                    ? usuarios?.find((item) => item.id === selectedUser)?.nome
-                    : usuarios ? "Selecione um local" : "Carregando..."}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              {usuarios && usuarios.length > 0 && (
-                <PopoverContent className="w-[500px] p-0" align="start">
-                  <Command shouldFilter={true}>
-                    <CommandInput placeholder="Pesquisar local..." />
-                    <CommandEmpty>Nenhum local encontrado.</CommandEmpty>
-                    <CommandGroup className="max-h-64 overflow-auto">
-                      {(usuarios || []).map((item) => (
-                        <CommandItem
-                          key={item.id}
-                          value={`${item.nome} ${item.usuarios?.nome || ''} ${item.usuarios?.email || ''}`}
-                          onSelect={() => {
-                            setSelectedUser(item.id);
-                            setOpenCombobox(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedUser === item.id ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                          {item.nome} - {item.usuarios?.nome || 'Sem usuário'} ({item.usuarios?.email || 'Sem email'})
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              )}
-            </Popover>
+            <Input
+              placeholder="Pesquisar local..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="mb-2"
+            />
+            <Select value={selectedUser} onValueChange={setSelectedUser}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione um local" />
+              </SelectTrigger>
+              <SelectContent>
+                {usuarios
+                  ?.filter((item) => 
+                    item.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.usuarios?.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.usuarios?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                  .map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.nome} - {item.usuarios?.nome || 'Sem usuário'} ({item.usuarios?.email || 'Sem email'})
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
