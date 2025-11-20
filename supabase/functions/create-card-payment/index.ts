@@ -35,10 +35,12 @@ serve(async (req) => {
       );
     }
 
-    // Obter token do Mercado Pago
+    // Obter tokens do Mercado Pago
     const mpAccessToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN');
-    if (!mpAccessToken) {
-      console.error('MERCADO_PAGO_ACCESS_TOKEN not configured');
+    const mpPublicKey = Deno.env.get('MERCADO_PAGO_PUBLIC_KEY');
+    
+    if (!mpAccessToken || !mpPublicKey) {
+      console.error('MERCADO_PAGO tokens not configured');
       return new Response(
         JSON.stringify({ error: 'Configuração de pagamento não encontrada' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -88,11 +90,8 @@ serve(async (req) => {
     const bin = cardData.cardNumber.substring(0, 6);
     console.log('Searching payment method for BIN:', bin);
     
-    const pmResponse = await fetch(`https://api.mercadopago.com/v1/payment_methods/search?bin=${bin}`, {
+    const pmResponse = await fetch(`https://api.mercadopago.com/v1/payment_methods/search?public_key=${mpPublicKey}&bin=${bin}`, {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${mpAccessToken}`,
-      },
     });
 
     const pmResult = await pmResponse.json();
