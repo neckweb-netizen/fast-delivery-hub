@@ -84,11 +84,27 @@ serve(async (req) => {
     console.log('Card token created successfully:', tokenResult.id);
     console.log('Token result:', JSON.stringify(tokenResult));
 
-    // Determinar o payment_method_id
+    // Buscar o payment_method_id correto usando a API do Mercado Pago
+    const bin = cardData.cardNumber.substring(0, 6);
+    console.log('Searching payment method for BIN:', bin);
+    
+    const pmResponse = await fetch(`https://api.mercadopago.com/v1/payment_methods/search?bin=${bin}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${mpAccessToken}`,
+      },
+    });
+
+    const pmResult = await pmResponse.json();
+    console.log('Payment method search result:', JSON.stringify(pmResult));
+
     let paymentMethodId = tokenResult.payment_method_id;
     
-    // Se não veio no token, tentar identificar pelo primeiro dígito do cartão
-    if (!paymentMethodId) {
+    if (pmResponse.ok && pmResult.results && pmResult.results.length > 0) {
+      paymentMethodId = pmResult.results[0].id;
+      console.log('Payment method found from API:', paymentMethodId);
+    } else if (!paymentMethodId) {
+      // Fallback: inferir pelo primeiro dígito se a API falhar
       const firstDigit = cardData.cardNumber.charAt(0);
       const firstTwoDigits = cardData.cardNumber.substring(0, 2);
       
@@ -99,17 +115,10 @@ serve(async (req) => {
         paymentMethodId = 'master';
       } else if (firstTwoDigits === '34' || firstTwoDigits === '37') {
         paymentMethodId = 'amex';
-      } else if (firstTwoDigits === '36' || firstTwoDigits === '38') {
-        paymentMethodId = 'diners';
-      } else if (firstTwoDigits === '60' || firstTwoDigits === '65') {
-        paymentMethodId = 'elo';
-      } else if (firstTwoDigits === '50' || (parseInt(firstTwoDigits) >= 56 && parseInt(firstTwoDigits) <= 69)) {
-        paymentMethodId = 'maestro';
       } else {
-        // Default para visa se não conseguir identificar
         paymentMethodId = 'visa';
       }
-      console.log('Payment method inferred from card number:', paymentMethodId);
+      console.log('Payment method inferred as fallback:', paymentMethodId);
     }
 
     // Criar pagamento com cartão no Mercado Pago
