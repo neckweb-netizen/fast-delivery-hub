@@ -391,12 +391,23 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
                 <div className="space-y-4 bg-muted/50 p-4 rounded-lg">
                   <h4 className="text-sm font-medium">Dados do titular:</h4>
                   <div className="space-y-2">
-                    <Label>Nome completo</Label>
-                    <Input value={profile?.nome || ''} readOnly className="bg-background" />
+                    <Label htmlFor="pixNome">Nome completo *</Label>
+                    <Input 
+                      id="pixNome"
+                      value={cardholderName}
+                      onChange={(e) => setCardholderName(e.target.value)}
+                      placeholder="Nome completo do titular"
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label>E-mail</Label>
-                    <Input value={profile?.email || ''} readOnly className="bg-background" />
+                    <Label htmlFor="pixEmail">E-mail *</Label>
+                    <Input 
+                      id="pixEmail"
+                      type="email"
+                      value={cardholderEmail}
+                      onChange={(e) => setCardholderEmail(e.target.value)}
+                      placeholder="email@exemplo.com"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="tipoDocumento">Tipo de Documento *</Label>
