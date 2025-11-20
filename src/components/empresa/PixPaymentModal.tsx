@@ -286,9 +286,27 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
         });
         handleClose();
       } else {
+        // Mensagens mais específicas baseadas no statusDetail
+        const statusMessages: Record<string, string> = {
+          'cc_rejected_insufficient_amount': 'Saldo insuficiente no cartão',
+          'cc_rejected_bad_filled_security_code': 'Código de segurança inválido',
+          'cc_rejected_bad_filled_date': 'Data de validade inválida',
+          'cc_rejected_bad_filled_other': 'Revise os dados do cartão',
+          'cc_rejected_high_risk': 'Pagamento rejeitado por análise de segurança',
+          'cc_rejected_call_for_authorize': 'Entre em contato com o banco do cartão',
+          'cc_rejected_card_disabled': 'Cartão desabilitado ou bloqueado',
+          'cc_rejected_duplicated_payment': 'Pagamento duplicado',
+          'cc_rejected_max_attempts': 'Número máximo de tentativas excedido',
+          'cc_rejected_other_reason': 'Pagamento rejeitado pelo banco',
+        };
+
+        const errorMessage = data.statusDetail && statusMessages[data.statusDetail] 
+          ? statusMessages[data.statusDetail]
+          : 'Tente novamente ou use outro método de pagamento.';
+
         toast({
           title: 'Pagamento não aprovado',
-          description: 'Tente novamente ou use outro método de pagamento.',
+          description: errorMessage,
           variant: 'destructive',
         });
       }
