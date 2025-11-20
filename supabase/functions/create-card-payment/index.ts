@@ -94,12 +94,21 @@ serve(async (req) => {
       method: 'GET',
     });
 
-    const pmResult = await pmResponse.json();
-    console.log('Payment method search result:', JSON.stringify(pmResult));
+    let pmResult: any = null;
+    if (pmResponse.ok) {
+      try {
+        pmResult = await pmResponse.json();
+        console.log('Payment method search result:', JSON.stringify(pmResult));
+      } catch (e) {
+        console.error('Error parsing payment method response:', e);
+      }
+    } else {
+      console.error('Payment method search failed with status:', pmResponse.status);
+    }
 
     let paymentMethodId = tokenResult.payment_method_id;
     
-    if (pmResponse.ok && pmResult.results && pmResult.results.length > 0) {
+    if (pmResult && pmResponse.ok && pmResult.results && pmResult.results.length > 0) {
       paymentMethodId = pmResult.results[0].id;
       console.log('Payment method found from API:', paymentMethodId);
     } else if (!paymentMethodId) {
