@@ -82,6 +82,35 @@ serve(async (req) => {
     }
 
     console.log('Card token created successfully:', tokenResult.id);
+    console.log('Token result:', JSON.stringify(tokenResult));
+
+    // Determinar o payment_method_id
+    let paymentMethodId = tokenResult.payment_method_id;
+    
+    // Se não veio no token, tentar identificar pelo primeiro dígito do cartão
+    if (!paymentMethodId) {
+      const firstDigit = cardData.cardNumber.charAt(0);
+      const firstTwoDigits = cardData.cardNumber.substring(0, 2);
+      
+      if (firstDigit === '4') {
+        paymentMethodId = 'visa';
+      } else if (firstTwoDigits === '51' || firstTwoDigits === '52' || firstTwoDigits === '53' || 
+                 firstTwoDigits === '54' || firstTwoDigits === '55') {
+        paymentMethodId = 'master';
+      } else if (firstTwoDigits === '34' || firstTwoDigits === '37') {
+        paymentMethodId = 'amex';
+      } else if (firstTwoDigits === '36' || firstTwoDigits === '38') {
+        paymentMethodId = 'diners';
+      } else if (firstTwoDigits === '60' || firstTwoDigits === '65') {
+        paymentMethodId = 'elo';
+      } else if (firstTwoDigits === '50' || (parseInt(firstTwoDigits) >= 56 && parseInt(firstTwoDigits) <= 69)) {
+        paymentMethodId = 'maestro';
+      } else {
+        // Default para visa se não conseguir identificar
+        paymentMethodId = 'visa';
+      }
+      console.log('Payment method inferred from card number:', paymentMethodId);
+    }
 
     // Criar pagamento com cartão no Mercado Pago
     const paymentData = {
@@ -89,7 +118,7 @@ serve(async (req) => {
       token: tokenResult.id,
       description: `${plano.nome} - Plano Mensal`,
       installments: installments,
-      payment_method_id: tokenResult.payment_method_id,
+      payment_method_id: paymentMethodId,
       payer: {
         email: userInfo.email,
         identification: {
