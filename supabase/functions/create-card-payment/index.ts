@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { planoId, userInfo, cardToken, installments = 1 } = await req.json();
+    const { planoId, cardData, userInfo, installments = 1 } = await req.json();
 
     console.log('Creating card payment for plan:', planoId);
 
@@ -45,13 +45,51 @@ serve(async (req) => {
       );
     }
 
+    // Primeiro, criar o token do cartão no Mercado Pago
+    console.log('Creating card token...');
+    const tokenResponse = await fetch('https://api.mercadopago.com/v1/card_tokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${mpAccessToken}`,
+      },
+      body: JSON.stringify({
+        card_number: cardData.cardNumber,
+        cardholder: {
+          name: cardData.cardholderName,
+          identification: {
+            type: cardData.identificationType,
+            number: cardData.identificationNumber,
+          },
+        },
+        security_code: cardData.securityCode,
+        expiration_month: cardData.cardExpirationMonth,
+        expiration_year: cardData.cardExpirationYear,
+      }),
+    });
+
+    const tokenResult = await tokenResponse.json();
+
+    if (!tokenResponse.ok) {
+      console.error('Token creation error:', tokenResult);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Erro ao validar cartão',
+          details: tokenResult 
+        }),
+        { status: tokenResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Card token created successfully:', tokenResult.id);
+
     // Criar pagamento com cartão no Mercado Pago
     const paymentData = {
       transaction_amount: Number(plano.preco_mensal),
-      token: cardToken,
+      token: tokenResult.id,
       description: `${plano.nome} - Plano Mensal`,
       installments: installments,
-      payment_method_id: 'visa', // Será detectado automaticamente pelo token
+      payment_method_id: tokenResult.payment_method_id,
       payer: {
         email: userInfo.email,
         identification: {
