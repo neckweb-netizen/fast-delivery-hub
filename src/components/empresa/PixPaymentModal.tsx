@@ -9,10 +9,7 @@ import { Copy, CheckCircle, QrCode, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  initMercadoPago, 
-  createCardToken 
-} from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 
 // Inicializar SDK do Mercado Pago
 initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
@@ -248,30 +245,28 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
     setCardPaymentLoading(true);
 
     try {
-      console.log('[MP] Criando token do cartão...');
+      console.log('[MP] Processando pagamento com cartão...');
       
-      // Criar token do cartão usando os dados
-      const cardToken = await createCardToken({
-        cardholderName,
-        identificationType,
-        identificationNumber: identificationNumber.replace(/\D/g, ''),
-      });
-
-      if (!cardToken || !cardToken.id) {
-        throw new Error('Não foi possível processar o cartão. Verifique os dados e tente novamente.');
-      }
-
-      console.log('[MP] Token criado com sucesso:', cardToken.id);
-
+      const [month, year] = cardExpiry.split('/');
+      
+      // Enviar dados do cartão para o edge function processar
       const { data, error } = await supabase.functions.invoke('create-card-payment', {
         body: {
           planoId: plano.id,
+          cardData: {
+            cardNumber: cardNumber.replace(/\s/g, ''),
+            cardholderName,
+            cardExpirationMonth: month,
+            cardExpirationYear: `20${year}`,
+            securityCode: cardCvv,
+            identificationType,
+            identificationNumber: identificationNumber.replace(/\D/g, ''),
+          },
           userInfo: {
             email: cardholderEmail,
             docType: identificationType,
             docNumber: identificationNumber.replace(/\D/g, ''),
           },
-          cardToken: cardToken.id,
           installments: 1,
         },
       });
