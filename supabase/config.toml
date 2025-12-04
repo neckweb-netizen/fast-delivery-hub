@@ -1,1 +1,40 @@
 project_id = "uyleozhwzngnvyddfvni"
+
+[functions.create-card-payment]
+verify_jwt = false
+
+[functions.create-pix-payment]
+verify_jwt = false
+
+[functions.get-mercado-pago-token]
+verify_jwt = false
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.send-empresa-notification]
+verify_jwt = false
+
+[functions.send-event-notification]
+verify_jwt = false
+
+[functions.weather]
+verify_jwt = false
+
+[functions.log-security-event]
+verify_jwt = false
+
+[functions.rate-limit-check]
+verify_jwt = false
+
+[functions.create-short-url]
+verify_jwt = false
+
+[functions.redirect-short-url]
+verify_jwt = false
+
+[functions.manage-eventos]
+verify_jwt = false
