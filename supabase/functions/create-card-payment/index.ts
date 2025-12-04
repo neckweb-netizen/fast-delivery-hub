@@ -129,6 +129,11 @@ serve(async (req) => {
       console.log('Payment method inferred as fallback:', paymentMethodId);
     }
 
+    // Separar nome do titular em primeiro e último nome
+    const nameParts = cardData.cardholderName.trim().split(' ');
+    const firstName = nameParts[0] || 'Cliente';
+    const lastName = nameParts.slice(1).join(' ') || 'Usuario';
+
     // Criar pagamento com cartão no Mercado Pago
     const paymentData = {
       transaction_amount: Number(plano.preco_mensal),
@@ -136,16 +141,33 @@ serve(async (req) => {
       description: `${plano.nome} - Plano Mensal`,
       installments: installments,
       payment_method_id: paymentMethodId,
+      binary_mode: false, // Permite análise manual em caso de dúvida
+      statement_descriptor: 'SAJTEM',
       payer: {
         email: userInfo.email,
-        first_name: userInfo.firstName || cardData.cardholderName.split(' ')[0] || 'Cliente',
-        last_name: userInfo.lastName || cardData.cardholderName.split(' ').slice(1).join(' ') || 'Saj',
+        first_name: firstName,
+        last_name: lastName,
         identification: {
           type: userInfo.docType,
           number: userInfo.docNumber,
         },
       },
-      statement_descriptor: 'SAJTEM',
+      additional_info: {
+        items: [
+          {
+            id: planoId,
+            title: plano.nome,
+            description: `Assinatura do plano ${plano.nome}`,
+            category_id: 'services',
+            quantity: 1,
+            unit_price: Number(plano.preco_mensal),
+          }
+        ],
+        payer: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
     };
 
     console.log('Creating card payment with Mercado Pago:', { ...paymentData, token: 'REDACTED' });
