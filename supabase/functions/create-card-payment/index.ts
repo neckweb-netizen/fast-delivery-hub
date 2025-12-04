@@ -138,11 +138,14 @@ serve(async (req) => {
       payment_method_id: paymentMethodId,
       payer: {
         email: userInfo.email,
+        first_name: userInfo.firstName || cardData.cardholderName.split(' ')[0] || 'Cliente',
+        last_name: userInfo.lastName || cardData.cardholderName.split(' ').slice(1).join(' ') || 'Saj',
         identification: {
           type: userInfo.docType,
           number: userInfo.docNumber,
         },
       },
+      statement_descriptor: 'SAJTEM',
     };
 
     console.log('Creating card payment with Mercado Pago:', { ...paymentData, token: 'REDACTED' });
@@ -159,12 +162,22 @@ serve(async (req) => {
 
     const mpResult = await mpResponse.json();
 
+    console.log('Mercado Pago Response Status:', mpResponse.status);
+    console.log('Mercado Pago Full Response:', JSON.stringify(mpResult));
+
     if (!mpResponse.ok) {
-      console.error('Mercado Pago error:', mpResult);
+      console.error('Mercado Pago error details:', {
+        status: mpResponse.status,
+        cause: mpResult.cause,
+        message: mpResult.message,
+        error: mpResult.error,
+      });
+      
       return new Response(
         JSON.stringify({ 
           error: 'Erro ao processar pagamento',
-          details: mpResult 
+          details: mpResult,
+          message: mpResult.message || 'Pagamento não aprovado',
         }),
         { status: mpResponse.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
