@@ -11,10 +11,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { initMercadoPago } from '@mercadopago/sdk-react';
 
-// Inicializar SDK do Mercado Pago
-initMercadoPago('TEST-c9267c95-0402-4969-b163-b0c0456e33a7', {
-  locale: 'pt-BR'
-});
+// Flag para evitar inicialização múltipla
+let mpInitialized = false;
 
 interface PixPaymentModalProps {
   isOpen: boolean;
@@ -44,6 +42,32 @@ export const PixPaymentModal = ({ isOpen, onClose, plano }: PixPaymentModalProps
   
   const { toast } = useToast();
   const { profile } = useAuth();
+
+  // Inicializar Mercado Pago SDK com chave do backend
+  useEffect(() => {
+    const initMP = async () => {
+      if (mpInitialized) return;
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('get-mp-public-key');
+        
+        if (error) {
+          console.error('Erro ao buscar chave pública MP:', error);
+          return;
+        }
+        
+        if (data?.public_key && !mpInitialized) {
+          console.log('Inicializando Mercado Pago SDK...');
+          initMercadoPago(data.public_key, { locale: 'pt-BR' });
+          mpInitialized = true;
+        }
+      } catch (err) {
+        console.error('Erro ao inicializar MP:', err);
+      }
+    };
+    
+    initMP();
+  }, []);
 
   // Preencher email automaticamente
   useEffect(() => {
