@@ -9,6 +9,9 @@ verify_jwt = false
 [functions.get-mercado-pago-token]
 verify_jwt = false
 
+[functions.get-mp-public-key]
+verify_jwt = false
+
 [functions.send-contact-email]
 verify_jwt = false
 
