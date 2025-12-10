@@ -2,10 +2,23 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Tables } from '@/integrations/supabase/types';
 import { supabaseCache } from '@/lib/supabaseCache';
 
-type UserProfile = Tables<'usuarios'>;
+// Tipo do perfil do usuário
+interface UserProfile {
+  id: string;
+  user_id?: string;
+  nome: string;
+  email: string;
+  telefone?: string;
+  avatar_url?: string;
+  bio?: string;
+  tipo_conta?: string;
+  cidade_id?: string;
+  criado_em?: string;
+  atualizado_em?: string;
+}
+
 type TipoConta = 'usuario' | 'empresa' | 'admin_cidade' | 'admin_geral';
 
 interface AdditionalSignUpData {
@@ -26,12 +39,11 @@ export const useAuth = () => {
       console.log('👤 Creating user profile for:', userId, 'Type:', tipoConta);
       
       const { data, error } = await supabase
-        .from('usuarios')
+        .from('user_profiles')
         .insert({
-          id: userId,
+          user_id: userId,
           nome: authUser.user_metadata?.nome || authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'Usuário',
           email: authUser.email || '',
-          tipo_conta: tipoConta,
           telefone: additionalData?.telefone || authUser.user_metadata?.telefone
         })
         .select()
@@ -43,7 +55,11 @@ export const useAuth = () => {
       }
 
       console.log('✅ Profile created successfully:', data.nome);
-      return data;
+      
+      return {
+        ...data,
+        tipo_conta: (authUser.user_metadata?.tipo_conta as TipoConta) || tipoConta
+      } as UserProfile;
     } catch (error) {
       console.error('💥 Error creating user profile:', error);
       return null;
@@ -52,7 +68,6 @@ export const useAuth = () => {
 
   const fetchProfile = useCallback(async (userId: string, authUser: User): Promise<UserProfile | null> => {
     try {
-      // Check cache first
       const cacheKey = `user-profile-${userId}`;
       const cachedProfile = supabaseCache.get<UserProfile>(cacheKey);
       
@@ -64,9 +79,9 @@ export const useAuth = () => {
       console.log('🔍 Fetching profile for user:', userId);
       
       const { data, error } = await supabase
-        .from('usuarios')
+        .from('user_profiles')
         .select('*')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .maybeSingle();
 
       if (error) {
@@ -76,9 +91,12 @@ export const useAuth = () => {
 
       if (data) {
         console.log('✅ Profile found:', data.nome);
-        // Cache for 30 minutes for better performance
-        supabaseCache.set(cacheKey, data, 1800);
-        return data;
+        const profileWithTipo = {
+          ...data,
+          tipo_conta: (authUser.user_metadata?.tipo_conta as TipoConta) || 'usuario'
+        } as UserProfile;
+        supabaseCache.set(cacheKey, profileWithTipo, 1800);
+        return profileWithTipo;
       } else {
         console.log('⚠️ No profile found, creating default...');
         const newProfile = await createUserProfile(userId, authUser);
@@ -94,31 +112,12 @@ export const useAuth = () => {
   }, [createUserProfile]);
 
   const redirectAfterLogin = useCallback((userProfile: UserProfile, isExplicitLogin = false) => {
-    console.log('🔀 redirectAfterLogin called:', { 
-      isExplicitLogin, 
-      tipoConta: userProfile.tipo_conta,
-      nome: userProfile.nome 
-    });
+    if (!isExplicitLogin) return;
     
-    // Só redireciona se for um login explícito (não automático)
-    if (!isExplicitLogin) {
-      console.log('⏭️ Skipping redirect - not an explicit login');
-      return;
-    }
-    
-    // Redireciona usuários com empresas para o dashboard
     if (userProfile.tipo_conta === 'empresa') {
-      console.log('🏢 Redirecting empresa user to dashboard');
-      setTimeout(() => {
-        window.location.href = '/empresa-dashboard';
-      }, 100);
+      setTimeout(() => { window.location.href = '/empresa-dashboard'; }, 100);
     } else if (userProfile.tipo_conta === 'admin_geral' || userProfile.tipo_conta === 'admin_cidade') {
-      console.log('👨‍💼 Redirecting admin user to admin panel');
-      setTimeout(() => {
-        window.location.href = '/admin';
-      }, 100);
-    } else {
-      console.log('👤 Regular user - no redirect needed');
+      setTimeout(() => { window.location.href = '/admin'; }, 100);
     }
   }, []);
 
@@ -133,75 +132,44 @@ export const useAuth = () => {
       isInitializing = true;
 
       try {
-        console.log('🔐 Initializing authentication...');
-        
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
-          console.error('❌ Session error:', sessionError);
-          if (mounted) {
-            setLoading(false);
-            setInitialized(true);
-          }
-          isInitializing = false;
+          if (mounted) { setLoading(false); setInitialized(true); }
           return;
         }
 
         if (mounted) {
           setUser(session?.user ?? null);
-          
           if (session?.user) {
             const userProfile = await fetchProfile(session.user.id, session.user);
-            if (mounted) {
-              setProfile(userProfile);
-            }
+            if (mounted) setProfile(userProfile);
           }
-          
           setLoading(false);
           setInitialized(true);
         }
       } catch (error) {
-        console.error('💥 Initialize error:', error);
-        if (mounted) {
-          setLoading(false);
-          setInitialized(true);
-        }
+        if (mounted) { setLoading(false); setInitialized(true); }
       }
-      isInitializing = false;
     };
 
-    if (!initialized) {
-      initializeAuth();
-    }
+    if (!initialized) initializeAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('🔄 Auth state changed:', event, session?.user?.id);
-        
         if (!mounted) return;
-
-        if (event === 'INITIAL_SESSION' && initialized) {
-          console.log('⏭️ Skipping duplicate INITIAL_SESSION');
-          return;
-        }
+        if (event === 'INITIAL_SESSION' && initialized) return;
 
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Debounce profile fetching to avoid multiple rapid requests
-          if (fetchTimeoutRef.current) {
-            clearTimeout(fetchTimeoutRef.current);
-          }
-          
+          if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
           fetchTimeoutRef.current = setTimeout(async () => {
             if (mounted) {
               const userProfile = await fetchProfile(session.user.id, session.user);
-              if (mounted) {
-                setProfile(userProfile);
-                setLoading(false);
-              }
+              if (mounted) { setProfile(userProfile); setLoading(false); }
             }
-          }, 50); // Reduced debounce time for faster response
+          }, 50);
         } else {
           setProfile(null);
           setLoading(false);
@@ -211,65 +179,35 @@ export const useAuth = () => {
 
     return () => {
       mounted = false;
-      if (fetchTimeoutRef.current) {
-        clearTimeout(fetchTimeoutRef.current);
-      }
+      if (fetchTimeoutRef.current) clearTimeout(fetchTimeoutRef.current);
       subscription.unsubscribe();
     };
-  }, [initialized, fetchProfile, redirectAfterLogin]);
+  }, [initialized, fetchProfile]);
 
   const signIn = async (email: string, password: string) => {
-    console.log('🔑 Attempting sign in for:', email);
     setLoading(true);
-    
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) { setLoading(false); return { error }; }
       
-      if (error) {
-        console.error('❌ Sign in error:', error);
-        setLoading(false);
-        return { error };
-      }
-      
-      console.log('✅ Sign in successful');
-      
-      // Buscar perfil do usuário para redirecionamento apenas no login explícito
       if (data.user) {
         const userProfile = await fetchProfile(data.user.id, data.user);
-        if (userProfile) {
-          redirectAfterLogin(userProfile, true); // true indica login explícito
-        }
+        if (userProfile) redirectAfterLogin(userProfile, true);
       }
-      
       return { error: null };
     } catch (error) {
-      console.error('💥 Unexpected sign in error:', error);
       setLoading(false);
       return { error };
     }
   };
 
-  const signUp = async (
-    email: string, 
-    password: string, 
-    nome: string, 
-    tipoConta: TipoConta = 'usuario',
-    additionalData?: AdditionalSignUpData
-  ) => {
+  const signUp = async (email: string, password: string, nome: string, tipoConta: TipoConta = 'usuario', additionalData?: AdditionalSignUpData) => {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email, password,
         options: {
-          data: {
-            nome,
-            tipo_conta: tipoConta,
-            ...additionalData
-          },
+          data: { nome, tipo_conta: tipoConta, ...additionalData },
           emailRedirectTo: `${window.location.origin}/`
         },
       });
@@ -280,29 +218,15 @@ export const useAuth = () => {
   };
 
   const signOut = async () => {
-    console.log('🚪 Signing out...');
     setLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('❌ Sign out error:', error);
-      } else {
-        console.log('✅ Sign out successful');
-        setProfile(null);
-        window.location.href = '/';
-      }
+      if (!error) { setProfile(null); window.location.href = '/'; }
       return { error };
     } finally {
       setLoading(false);
     }
   };
 
-  return {
-    user,
-    profile,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-  };
+  return { user, profile, loading, signIn, signUp, signOut };
 };
