@@ -139,47 +139,7 @@ export const EventosSection = () => {
                     </div>
                   )}
 
-                  {evento.status_aprovacao === 'pendente' && profile?.tipo_conta && ['admin_geral', 'admin_cidade'].includes(profile.tipo_conta) && (
-                    <div className="flex gap-2 pt-2">
-                      <Button 
-                        size="sm" 
-                        onClick={async () => {
-                          const { error } = await supabase
-                            .from('eventos')
-                            .update({ 
-                              status_aprovacao: 'aprovado',
-                              aprovado_por: profile.id,
-                              data_aprovacao: new Date().toISOString(),
-                              ativo: true
-                            })
-                            .eq('id', evento.id);
-                          
-                          if (!error) refetch();
-                        }}
-                      >
-                        Aprovar
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="destructive"
-                        onClick={async () => {
-                          const { error } = await supabase
-                            .from('eventos')
-                            .update({ 
-                              status_aprovacao: 'rejeitado',
-                              aprovado_por: profile.id,
-                              data_aprovacao: new Date().toISOString(),
-                              ativo: false
-                            })
-                            .eq('id', evento.id);
-                          
-                          if (!error) refetch();
-                        }}
-                      >
-                        Rejeitar
-                      </Button>
-                    </div>
-                  )}
+                  
                 </div>
                 
                 <div className="pt-4 border-t text-xs text-muted-foreground">
