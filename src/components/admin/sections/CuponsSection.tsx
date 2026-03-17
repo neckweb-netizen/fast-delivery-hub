@@ -104,15 +104,15 @@ export const CuponsSection = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-lg font-semibold">
-                    {cupom.tipo === 'porcentagem' ? (
+                    {cupom.tipo_desconto === 'percentual' ? (
                       <>
                         <Percent className="w-5 h-5 text-green-600 flex-shrink-0" />
-                        <span>{cupom.valor}% de desconto</span>
+                        <span>{cupom.valor_desconto}% de desconto</span>
                       </>
                     ) : (
                       <>
                         <DollarSign className="w-5 h-5 text-green-600 flex-shrink-0" />
-                        <span>R$ {cupom.valor} de desconto</span>
+                        <span>R$ {cupom.valor_desconto} de desconto</span>
                       </>
                     )}
                   </div>
