@@ -75,11 +75,8 @@ export const ProblemasCidadeSection = () => {
     const { error } = await supabase
       .from('problemas_cidade')
       .update({
-        status_aprovacao: 'aprovado',
-        aprovado_por: user?.id,
-        data_aprovacao: new Date().toISOString(),
-        observacoes_moderacao: observacoes,
-      })
+        status: 'aprovado',
+      } as any)
       .eq('id', problemaModal.id);
 
     if (error) {
