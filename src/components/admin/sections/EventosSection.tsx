@@ -144,10 +144,6 @@ export const EventosSection = () => {
                 
                 <div className="pt-4 border-t text-xs text-muted-foreground">
                   <p>Criado em: {new Date(evento.criado_em).toLocaleDateString()}</p>
-                  <p>Atualizado em: {new Date(evento.atualizado_em).toLocaleDateString()}</p>
-                  {evento.data_aprovacao && (
-                    <p>Aprovado em: {new Date(evento.data_aprovacao).toLocaleDateString()}</p>
-                  )}
                 </div>
               </div>
             </CardContent>

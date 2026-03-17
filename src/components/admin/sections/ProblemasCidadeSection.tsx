@@ -142,7 +142,7 @@ export const ProblemasCidadeSection = () => {
 
     const { error } = await supabase
       .from('problemas_cidade')
-      .update({ ativo: false })
+      .update({ status: 'fechado' } as any)
       .eq('id', id);
 
     if (error) {

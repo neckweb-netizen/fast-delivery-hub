@@ -133,17 +133,17 @@ export const CuponsSection = () => {
                   <div className="text-sm">
                     <span className="font-medium">Uso:</span>
                     <span className="ml-2">
-                      {cupom.quantidade_usada}
-                      {cupom.quantidade_total && ` / ${cupom.quantidade_total}`}
+                      {cupom.usos || 0}
+                      {cupom.limite_uso && ` / ${cupom.limite_uso}`}
                     </span>
                   </div>
                   
-                  {cupom.quantidade_total && (
+                  {cupom.limite_uso && (
                     <div className="w-full bg-muted rounded-full h-2">
                       <div 
                         className="bg-primary h-2 rounded-full transition-all" 
                         style={{
-                          width: `${Math.min((cupom.quantidade_usada / cupom.quantidade_total) * 100, 100)}%`
+                          width: `${Math.min(((cupom.usos || 0) / cupom.limite_uso) * 100, 100)}%`
                         }}
                       />
                     </div>

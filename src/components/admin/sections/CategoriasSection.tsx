@@ -168,7 +168,7 @@ export const CategoriasSection = () => {
                 
                 <div className="flex items-center gap-2 text-sm">
                   <Image className="w-4 h-4" />
-                  {categoria.icone_url ? (
+                  {categoria.icone ? (
                     <span>Ícone configurado</span>
                   ) : (
                     <span className="text-muted-foreground">Sem ícone</span>
