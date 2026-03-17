@@ -75,11 +75,8 @@ export const ProblemasCidadeSection = () => {
     const { error } = await supabase
       .from('problemas_cidade')
       .update({
-        status_aprovacao: 'aprovado',
-        aprovado_por: user?.id,
-        data_aprovacao: new Date().toISOString(),
-        observacoes_moderacao: observacoes,
-      })
+        status: 'aprovado',
+      } as any)
       .eq('id', problemaModal.id);
 
     if (error) {
@@ -101,11 +98,8 @@ export const ProblemasCidadeSection = () => {
     const { error } = await supabase
       .from('problemas_cidade')
       .update({
-        status_aprovacao: 'rejeitado',
-        aprovado_por: user?.id,
-        data_aprovacao: new Date().toISOString(),
-        observacoes_moderacao: observacoes,
-      })
+        status: 'rejeitado',
+      } as any)
       .eq('id', problemaModal.id);
 
     if (error) {
@@ -128,13 +122,8 @@ export const ProblemasCidadeSection = () => {
         titulo: tituloEdit,
         descricao: descricaoEdit,
         endereco: enderecoEdit,
-        bairro: bairroEdit,
-        prioridade: prioridadeEdit as 'baixa' | 'media' | 'alta' | 'urgente',
-        status: statusSelecionado as 'aberto' | 'em_analise' | 'resolvido' | 'fechado',
-        moderado: true,
-        data_moderacao: new Date().toISOString(),
-        observacoes_moderacao: observacoes,
-      })
+        status: statusSelecionado,
+      } as any)
       .eq('id', problemaModal.id);
 
     if (error) {
@@ -153,7 +142,7 @@ export const ProblemasCidadeSection = () => {
 
     const { error } = await supabase
       .from('problemas_cidade')
-      .update({ ativo: false })
+      .update({ status: 'fechado' } as any)
       .eq('id', id);
 
     if (error) {

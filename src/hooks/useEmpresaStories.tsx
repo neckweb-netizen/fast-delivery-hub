@@ -8,22 +8,20 @@ export const useEmpresaStories = () => {
     queryKey: ['empresa-stories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('empresa_stories')
+        .from('stories')
         .select(`
           *,
           empresas(
             id,
             nome,
-            imagem_capa_url,
             slug
           )
         `)
         .eq('ativo', true)
-        .order('ordem', { ascending: true })
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
   });
 };
@@ -36,47 +34,34 @@ export const useAdminEmpresaStories = () => {
     queryKey: ['admin-empresa-stories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('empresa_stories')
+        .from('stories')
         .select(`
           *,
           empresas(
             id,
             nome,
-            imagem_capa_url,
             slug
           )
         `)
-        .order('ordem', { ascending: true })
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
   });
 
   const createStoryMutation = useMutation({
-    mutationFn: async (data: {
-      empresa_id?: string | null;
-      tipo_story: 'empresa' | 'sistema';
-      nome_perfil_sistema?: string;
-      tipo_midia?: 'imagem' | 'video';
-      url_midia: string;
-      imagem_story_url?: string;
-      imagem_capa_url?: string;
-      duracao?: number;
-      ordem?: number;
-      botao_titulo?: string;
-      botao_link?: string;
-      botao_tipo?: string;
-    }) => {
-      const storyData = {
-        ...data,
-        // Manter compatibilidade com imagem_story_url se url_midia não estiver definida
-        imagem_story_url: data.imagem_story_url || data.url_midia,
+    mutationFn: async (data: any) => {
+      const storyData: any = {
+        empresa_id: data.empresa_id,
+        tipo: data.tipo_midia || 'imagem',
+        media_url: data.url_midia || data.imagem_story_url,
+        titulo: data.nome_perfil_sistema || null,
+        link: data.botao_link || null,
       };
       
       const { error } = await supabase
-        .from('empresa_stories')
+        .from('stories')
         .insert(storyData);
 
       if (error) throw error;
@@ -97,42 +82,20 @@ export const useAdminEmpresaStories = () => {
   });
 
   const updateStoryMutation = useMutation({
-    mutationFn: async ({ id, ...data }: {
-      id: string;
-      imagem_story_url?: string;
-      url_midia?: string;
-      tipo_midia?: string;
-      nome_perfil_sistema?: string;
-      imagem_capa_url?: string;
-      duracao?: number;
-      ordem?: number;
-      ativo?: boolean;
-      botao_titulo?: string;
-      botao_link?: string;
-      botao_tipo?: string;
-    }) => {
-      // Criar objeto apenas com campos definidos (não undefined)
+    mutationFn: async ({ id, ...data }: { id: string; [key: string]: any }) => {
       const updateData: any = {};
       
-      // Incluir apenas campos que têm valores definidos
-      Object.entries(data).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          updateData[key] = value;
-        }
-      });
+      if (data.ativo !== undefined) updateData.ativo = data.ativo;
+      if (data.url_midia || data.imagem_story_url) updateData.media_url = data.url_midia || data.imagem_story_url;
+      if (data.titulo) updateData.titulo = data.titulo;
+      if (data.botao_link) updateData.link = data.botao_link;
       
-      // Se imagem_story_url for fornecida, usar como url_midia também
-      if (updateData.imagem_story_url && !updateData.url_midia) {
-        updateData.url_midia = updateData.imagem_story_url;
-      }
-      
-      // Garantir que não estamos enviando campos vazios
       if (Object.keys(updateData).length === 0) {
         throw new Error('Nenhum campo válido para atualização');
       }
       
       const { error } = await supabase
-        .from('empresa_stories')
+        .from('stories')
         .update(updateData)
         .eq('id', id);
 
@@ -156,7 +119,7 @@ export const useAdminEmpresaStories = () => {
   const deleteStoryMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('empresa_stories')
+        .from('stories')
         .delete()
         .eq('id', id);
 

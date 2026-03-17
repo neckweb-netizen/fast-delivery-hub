@@ -56,9 +56,9 @@ export const LugaresPublicosSection = () => {
   const { data: lugares, isLoading } = useLugaresPublicosAdmin();
   const deleteMutation = useDeleteLugarPublico();
 
-  const filteredLugares = lugares?.filter(lugar =>
+  const filteredLugares = lugares?.filter((lugar: any) =>
     lugar.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lugar.tipo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (lugar.categoria || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (lugar.endereco && lugar.endereco.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 

@@ -14,7 +14,6 @@ import {
   CheckCircle, 
   XCircle, 
   RefreshCw,
-  ExternalLink
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -28,7 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-const tipoAvisoConfig = {
+const tipoAvisoConfig: Record<string, any> = {
   info: { icon: Info, color: 'bg-blue-100 text-blue-800', label: 'Informação' },
   warning: { icon: AlertTriangle, color: 'bg-yellow-100 text-yellow-800', label: 'Atenção' },
   success: { icon: CheckCircle, color: 'bg-green-100 text-green-800', label: 'Sucesso' },
@@ -92,10 +91,10 @@ export const AvisosSistemaSection = () => {
       </div>
 
       <div className="grid gap-4">
-        {avisos.map((aviso) => {
-          const config = tipoAvisoConfig[aviso.tipo_aviso as keyof typeof tipoAvisoConfig] || tipoAvisoConfig.info;
+        {avisos.map((aviso: any) => {
+          const tipoKey = aviso.tipo || 'info';
+          const config = tipoAvisoConfig[tipoKey] || tipoAvisoConfig.info;
           const IconComponent = config.icon;
-          const botoes = Array.isArray(aviso.botoes) ? aviso.botoes : [];
           
           return (
             <Card key={aviso.id}>
@@ -109,11 +108,6 @@ export const AvisosSistemaSection = () => {
                         <Badge className={config.color}>
                           {config.label}
                         </Badge>
-                        {aviso.prioridade > 0 && (
-                          <Badge variant="outline">
-                            Prioridade {aviso.prioridade}
-                          </Badge>
-                        )}
                         <Badge variant={aviso.ativo ? 'default' : 'secondary'}>
                           {aviso.ativo ? 'Ativo' : 'Inativo'}
                         </Badge>
@@ -160,24 +154,8 @@ export const AvisosSistemaSection = () => {
               </CardHeader>
               
               <CardContent>
-                {aviso.conteudo && (
-                  <p className="text-muted-foreground mb-4">{aviso.conteudo}</p>
-                )}
-                
-                {botoes && botoes.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {botoes.map((botao: any, index: number) => (
-                      <Button
-                        key={index}
-                        size="sm"
-                        variant={botao.cor === 'primary' ? 'default' : 'outline'}
-                        onClick={() => window.open(botao.link, '_blank')}
-                      >
-                        {botao.texto}
-                        <ExternalLink className="h-3 w-3 ml-1" />
-                      </Button>
-                    ))}
-                  </div>
+                {aviso.mensagem && (
+                  <p className="text-muted-foreground mb-4">{aviso.mensagem}</p>
                 )}
                 
                 <div className="text-sm text-muted-foreground">
@@ -189,7 +167,6 @@ export const AvisosSistemaSection = () => {
                     {aviso.data_fim && (
                       <span>Fim: {new Date(aviso.data_fim).toLocaleString('pt-BR')}</span>
                     )}
-                    {aviso.usuarios && typeof aviso.usuarios === 'object' && 'nome' in aviso.usuarios && <span>Por: {aviso.usuarios.nome}</span>}
                   </div>
                 </div>
               </CardContent>

@@ -9,17 +9,25 @@ export const useEmpresaAvaliacoes = (empresaId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('avaliacoes')
-        .select(`
-          *,
-          usuarios(
-            nome
-          )
-        `)
+        .select('*')
         .eq('empresa_id', empresaId)
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+
+      // Fetch user names separately
+      const userIds = [...new Set((data || []).map(a => a.usuario_id).filter(Boolean))];
+      const { data: usuarios } = await supabase
+        .from('usuarios')
+        .select('id, nome')
+        .in('id', userIds as string[]);
+
+      const userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u.nome; return acc; }, {});
+
+      return (data || []).map(a => ({
+        ...a,
+        usuario_nome: userMap[a.usuario_id as string] || 'Usuário'
+      }));
     },
     enabled: !!empresaId,
   });
@@ -29,7 +37,6 @@ export const useEmpresaEstatisticasAvaliacoes = (empresaId: string) => {
   return useQuery({
     queryKey: ['empresa-estatisticas-avaliacoes', empresaId],
     queryFn: async () => {
-      // Buscar todas as avaliações para calcular estatísticas
       const { data: avaliacoes, error } = await supabase
         .from('avaliacoes')
         .select('nota')
@@ -46,28 +53,24 @@ export const useEmpresaEstatisticasAvaliacoes = (empresaId: string) => {
       }
 
       const total = avaliacoes.length;
-      const soma = avaliacoes.reduce((acc, av) => acc + av.nota, 0);
+      const soma = avaliacoes.reduce((acc, av) => acc + (av.nota || 0), 0);
       const media = soma / total;
 
-      // Calcular distribuição por nota
-      const distribuicao = avaliacoes.reduce((acc, av) => {
-        acc[av.nota] = (acc[av.nota] || 0) + 1;
+      const distribuicao = avaliacoes.reduce((acc: any, av) => {
+        acc[av.nota || 0] = (acc[av.nota || 0] || 0) + 1;
         return acc;
       }, {} as Record<number, number>);
-
-      // Garantir que todas as notas de 1-5 existam
-      const distribuicaoCompleta = {
-        1: distribuicao[1] || 0,
-        2: distribuicao[2] || 0,
-        3: distribuicao[3] || 0,
-        4: distribuicao[4] || 0,
-        5: distribuicao[5] || 0,
-      };
 
       return {
         total_avaliacoes: total,
         media_avaliacoes: parseFloat(media.toFixed(1)),
-        distribuicao_notas: distribuicaoCompleta
+        distribuicao_notas: {
+          1: distribuicao[1] || 0,
+          2: distribuicao[2] || 0,
+          3: distribuicao[3] || 0,
+          4: distribuicao[4] || 0,
+          5: distribuicao[5] || 0,
+        }
       };
     },
     enabled: !!empresaId,
@@ -120,7 +123,6 @@ export const useCriarAvaliacao = () => {
     },
     onSuccess: (_, variables) => {
       toast.success('Avaliação criada com sucesso!');
-      // Invalidar queries relacionadas
       queryClient.invalidateQueries({ queryKey: ['empresa-avaliacoes', variables.empresaId] });
       queryClient.invalidateQueries({ queryKey: ['empresa-estatisticas-avaliacoes', variables.empresaId] });
       queryClient.invalidateQueries({ queryKey: ['usuario-ja-avaliou', variables.empresaId, variables.usuarioId] });
@@ -151,7 +153,6 @@ export const useUserAvaliacoes = (usuarioId?: string) => {
             id,
             nome,
             slug,
-            imagem_capa_url,
             categorias(nome)
           )
         `)
@@ -173,13 +174,25 @@ export const useAdminAvaliacoes = () => {
         .from('avaliacoes')
         .select(`
           *,
-          empresas(nome),
-          usuarios(nome)
+          empresas(nome)
         `)
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data || [];
+
+      // Fetch user names separately to avoid FK relation issues
+      const userIds = [...new Set((data || []).map(a => a.usuario_id).filter(Boolean))];
+      const { data: usuarios } = await supabase
+        .from('usuarios')
+        .select('id, nome')
+        .in('id', userIds as string[]);
+
+      const userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u.nome; return acc; }, {});
+
+      return (data || []).map(a => ({
+        ...a,
+        usuario_nome: userMap[a.usuario_id as string] || 'Usuário desconhecido'
+      }));
     },
   });
 };
@@ -196,7 +209,6 @@ export const useEditarAvaliacao = () => {
       const updateData: any = {};
       if (comentario !== undefined) updateData.comentario = comentario?.trim() || null;
       if (nota !== undefined) updateData.nota = nota;
-      updateData.atualizado_em = new Date().toISOString();
 
       const { data, error } = await supabase
         .from('avaliacoes')

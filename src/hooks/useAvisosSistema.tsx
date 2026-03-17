@@ -12,35 +12,20 @@ export const useAvisosSistema = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('avisos_sistema')
-        .select(`
-          *,
-          usuarios!avisos_sistema_autor_id_fkey(nome)
-        `)
+        .select('*')
         .eq('ativo', true)
-        .order('prioridade', { ascending: false })
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return (data || []) as any[];
     },
   });
 
   const criarAvisoMutation = useMutation({
-    mutationFn: async (dados: {
-      titulo: string;
-      conteudo?: string;
-      tipo_aviso: string;
-      botoes?: Array<{texto: string; link: string; cor?: string}>;
-      data_inicio?: string;
-      data_fim?: string;
-      prioridade?: number;
-    }) => {
+    mutationFn: async (dados: any) => {
       const { error } = await supabase
         .from('avisos_sistema')
-        .insert({
-          ...dados,
-          autor_id: (await supabase.auth.getUser()).data.user?.id
-        });
+        .insert(dados as any);
 
       if (error) throw error;
     },
@@ -57,7 +42,7 @@ export const useAvisosSistema = () => {
     mutationFn: async ({ id, ...dados }: { id: string } & any) => {
       const { error } = await supabase
         .from('avisos_sistema')
-        .update(dados)
+        .update(dados as any)
         .eq('id', id);
 
       if (error) throw error;

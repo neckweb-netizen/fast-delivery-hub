@@ -129,6 +129,7 @@ export type Database = {
       avisos_sistema: {
         Row: {
           ativo: boolean | null
+          autor_id: string | null
           criado_em: string | null
           data_fim: string | null
           data_inicio: string | null
@@ -139,6 +140,7 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean | null
+          autor_id?: string | null
           criado_em?: string | null
           data_fim?: string | null
           data_inicio?: string | null
@@ -149,6 +151,7 @@ export type Database = {
         }
         Update: {
           ativo?: boolean | null
+          autor_id?: string | null
           criado_em?: string | null
           data_fim?: string | null
           data_inicio?: string | null
@@ -157,7 +160,15 @@ export type Database = {
           tipo?: string | null
           titulo?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "avisos_sistema_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       banners: {
         Row: {

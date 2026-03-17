@@ -89,16 +89,8 @@ export const EventosSection = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Badge 
-                    variant={
-                      evento.status_aprovacao === 'aprovado' ? 'default' : 
-                      evento.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                      'secondary'
-                    }
-                  >
-                    {evento.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                     evento.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                     'Pendente'}
+                  <Badge variant={evento.ativo ? 'default' : 'secondary'}>
+                    {evento.ativo ? 'Ativo' : 'Inativo'}
                   </Badge>
                   <Badge variant={evento.ativo ? 'default' : 'secondary'}>
                     {evento.ativo ? 'Ativo' : 'Inativo'}
@@ -135,14 +127,7 @@ export const EventosSection = () => {
                     </div>
                   )}
 
-                  {evento.cidades && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Cidade:</span>
-                      <span>{evento.cidades.nome} - {evento.cidades.estado}</span>
-                    </div>
-                  )}
-                  
-                  {evento.imagem_banner ? (
+                  {evento.imagem_url ? (
                     <div className="flex items-center gap-2 text-green-600">
                       <Image className="w-4 h-4" />
                       <span>Banner configurado</span>
@@ -154,55 +139,11 @@ export const EventosSection = () => {
                     </div>
                   )}
 
-                  {evento.status_aprovacao === 'pendente' && profile?.tipo_conta && ['admin_geral', 'admin_cidade'].includes(profile.tipo_conta) && (
-                    <div className="flex gap-2 pt-2">
-                      <Button 
-                        size="sm" 
-                        onClick={async () => {
-                          const { error } = await supabase
-                            .from('eventos')
-                            .update({ 
-                              status_aprovacao: 'aprovado',
-                              aprovado_por: profile.id,
-                              data_aprovacao: new Date().toISOString(),
-                              ativo: true
-                            })
-                            .eq('id', evento.id);
-                          
-                          if (!error) refetch();
-                        }}
-                      >
-                        Aprovar
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="destructive"
-                        onClick={async () => {
-                          const { error } = await supabase
-                            .from('eventos')
-                            .update({ 
-                              status_aprovacao: 'rejeitado',
-                              aprovado_por: profile.id,
-                              data_aprovacao: new Date().toISOString(),
-                              ativo: false
-                            })
-                            .eq('id', evento.id);
-                          
-                          if (!error) refetch();
-                        }}
-                      >
-                        Rejeitar
-                      </Button>
-                    </div>
-                  )}
+                  
                 </div>
                 
                 <div className="pt-4 border-t text-xs text-muted-foreground">
                   <p>Criado em: {new Date(evento.criado_em).toLocaleDateString()}</p>
-                  <p>Atualizado em: {new Date(evento.atualizado_em).toLocaleDateString()}</p>
-                  {evento.data_aprovacao && (
-                    <p>Aprovado em: {new Date(evento.data_aprovacao).toLocaleDateString()}</p>
-                  )}
                 </div>
               </div>
             </CardContent>

@@ -88,7 +88,7 @@ export const CuponsSection = () => {
                     <Badge variant="secondary">Agendado</Badge>
                   )}
                   <Badge variant="outline">
-                    {cupom.tipo === 'porcentagem' ? 'Percentual' : 'Valor Fixo'}
+                    {cupom.tipo_desconto === 'percentual' ? 'Percentual' : 'Valor Fixo'}
                   </Badge>
                 </div>
               </div>
@@ -104,15 +104,15 @@ export const CuponsSection = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-lg font-semibold">
-                    {cupom.tipo === 'porcentagem' ? (
+                    {cupom.tipo_desconto === 'percentual' ? (
                       <>
                         <Percent className="w-5 h-5 text-green-600 flex-shrink-0" />
-                        <span>{cupom.valor}% de desconto</span>
+                        <span>{cupom.valor_desconto}% de desconto</span>
                       </>
                     ) : (
                       <>
                         <DollarSign className="w-5 h-5 text-green-600 flex-shrink-0" />
-                        <span>R$ {cupom.valor} de desconto</span>
+                        <span>R$ {cupom.valor_desconto} de desconto</span>
                       </>
                     )}
                   </div>
@@ -133,17 +133,17 @@ export const CuponsSection = () => {
                   <div className="text-sm">
                     <span className="font-medium">Uso:</span>
                     <span className="ml-2">
-                      {cupom.quantidade_usada}
-                      {cupom.quantidade_total && ` / ${cupom.quantidade_total}`}
+                      {cupom.usos || 0}
+                      {cupom.limite_uso && ` / ${cupom.limite_uso}`}
                     </span>
                   </div>
                   
-                  {cupom.quantidade_total && (
+                  {cupom.limite_uso && (
                     <div className="w-full bg-muted rounded-full h-2">
                       <div 
                         className="bg-primary h-2 rounded-full transition-all" 
                         style={{
-                          width: `${Math.min((cupom.quantidade_usada / cupom.quantidade_total) * 100, 100)}%`
+                          width: `${Math.min(((cupom.usos || 0) / cupom.limite_uso) * 100, 100)}%`
                         }}
                       />
                     </div>
