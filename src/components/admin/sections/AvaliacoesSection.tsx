@@ -52,7 +52,7 @@ export const AvaliacoesSection = () => {
       </div>
       
       <div className="grid gap-4">
-        {avaliacoes?.map((avaliacao) => (
+        {avaliacoes?.map((avaliacao: any) => (
           <Card key={avaliacao.id}>
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -64,7 +64,7 @@ export const AvaliacoesSection = () => {
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <User className="w-4 h-4" />
-                      {avaliacao.usuarios?.nome}
+                      {avaliacao.usuario_nome || 'Usuário'}
                     </span>
                     <span className="flex items-center gap-1">
                       <Building2 className="w-4 h-4" />
@@ -77,14 +77,9 @@ export const AvaliacoesSection = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  {avaliacao.resposta_empresa ? (
-                    <Badge variant="default">Respondida</Badge>
-                  ) : (
-                    <Badge variant="secondary">Pendente</Badge>
-                  )}
-                  {avaliacao.imagens && avaliacao.imagens.length > 0 && (
-                    <Badge variant="outline">Com imagens</Badge>
-                  )}
+                  <Badge variant="secondary">
+                    {avaliacao.aprovada ? 'Aprovada' : 'Pendente'}
+                  </Badge>
                   <div className="flex gap-1 ml-2">
                     <Button
                       size="sm"
@@ -137,40 +132,9 @@ export const AvaliacoesSection = () => {
                   </div>
                 )}
                 
-                {avaliacao.resposta_empresa && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <Building2 className="w-4 h-4" />
-                      Resposta do local:
-                    </h4>
-                    <p className="text-sm bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
-                      "{avaliacao.resposta_empresa}"
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Respondido em: {avaliacao.respondido_em ? 
-                        new Date(avaliacao.respondido_em).toLocaleDateString() : 
-                        'Data não disponível'
-                      }
-                    </p>
-                  </div>
-                )}
-                
-                {avaliacao.imagens && avaliacao.imagens.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="font-medium">Imagens anexadas:</h4>
-                    <div className="flex gap-2">
-                      {avaliacao.imagens.map((imagem, index) => (
-                        <Badge key={index} variant="outline">
-                          Imagem {index + 1}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
                 <div className="pt-4 border-t text-xs text-muted-foreground">
                   <p>ID da avaliação: {avaliacao.id}</p>
-                  <p>Última atualização: {new Date(avaliacao.atualizado_em).toLocaleDateString()}</p>
+                  <p>Criado em: {new Date(avaliacao.criado_em).toLocaleDateString()}</p>
                 </div>
               </div>
             </CardContent>

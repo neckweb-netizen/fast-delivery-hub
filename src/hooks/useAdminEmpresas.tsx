@@ -15,13 +15,25 @@ export const useAdminEmpresas = () => {
         .select(`
           *,
           categorias(nome),
-          usuario:usuarios!empresas_usuario_id_fkey(nome, email),
           cidades(nome)
         `)
         .order('criado_em', { ascending: false });
 
       if (error) throw error;
-      return data;
+
+      // Fetch user info separately to avoid FK issues with tipos
+      const userIds = [...new Set((data || []).map(e => e.usuario_id).filter(Boolean))];
+      const { data: usuarios } = await supabase
+        .from('usuarios')
+        .select('id, nome, email, telefone')
+        .in('id', userIds as string[]);
+
+      const userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u; return acc; }, {});
+
+      return (data || []).map(e => ({
+        ...e,
+        usuario: userMap[e.usuario_id as string] || null
+      })) as any[];
     },
   });
 
@@ -33,14 +45,26 @@ export const useAdminEmpresas = () => {
         .select(`
           *,
           categorias(nome),
-          usuario:usuarios!empresas_usuario_id_fkey(nome, email, telefone),
           cidades(nome)
         `)
-        .eq('status_aprovacao', 'pendente')
+        .eq('aprovada', false)
         .order('criado_em', { ascending: true });
 
       if (error) throw error;
-      return data;
+
+      const userIds = [...new Set((data || []).map(e => e.usuario_id).filter(Boolean))];
+      const { data: usuarios } = await supabase
+        .from('usuarios')
+        .select('id, nome, email, telefone')
+        .in('id', userIds as string[]);
+
+      const userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u; return acc; }, {});
+
+      return (data || []).map(e => ({
+        ...e,
+        usuario: userMap[e.usuario_id as string] || null,
+        status_aprovacao: (e as any).status_aprovacao || (e.aprovada ? 'aprovado' : 'pendente')
+      })) as any[];
     },
   });
 
@@ -51,11 +75,8 @@ export const useAdminEmpresas = () => {
       const { error } = await supabase
         .from('empresas')
         .update({ 
-          status_aprovacao: 'aprovado',
-          aprovado_por: user?.id,
-          observacoes_admin: observacoes,
-          data_aprovacao: new Date().toISOString()
-        })
+          aprovada: true,
+        } as any)
         .eq('id', id);
 
       if (error) throw error;
@@ -72,15 +93,11 @@ export const useAdminEmpresas = () => {
 
   const rejeitarEmpresaMutation = useMutation({
     mutationFn: async ({ id, observacoes }: { id: string; observacoes: string }) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
       const { error } = await supabase
         .from('empresas')
         .update({ 
-          status_aprovacao: 'rejeitado',
-          aprovado_por: user?.id,
-          observacoes_admin: observacoes
-        })
+          aprovada: false,
+        } as any)
         .eq('id', id);
 
       if (error) throw error;
@@ -99,7 +116,7 @@ export const useAdminEmpresas = () => {
     mutationFn: async ({ id, field, value }: { id: string; field: string; value: boolean }) => {
       const { error } = await supabase
         .from('empresas')
-        .update({ [field]: value })
+        .update({ [field]: value } as any)
         .eq('id', id);
 
       if (error) throw error;
