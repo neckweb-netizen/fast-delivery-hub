@@ -127,14 +127,7 @@ export const EventosSection = () => {
                     </div>
                   )}
 
-                  {evento.cidades && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Cidade:</span>
-                      <span>{evento.cidades.nome} - {evento.cidades.estado}</span>
-                    </div>
-                  )}
-                  
-                  {evento.imagem_banner ? (
+                  {evento.imagem_url ? (
                     <div className="flex items-center gap-2 text-green-600">
                       <Image className="w-4 h-4" />
                       <span>Banner configurado</span>
