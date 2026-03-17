@@ -88,7 +88,7 @@ export const CuponsSection = () => {
                     <Badge variant="secondary">Agendado</Badge>
                   )}
                   <Badge variant="outline">
-                    {cupom.tipo === 'porcentagem' ? 'Percentual' : 'Valor Fixo'}
+                    {cupom.tipo_desconto === 'percentual' ? 'Percentual' : 'Valor Fixo'}
                   </Badge>
                 </div>
               </div>
