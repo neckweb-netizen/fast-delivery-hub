@@ -89,16 +89,8 @@ export const EventosSection = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Badge 
-                    variant={
-                      evento.status_aprovacao === 'aprovado' ? 'default' : 
-                      evento.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                      'secondary'
-                    }
-                  >
-                    {evento.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                     evento.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                     'Pendente'}
+                  <Badge variant={evento.ativo ? 'default' : 'secondary'}>
+                    {evento.ativo ? 'Ativo' : 'Inativo'}
                   </Badge>
                   <Badge variant={evento.ativo ? 'default' : 'secondary'}>
                     {evento.ativo ? 'Ativo' : 'Inativo'}
