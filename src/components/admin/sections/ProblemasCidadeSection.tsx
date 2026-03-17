@@ -122,13 +122,8 @@ export const ProblemasCidadeSection = () => {
         titulo: tituloEdit,
         descricao: descricaoEdit,
         endereco: enderecoEdit,
-        bairro: bairroEdit,
-        prioridade: prioridadeEdit as 'baixa' | 'media' | 'alta' | 'urgente',
-        status: statusSelecionado as 'aberto' | 'em_analise' | 'resolvido' | 'fechado',
-        moderado: true,
-        data_moderacao: new Date().toISOString(),
-        observacoes_moderacao: observacoes,
-      })
+        status: statusSelecionado,
+      } as any)
       .eq('id', problemaModal.id);
 
     if (error) {
