@@ -182,9 +182,9 @@ export function AdminHomeSections() {
                       </div>
                       
                       <div>
-                        <CardTitle className="text-lg">{section.display_name}</CardTitle>
+                        <CardTitle className="text-lg">{section.section_key}</CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          {section.section_name}
+                          {section.section_key}
                         </p>
                       </div>
                     </div>
