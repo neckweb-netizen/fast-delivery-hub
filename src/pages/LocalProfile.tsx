@@ -53,14 +53,15 @@ const EmpresaProfile = () => {
   // Verificar se existe um admin atribuído para esta empresa
   const {
     data: adminAtribuido
-  } = useQuery({
+   } = useQuery({
     queryKey: ['empresa-admin-check', empresa?.id],
     queryFn: async () => {
       if (!empresa?.id) return false;
-      const {
-        data,
-        error
-      } = await supabase.from('usuario_empresa_admin').select('id').eq('empresa_id', empresa.id).eq('ativo', true).limit(1);
+      const { data, error } = await supabase
+        .from('empresa_admins')
+        .select('id')
+        .eq('empresa_id', empresa.id)
+        .limit(1);
       if (error) throw error;
       return data && data.length > 0;
     },
@@ -154,7 +155,7 @@ const EmpresaProfile = () => {
       </div>;
   }
   console.log('✅ EmpresaProfile - Renderizando perfil da empresa:', empresa.nome);
-  const images = [empresa.imagem_capa_url].filter(Boolean);
+  const images = [empresa.capa_url].filter(Boolean);
   const handleFavorite = () => {
     if (!user) {
       // Se usuário não está logado, abrir modal de autenticação
@@ -214,7 +215,7 @@ const EmpresaProfile = () => {
   });
 
   // Verifica se é uma rádio para mostrar apenas a aba de rádio
-  const isRadio = empresa.categorias?.nome === 'Rádios' && empresa.link_radio;
+  const isRadio = empresa.categorias?.nome === 'Rádios' && (empresa as any).link_radio;
 
   // Verifica se é um influencer para mostrar perfil específico
   const isInfluencer = empresa.categorias?.nome === 'Influencers';
@@ -245,7 +246,7 @@ const EmpresaProfile = () => {
       <main className="flex-1">
         {/* Header com imagem de capa */}
         <div className="relative h-64 md:h-80 bg-gradient-to-br from-blue-100 to-blue-200">
-          {empresa.imagem_capa_url ? <img src={empresa.imagem_capa_url} alt={empresa.nome} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center">
+          {empresa.capa_url ? <img src={empresa.capa_url} alt={empresa.nome} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center">
               <Camera className="h-16 w-16 text-blue-600/50" />
             </div>}
           
@@ -260,9 +261,9 @@ const EmpresaProfile = () => {
                       <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                         {empresa.categorias?.nome}
                       </Badge>
-                      {empresa.verificado && <Badge className="bg-green-500/90 text-white border-green-400">
+                      {empresa.aprovada && <Badge className="bg-green-500/90 text-white border-green-400">
                           <Verified className="h-3 w-3 mr-1" />
-                          Verificado
+                          Aprovado
                         </Badge>}
                       {empresa.destaque && <Badge className="bg-yellow-500/90 text-white border-yellow-400">
                           ⭐ Destaque
@@ -455,12 +456,12 @@ const EmpresaProfile = () => {
                                         <div className="flex items-start space-x-3 mb-3">
                                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                             <span className="text-sm font-medium text-blue-600">
-                                              {avaliacao.usuarios?.nome?.charAt(0).toUpperCase() || 'U'}
+                                              {(avaliacao as any).usuario_nome?.charAt(0).toUpperCase() || 'U'}
                                             </span>
                                           </div>
                                           <div className="flex-1">
                                             <div className="flex items-center justify-between mb-1">
-                                              <p className="font-medium">{avaliacao.usuarios?.nome || 'Usuário'}</p>
+                                              <p className="font-medium">{(avaliacao as any).usuario_nome || 'Usuário'}</p>
                                               <span className="text-xs text-muted-foreground">
                                                 {new Date(avaliacao.criado_em).toLocaleDateString('pt-BR')}
                                               </span>
@@ -471,10 +472,6 @@ const EmpresaProfile = () => {
                                             {avaliacao.comentario && <p className="text-sm text-muted-foreground">
                                                 {avaliacao.comentario}
                                               </p>}
-                                            {avaliacao.resposta_empresa && <div className="mt-2 p-2 bg-primary/5 border-l-4 border-primary rounded-r">
-                                                <p className="text-xs font-medium text-primary mb-1">Resposta da empresa:</p>
-                                                <p className="text-xs text-muted-foreground">{avaliacao.resposta_empresa}</p>
-                                              </div>}
                                           </div>
                                         </div>
                                       </div>)}

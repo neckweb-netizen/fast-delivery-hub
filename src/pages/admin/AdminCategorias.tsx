@@ -17,8 +17,9 @@ interface Categoria {
   id: string;
   nome: string;
   slug: string;
-  icone_url: string | null;
-  tipo: 'empresa' | 'evento' | 'servico';
+  icone: string | null;
+  icone_url?: string | null;
+  tipo: string;
   ativo: boolean;
   criado_em: string;
 }
@@ -30,7 +31,7 @@ export const AdminCategorias = () => {
   const [formData, setFormData] = useState({
     nome: '',
     icone_url: '',
-    tipo: 'empresa' as 'empresa' | 'evento' | 'servico',
+    tipo: 'empresa' as string,
     ativo: true
   });
   const { toast } = useToast();
@@ -46,7 +47,7 @@ export const AdminCategorias = () => {
         .order('nome');
       
       if (error) throw error;
-      return data as Categoria[];
+      return (data || []).map(d => ({ ...d, icone_url: d.icone })) as Categoria[];
     }
   });
 
@@ -63,7 +64,7 @@ export const AdminCategorias = () => {
         .insert({
           nome: data.nome,
           slug,
-          icone_url: data.icone_url || null,
+          icone: data.icone_url || null,
           tipo: data.tipo,
           ativo: data.ativo
         });
@@ -98,7 +99,7 @@ export const AdminCategorias = () => {
         .update({
           nome: data.nome,
           slug,
-          icone_url: data.icone_url || null,
+          icone: data.icone_url || null,
           tipo: data.tipo,
           ativo: data.ativo
         })
@@ -158,8 +159,8 @@ export const AdminCategorias = () => {
     setEditingCategoria(categoria);
     setFormData({
       nome: categoria.nome,
-      icone_url: categoria.icone_url || '',
-      tipo: categoria.tipo,
+      icone_url: categoria.icone || categoria.icone_url || '',
+      tipo: categoria.tipo || 'empresa',
       ativo: categoria.ativo
     });
     setIsEditDialogOpen(true);
@@ -231,7 +232,7 @@ export const AdminCategorias = () => {
                 <Label htmlFor="tipo">Tipo</Label>
                 <Select 
                   value={formData.tipo} 
-                  onValueChange={(value: 'empresa' | 'evento' | 'servico') => 
+                  onValueChange={(value: string) => 
                     setFormData(prev => ({ ...prev, tipo: value }))
                   }
                 >
@@ -295,10 +296,10 @@ export const AdminCategorias = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="text-2xl">
-                      {categoria.icone_url?.startsWith('http') ? (
-                        <img src={categoria.icone_url} alt="" className="w-8 h-8" />
+                      {(categoria.icone || categoria.icone_url || '')?.startsWith('http') ? (
+                        <img src={categoria.icone || categoria.icone_url || ''} alt="" className="w-8 h-8" />
                       ) : (
-                        <span>{categoria.icone_url || '📁'}</span>
+                        <span>{categoria.icone || categoria.icone_url || '📁'}</span>
                       )}
                     </div>
                     <div>
@@ -378,10 +379,10 @@ export const AdminCategorias = () => {
             
             <div>
               <Label htmlFor="edit-tipo">Tipo</Label>
-              <Select 
-                value={formData.tipo} 
-                onValueChange={(value: 'empresa' | 'evento' | 'servico') => 
-                  setFormData(prev => ({ ...prev, tipo: value }))
+                <Select 
+                  value={formData.tipo} 
+                  onValueChange={(value: string) => 
+                    setFormData(prev => ({ ...prev, tipo: value }))
                 }
               >
                 <SelectTrigger>

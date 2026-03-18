@@ -164,7 +164,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 placeholder="Digite o nome do produto"
               />
               {errors.nome && (
-                <p className="text-red-500 text-sm">{errors.nome.message}</p>
+                <p className="text-red-500 text-sm">{errors.nome.message as string}</p>
               )}
             </div>
 
@@ -199,7 +199,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 placeholder="0.00"
               />
               {errors.preco_original && (
-                <p className="text-red-500 text-sm">{errors.preco_original.message}</p>
+                <p className="text-red-500 text-sm">{errors.preco_original.message as string}</p>
               )}
             </div>
 
@@ -213,7 +213,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 placeholder="0.00"
               />
               {errors.preco_promocional && (
-                <p className="text-red-500 text-sm">{errors.preco_promocional.message}</p>
+                <p className="text-red-500 text-sm">{errors.preco_promocional.message as string}</p>
               )}
             </div>
           </div>
@@ -275,7 +275,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 type="url"
               />
               {errors.link_compra && (
-                <p className="text-red-500 text-sm">{errors.link_compra.message}</p>
+                <p className="text-red-500 text-sm">{errors.link_compra.message as string}</p>
               )}
               <p className="text-xs text-muted-foreground mt-1">
                 Opcional: Link direto para a página de compra do produto
@@ -291,7 +291,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 type="url"
               />
               {errors.link_whatsapp && (
-                <p className="text-red-500 text-sm">{errors.link_whatsapp.message}</p>
+                <p className="text-red-500 text-sm">{errors.link_whatsapp.message as string}</p>
               )}
               <p className="text-xs text-muted-foreground mt-1">
                 Opcional: Link para contato via WhatsApp sobre o produto

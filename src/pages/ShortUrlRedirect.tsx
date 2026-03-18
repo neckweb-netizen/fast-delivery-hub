@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function ShortUrlRedirect() {
@@ -12,8 +12,8 @@ export default function ShortUrlRedirect() {
       try {
         const { data, error } = await supabase
           .from('short_urls')
-          .select('original_url')
-          .eq('short_code', shortCode)
+          .select('url_destino, cliques')
+          .eq('codigo', shortCode)
           .maybeSingle();
 
         if (error || !data) {
@@ -23,10 +23,12 @@ export default function ShortUrlRedirect() {
         }
 
         // Increment click count
-        await supabase.rpc('increment_url_clicks', { code: shortCode });
+        await supabase
+          .from('short_urls')
+          .update({ cliques: (data.cliques || 0) + 1 })
+          .eq('codigo', shortCode);
 
-        // Redirect to original URL
-        window.location.href = data.original_url;
+        window.location.href = data.url_destino;
       } catch (error) {
         console.error('Erro ao redirecionar:', error);
         window.location.href = '/';
@@ -36,7 +38,6 @@ export default function ShortUrlRedirect() {
     redirectToOriginalUrl();
   }, [shortCode]);
 
-  // Show loading while redirecting
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">

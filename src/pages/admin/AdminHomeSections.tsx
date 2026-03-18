@@ -152,7 +152,7 @@ export function AdminHomeSections() {
 
       <div className="space-y-4">
         {localSections.map((section, index) => {
-          const IconComponent = getSectionIcon(section.section_name);
+          const IconComponent = getSectionIcon(section.section_key);
           const canMoveUp = index > 0;
           const canMoveDown = index < localSections.length - 1;
           
@@ -182,9 +182,9 @@ export function AdminHomeSections() {
                       </div>
                       
                       <div>
-                        <CardTitle className="text-lg">{section.display_name}</CardTitle>
+                        <CardTitle className="text-lg">{section.section_key}</CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          {section.section_name}
+                          {section.section_key}
                         </p>
                       </div>
                     </div>
@@ -241,7 +241,7 @@ export function AdminHomeSections() {
                     Status: {section.ativo ? 'Visível' : 'Oculta'}
                   </span>
                   <span>
-                    Atualizada em: {new Date(section.atualizado_em).toLocaleDateString('pt-BR')}
+                    Atualizada em: {new Date(section.criado_em || '').toLocaleDateString('pt-BR')}
                   </span>
                 </div>
               </CardContent>

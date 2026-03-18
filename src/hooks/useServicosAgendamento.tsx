@@ -6,8 +6,10 @@ export interface ServicoAgendamento {
   id: string;
   empresa_id: string;
   nome: string;
+  nome_servico?: string;
   descricao?: string;
   preco?: number;
+  duracao_minutos?: number;
   ativo: boolean;
   criado_em: string;
 }
@@ -22,7 +24,6 @@ export const useServicosAgendamento = (empresaId?: string) => {
 
   const criarServico = useMutation({
     mutationFn: async (_dados: any) => {
-      // No-op: table doesn't exist
       throw new Error('Funcionalidade não disponível');
     },
     onError: () => {
