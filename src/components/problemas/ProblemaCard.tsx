@@ -100,8 +100,8 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
     setShowEditDialog(true);
   };
 
-  const IconeCategoria = problema.categoria?.icone
-    ? (LucideIcons as any)[problema.categoria.icone]
+  const IconeCategoria = typeof problema.categoria === 'object' && (problema.categoria as any)?.icone
+    ? (LucideIcons as any)[(problema.categoria as any).icone]
     : null;
 
   return (
@@ -125,7 +125,7 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   <ArrowUp className="w-4 h-4" />
                 </Button>
                 <span className="font-bold text-lg">
-                  {problema.votos_positivos - problema.votos_negativos}
+                  {(problema as any).votos || 0}
                 </span>
                 <Button
                   variant="ghost"
@@ -141,24 +141,13 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
               <div className="flex-1 min-w-0">
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  {problema.categoria && IconeCategoria && (
-                    <div
-                      className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-semibold"
-                      style={{
-                        backgroundColor: `${problema.categoria.cor}15`,
-                        color: problema.categoria.cor,
-                        filter: 'contrast(1.2) saturate(1.1)'
-                      }}
-                    >
-                      <IconeCategoria className="w-3.5 h-3.5" />
-                      {problema.categoria.nome}
-                    </div>
+                  {typeof problema.categoria === 'string' && problema.categoria && (
+                    <Badge variant="outline" className="text-xs">
+                      {problema.categoria}
+                    </Badge>
                   )}
                   <Badge className={statusColors[problema.status]}>
                     {statusLabels[problema.status]}
-                  </Badge>
-                  <Badge className={prioridadeColors[problema.prioridade]}>
-                    {prioridadeLabels[problema.prioridade]}
                   </Badge>
                 </div>
 
@@ -175,7 +164,6 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                 {/* Localização */}
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
                   <MapPin className="w-3.5 h-3.5" />
-                  {problema.bairro && `${problema.bairro} • `}
                   {problema.endereco}
                 </div>
 
@@ -191,7 +179,7 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   <div className="flex items-center gap-3 ml-auto">
                     <div className="flex items-center gap-1">
                       <Eye className="w-3.5 h-3.5" />
-                      {problema.visualizacoes}
+                      {(problema as any).visualizacoes || 0}
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageCircle className="w-3.5 h-3.5" />
@@ -204,16 +192,9 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
           </div>
 
           {/* Imagens */}
-          {problema.imagens && problema.imagens.length > 0 && (
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {problema.imagens.slice(0, 3).map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`Imagem ${idx + 1}`}
-                  className="w-full h-24 object-cover rounded-md"
-                />
-              ))}
+          {(problema as any).imagem_url && (
+            <div className="mt-4">
+              <img src={(problema as any).imagem_url} alt="Imagem" className="w-full h-24 object-cover rounded-md" />
             </div>
           )}
 

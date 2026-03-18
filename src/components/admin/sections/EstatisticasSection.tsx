@@ -39,9 +39,9 @@ export const EstatisticasSection = () => {
   ];
 
   const empresasData = [
-    { name: 'Verificadas', value: stats?.empresasVerificadas || 0, color: '#22c55e' },
+    { name: 'Aprovadas', value: stats?.empresasAprovadas || 0, color: '#22c55e' },
     { name: 'Em Destaque', value: stats?.empresasDestaque || 0, color: '#f59e0b' },
-    { name: 'Normais', value: (stats?.totalEmpresas || 0) - (stats?.empresasVerificadas || 0) - (stats?.empresasDestaque || 0), color: '#6b7280' },
+    { name: 'Normais', value: (stats?.totalEmpresas || 0) - (stats?.empresasAprovadas || 0) - (stats?.empresasDestaque || 0), color: '#6b7280' },
   ];
 
   return (
@@ -109,7 +109,7 @@ export const EstatisticasSection = () => {
                   <span>Taxa de Verificação</span>
                   <span className="font-bold">
                     {stats?.totalEmpresas ? 
-                      Math.round((stats.empresasVerificadas / stats.totalEmpresas) * 100) : 0
+                      Math.round((stats.empresasAprovadas / stats.totalEmpresas) * 100) : 0
                     }%
                   </span>
                 </div>
@@ -118,7 +118,7 @@ export const EstatisticasSection = () => {
                     className="bg-green-600 h-2 rounded-full" 
                     style={{
                       width: `${stats?.totalEmpresas ? 
-                        Math.round((stats.empresasVerificadas / stats.totalEmpresas) * 100) : 0
+                        Math.round((stats.empresasAprovadas / stats.totalEmpresas) * 100) : 0
                       }%`
                     }}
                   />

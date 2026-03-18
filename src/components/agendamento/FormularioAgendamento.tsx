@@ -22,7 +22,8 @@ export const FormularioAgendamento: React.FC<FormularioAgendamentoProps> = ({
   onSuccess 
 }) => {
   const { user } = useAuth();
-  const { criarAgendamento, isCreating } = useAgendamentos();
+  const { criarAgendamento } = useAgendamentos();
+  const isCreating = criarAgendamento.isPending;
   const { servicos } = useServicosAgendamento(empresaId);
 
   const [formData, setFormData] = useState({
@@ -43,13 +44,10 @@ export const FormularioAgendamento: React.FC<FormularioAgendamentoProps> = ({
       return;
     }
 
-    criarAgendamento({
+    criarAgendamento.mutate({
       empresa_id: empresaId,
-      nome_cliente: formData.nome_cliente,
-      telefone_cliente: formData.telefone_cliente,
-      servico: formData.servico,
-      data_agendamento: formData.data_agendamento,
-      observacoes: formData.observacoes || undefined
+      data_hora: formData.data_agendamento,
+      observacoes: formData.observacoes || undefined,
     });
 
     // Reset form

@@ -114,9 +114,9 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
               <CardContent className="p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
                   <div className="w-full lg:w-16 h-40 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {produto.imagem_principal_url ? (
+                    {(produto as any).imagem_url || (produto as any).imagem_principal_url ? (
                       <img 
-                        src={produto.imagem_principal_url} 
+                        src={(produto as any).imagem_url || (produto as any).imagem_principal_url} 
                         alt={produto.nome} 
                         className="w-full h-full object-cover"
                       />
@@ -147,7 +147,7 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                         {produto.preco_promocional ? (
                           <>
                             <span className="line-through text-gray-500 text-sm">
-                              {formatPrice(produto.preco_original)}
+                              {formatPrice((produto as any).preco || (produto as any).preco_original)}
                             </span>
                             <span className="font-bold text-[hsl(var(--success))]">
                               {formatPrice(produto.preco_promocional)}
@@ -155,52 +155,32 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                           </>
                         ) : (
                           <span className="font-bold">
-                            {formatPrice(produto.preco_original)}
+                            {formatPrice((produto as any).preco || (produto as any).preco_original)}
                           </span>
                         )}
                       </div>
                       
-                      {produto.estoque_disponivel !== undefined && (
+                       {(produto as any).estoque_disponivel !== undefined && (
                         <span className="text-gray-500 text-sm">
-                          Estoque: {produto.estoque_disponivel}
+                          Estoque: {(produto as any).estoque_disponivel}
                         </span>
                       )}
                     </div>
                     
                     {/* Botões de ação do produto */}
-                    {(produto.link_compra || produto.link_whatsapp) && (
+                     {((produto as any).link_compra || (produto as any).link_whatsapp) && (
                       <div className="flex gap-2 mb-3">
-                        {produto.link_compra && (
-                          <Button
-                            variant="default"
-                            size="sm"
-                            asChild
-                            className="flex-1 sm:flex-none"
-                          >
-                            <a 
-                              href={produto.link_compra} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2"
-                            >
+                        {(produto as any).link_compra && (
+                          <Button variant="default" size="sm" asChild className="flex-1 sm:flex-none">
+                            <a href={(produto as any).link_compra} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                               <ShoppingCart className="w-4 h-4" />
                               Comprar
                             </a>
                           </Button>
                         )}
-                        {produto.link_whatsapp && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                            className="flex-1 sm:flex-none text-[hsl(var(--success))] hover:text-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/10"
-                          >
-                            <a 
-                              href={produto.link_whatsapp} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2"
-                            >
+                        {(produto as any).link_whatsapp && (
+                          <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+                            <a href={(produto as any).link_whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                               <MessageCircle className="w-4 h-4" />
                               WhatsApp
                             </a>
@@ -211,14 +191,14 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex flex-wrap gap-1">
-                        {produto.categoria_produto && (
+                         {(produto as any).categoria_produto || produto.categoria ? (
                           <Badge variant="outline" className="text-xs">
-                            {produto.categoria_produto}
+                            {(produto as any).categoria_produto || produto.categoria}
                           </Badge>
-                        )}
-                        {produto.codigo_produto && (
+                        ) : null}
+                        {(produto as any).codigo_produto && (
                           <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
-                            #{produto.codigo_produto}
+                            #{(produto as any).codigo_produto}
                           </span>
                         )}
                       </div>

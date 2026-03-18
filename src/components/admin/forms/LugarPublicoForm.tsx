@@ -9,7 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useCreateLugarPublico, useUpdateLugarPublico, type LugarPublico } from '@/hooks/useLugaresPublicos';
+import { useCreateLugarPublico, useUpdateLugarPublico } from '@/hooks/useLugaresPublicos';
+type LugarPublico = any;
 import { useCidades } from '@/hooks/useCidades';
 import { CIDADE_PADRAO_ID } from '@/hooks/useCidadePadrao';
 

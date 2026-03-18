@@ -16,7 +16,7 @@ export const VideoPlayerWithAd = ({ videoUrl, videoTitle, className }: VideoPlay
   const [canSkip, setCanSkip] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement | HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Buscar banners para vídeos
   const { data: banners } = useQuery({

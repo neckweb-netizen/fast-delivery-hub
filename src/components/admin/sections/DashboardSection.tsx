@@ -47,10 +47,10 @@ export const DashboardSection = () => {
       highlight: (stats?.empresasPendentes || 0) > 0,
     },
     {
-      title: 'Locais Verificados',
-      value: stats?.empresasVerificadas || 0,
+      title: 'Locais Aprovados',
+      value: stats?.empresasAprovadas || 0,
       icon: CheckCircle,
-      description: 'Com selo de verificação',
+      description: 'Aprovados no sistema',
       variant: 'default' as const,
     },
     {

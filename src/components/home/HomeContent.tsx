@@ -81,7 +81,7 @@ export const HomeContent = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-4 space-y-6 pb-20">
         {activeSections.map((section) => {
-          const Component = sectionComponents[section.section_name as keyof typeof sectionComponents];
+          const Component = sectionComponents[section.section_key as keyof typeof sectionComponents];
           if (!Component) return null;
           
           return (

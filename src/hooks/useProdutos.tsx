@@ -8,37 +8,24 @@ export interface Produto {
   empresa_id: string;
   nome: string;
   descricao?: string;
-  preco_original: number;
+  preco?: number;
   preco_promocional?: number;
-  categoria_produto?: string;
-  imagem_principal_url?: string;
-  galeria_imagens?: string[];
+  categoria?: string;
+  imagem_url?: string;
   ativo: boolean;
   destaque: boolean;
-  estoque_disponivel?: number;
-  codigo_produto?: string;
-  tags?: string[];
-  link_compra?: string;
-  link_whatsapp?: string;
   criado_em: string;
-  atualizado_em: string;
 }
 
 export interface ProdutoInput {
   nome: string;
   descricao?: string;
-  preco_original: number;
+  preco?: number;
   preco_promocional?: number;
-  categoria_produto?: string;
-  imagem_principal_url?: string;
-  galeria_imagens?: string[];
+  categoria?: string;
+  imagem_url?: string;
   ativo?: boolean;
   destaque?: boolean;
-  estoque_disponivel?: number;
-  codigo_produto?: string;
-  tags?: string[];
-  link_compra?: string;
-  link_whatsapp?: string;
 }
 
 export const useProdutos = (empresaId?: string) => {
@@ -47,14 +34,7 @@ export const useProdutos = (empresaId?: string) => {
     queryFn: async () => {
       let query = supabase
         .from('produtos')
-        .select(`
-          *,
-          empresas(
-            id,
-            nome,
-            verificado
-          )
-        `)
+        .select('*, empresas(id, nome)')
         .eq('ativo', true)
         .order('destaque', { ascending: false })
         .order('criado_em', { ascending: false });
@@ -64,12 +44,7 @@ export const useProdutos = (empresaId?: string) => {
       }
 
       const { data, error } = await query;
-
-      if (error) {
-        console.error('Erro ao buscar produtos:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as any[];
     },
   });
@@ -86,12 +61,8 @@ export const useProdutosPorEmpresa = (empresaId: string) => {
         .order('destaque', { ascending: false })
         .order('criado_em', { ascending: false });
 
-      if (error) {
-        console.error('Erro ao buscar produtos da empresa:', error);
-        throw error;
-      }
-
-      return data as Produto[];
+      if (error) throw error;
+      return (data || []) as Produto[];
     },
     enabled: !!empresaId,
   });
@@ -108,19 +79,14 @@ export const useCriarProduto = () => {
         .select()
         .single();
 
-      if (error) {
-        console.error('Erro ao criar produto:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['produtos'] });
       toast.success('Produto criado com sucesso!');
     },
-    onError: (error: any) => {
-      console.error('Erro ao criar produto:', error);
+    onError: () => {
       toast.error('Erro ao criar produto');
     },
   });
@@ -138,19 +104,14 @@ export const useAtualizarProduto = () => {
         .select()
         .single();
 
-      if (error) {
-        console.error('Erro ao atualizar produto:', error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['produtos'] });
       toast.success('Produto atualizado com sucesso!');
     },
-    onError: (error: any) => {
-      console.error('Erro ao atualizar produto:', error);
+    onError: () => {
       toast.error('Erro ao atualizar produto');
     },
   });
@@ -166,17 +127,13 @@ export const useExcluirProduto = () => {
         .update({ ativo: false })
         .eq('id', id);
 
-      if (error) {
-        console.error('Erro ao excluir produto:', error);
-        throw error;
-      }
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['produtos'] });
       toast.success('Produto excluído com sucesso!');
     },
-    onError: (error: any) => {
-      console.error('Erro ao excluir produto:', error);
+    onError: () => {
       toast.error('Erro ao excluir produto');
     },
   });

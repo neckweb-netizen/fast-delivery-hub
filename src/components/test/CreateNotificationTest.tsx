@@ -20,9 +20,9 @@ export const CreateNotificationTest = () => {
     }
 
     createNotification({
-      user_id: user.id,
-      title: title.trim(),
-      message: message.trim() || undefined,
+      usuario_id: user.id,
+      titulo: title.trim(),
+      mensagem: message.trim() || undefined,
     });
 
     toast.success('Notificação criada!');

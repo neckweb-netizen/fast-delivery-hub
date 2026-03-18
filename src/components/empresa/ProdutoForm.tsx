@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCriarProduto, useAtualizarProduto, type ProdutoInput } from '@/hooks/useProdutos';
+import { useCriarProduto, useAtualizarProduto } from '@/hooks/useProdutos';
+type ProdutoInput = any;
 import { 
   Dialog,
   DialogContent,
