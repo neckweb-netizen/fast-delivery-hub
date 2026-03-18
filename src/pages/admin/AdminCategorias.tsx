@@ -159,8 +159,8 @@ export const AdminCategorias = () => {
     setEditingCategoria(categoria);
     setFormData({
       nome: categoria.nome,
-      icone_url: categoria.icone_url || '',
-      tipo: categoria.tipo,
+      icone_url: categoria.icone || categoria.icone_url || '',
+      tipo: categoria.tipo || 'empresa',
       ativo: categoria.ativo
     });
     setIsEditDialogOpen(true);
