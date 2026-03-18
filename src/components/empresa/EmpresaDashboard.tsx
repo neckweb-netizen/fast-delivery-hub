@@ -157,10 +157,10 @@ export const EmpresaDashboard = () => {
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
-                {empresaAtual.imagem_capa_url && (
+                {empresaAtual.capa_url && (
                   <div className="shrink-0">
                     <img
-                      src={empresaAtual.imagem_capa_url}
+                      src={empresaAtual.capa_url}
                       alt={empresaAtual.nome}
                       className="w-20 h-20 rounded-xl object-cover shadow-md ring-2 ring-secondary/20"
                     />
