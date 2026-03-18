@@ -141,18 +141,10 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
               <div className="flex-1 min-w-0">
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  {problema.categoria && IconeCategoria && (
-                    <div
-                      className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-semibold"
-                      style={{
-                        backgroundColor: `${problema.categoria.cor}15`,
-                        color: problema.categoria.cor,
-                        filter: 'contrast(1.2) saturate(1.1)'
-                      }}
-                    >
-                      <IconeCategoria className="w-3.5 h-3.5" />
-                      {problema.categoria.nome}
-                    </div>
+                  {typeof problema.categoria === 'string' && problema.categoria && (
+                    <Badge variant="outline" className="text-xs">
+                      {problema.categoria}
+                    </Badge>
                   )}
                   <Badge className={statusColors[problema.status]}>
                     {statusLabels[problema.status]}
