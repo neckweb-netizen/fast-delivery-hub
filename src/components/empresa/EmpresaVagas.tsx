@@ -97,12 +97,9 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
     queryKey: ['empresa-vagas', empresaId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('vagas_emprego')
-        .select(`
-          *,
-          categorias_oportunidades(nome)
-        `)
-        .eq('criado_por', empresaId)
+        .from('vagas')
+        .select('*')
+        .eq('empresa_id', empresaId)
         .order('criado_em', { ascending: false });
       
       if (error) throw error;
