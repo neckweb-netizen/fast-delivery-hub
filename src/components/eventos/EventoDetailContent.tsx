@@ -34,12 +34,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
         .select(`
           *,
           categorias(nome, slug),
-          empresas(nome, slug, endereco, telefone),
-          cidades(nome, estado)
+          empresas(nome, slug, endereco, telefone)
         `)
         .eq('id', eventoId)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
         .single();
 
       if (error) throw error;
