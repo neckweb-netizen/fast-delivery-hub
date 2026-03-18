@@ -149,9 +149,6 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   <Badge className={statusColors[problema.status]}>
                     {statusLabels[problema.status]}
                   </Badge>
-                  <Badge className={prioridadeColors[problema.prioridade]}>
-                    {prioridadeLabels[problema.prioridade]}
-                  </Badge>
                 </div>
 
                 {/* Título */}
