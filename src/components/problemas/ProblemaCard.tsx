@@ -195,13 +195,6 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
           {(problema as any).imagem_url && (
             <div className="mt-4">
               <img src={(problema as any).imagem_url} alt="Imagem" className="w-full h-24 object-cover rounded-md" />
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`Imagem ${idx + 1}`}
-                  className="w-full h-24 object-cover rounded-md"
-                />
-              ))}
             </div>
           )}
 
