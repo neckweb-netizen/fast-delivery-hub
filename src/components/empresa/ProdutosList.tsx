@@ -160,9 +160,9 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                         )}
                       </div>
                       
-                      {produto.estoque_disponivel !== undefined && (
+                       {(produto as any).estoque_disponivel !== undefined && (
                         <span className="text-gray-500 text-sm">
-                          Estoque: {produto.estoque_disponivel}
+                          Estoque: {(produto as any).estoque_disponivel}
                         </span>
                       )}
                     </div>
