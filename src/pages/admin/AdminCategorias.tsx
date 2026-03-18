@@ -31,7 +31,7 @@ export const AdminCategorias = () => {
   const [formData, setFormData] = useState({
     nome: '',
     icone_url: '',
-    tipo: 'empresa' as 'empresa' | 'evento' | 'servico',
+    tipo: 'empresa' as string,
     ativo: true
   });
   const { toast } = useToast();
