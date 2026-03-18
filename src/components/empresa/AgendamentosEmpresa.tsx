@@ -117,7 +117,7 @@ export const AgendamentosEmpresa: React.FC<AgendamentosEmpresaProps> = ({ empres
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      onClick={() => atualizarStatus({ id: agendamento.id, status: 'confirmado' })}
+                      onClick={() => atualizarStatus.mutate({ id: agendamento.id, status: 'confirmado' })}
                       className="bg-green-600 hover:bg-green-700"
                     >
                       Confirmar
