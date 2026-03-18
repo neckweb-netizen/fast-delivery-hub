@@ -154,7 +154,7 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                       
                     </div>
                     
-                    {!evento.gratuito && evento.preco && (
+                    {evento.preco && evento.preco > 0 && (
                       <div className="mt-3">
                         <span className="font-bold text-lg text-primary">
                           R$ {evento.preco}

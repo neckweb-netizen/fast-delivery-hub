@@ -445,7 +445,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
         </NeonCard>
       ) : (
         <div className="grid gap-4">
-          {vagas.map((vaga) => (
+          {(vagas as any[]).map((vaga: any) => (
             <NeonCard key={vaga.id} className={`${!vaga.ativo ? 'opacity-60' : ''}`}>
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -457,19 +457,13 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      {vaga.categorias_oportunidades && (
-                        <span className="flex items-center gap-1">
-                          <Briefcase className="w-4 h-4" />
-                          {vaga.categorias_oportunidades.nome}
-                        </span>
-                      )}
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="w-4 h-4" />
+                        {vaga.tipo_contrato || 'Não informado'}
+                      </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {format(new Date(vaga.criado_em), 'dd/MM/yyyy', { locale: ptBR })}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-4 h-4" />
-                        {vaga.visualizacoes} visualizações
                       </span>
                     </div>
                   </div>

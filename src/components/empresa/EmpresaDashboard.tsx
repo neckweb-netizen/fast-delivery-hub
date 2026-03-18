@@ -356,8 +356,8 @@ export const EmpresaDashboard = () => {
                 <div className="text-xs text-muted-foreground space-y-1">
                   <p>Criado em: {new Date(empresaAtual.criado_em).toLocaleDateString('pt-BR')}</p>
                   <p>Atualizado em: {new Date(empresaAtual.atualizado_em).toLocaleDateString('pt-BR')}</p>
-                  {empresaAtual.data_aprovacao && (
-                    <p>Aprovado em: {new Date(empresaAtual.data_aprovacao).toLocaleDateString('pt-BR')}</p>
+                  {empresaAtual.atualizado_em && (
+                    <p>Atualizado em: {new Date(empresaAtual.atualizado_em).toLocaleDateString('pt-BR')}</p>
                   )}
                 </div>
               </CardContent>

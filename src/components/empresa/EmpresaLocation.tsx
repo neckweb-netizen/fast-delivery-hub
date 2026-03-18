@@ -189,18 +189,15 @@ export const EmpresaLocation = ({ empresa }: EmpresaLocationProps) => {
                     <div key={endereco.id} className="mb-4 last:mb-0">
                       <div className="flex items-center gap-2 mb-1">
                         <p className="text-sm font-medium text-foreground">
-                          {endereco.nome_identificacao}
+                          {endereco.nome || `Endereço ${index + 1}`}
                         </p>
                         {endereco.principal && (
                           <Badge variant="default" className="text-xs">Principal</Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground">{endereco.endereco}</p>
-                      {endereco.bairro && (
-                        <p className="text-xs text-muted-foreground">{endereco.bairro}</p>
-                      )}
-                      {endereco.telefone && (
-                        <p className="text-xs text-muted-foreground">Tel: {endereco.telefone}</p>
+                      {endereco.cidade && (
+                        <p className="text-xs text-muted-foreground">{endereco.cidade}</p>
                       )}
                       
                       <div className="flex gap-2 mt-2">
