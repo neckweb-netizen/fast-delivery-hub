@@ -136,9 +136,9 @@ export const EmpresaDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Building2 className="w-4 h-4" />
                         <span>{emp.nome}</span>
-                        {emp.verificado && (
+                        {emp.aprovada && (
                           <Badge variant="secondary" className="text-xs">
-                            Verificado
+                            Aprovado
                           </Badge>
                         )}
                       </div>
