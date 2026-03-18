@@ -109,7 +109,7 @@ export const EstatisticasSection = () => {
                   <span>Taxa de Verificação</span>
                   <span className="font-bold">
                     {stats?.totalEmpresas ? 
-                      Math.round((stats.empresasVerificadas / stats.totalEmpresas) * 100) : 0
+                      Math.round((stats.empresasAprovadas / stats.totalEmpresas) * 100) : 0
                     }%
                   </span>
                 </div>
