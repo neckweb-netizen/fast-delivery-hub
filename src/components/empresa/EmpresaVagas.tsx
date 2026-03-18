@@ -137,7 +137,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const updateVagaMutation = useMutation({
     mutationFn: async ({ id, ...data }: any) => {
       const { data: result, error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .update(data)
         .eq('id', id)
         .select()
