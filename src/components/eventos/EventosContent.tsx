@@ -24,12 +24,9 @@ export const EventosContent = () => {
         .select(`
           *,
           categorias(nome),
-          empresas(nome),
-          cidades(nome, estado)
+          empresas(nome)
         `)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
-        .eq('cidade_id', cidadePadrao?.id)
         .gte('data_inicio', new Date().toISOString())
         .order('data_inicio', { ascending: true });
 
