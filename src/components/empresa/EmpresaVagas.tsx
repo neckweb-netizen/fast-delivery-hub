@@ -161,7 +161,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const deleteVagaMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .delete()
         .eq('id', id);
       
