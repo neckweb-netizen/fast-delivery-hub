@@ -152,7 +152,7 @@ export function AdminHomeSections() {
 
       <div className="space-y-4">
         {localSections.map((section, index) => {
-          const IconComponent = getSectionIcon(section.section_name);
+          const IconComponent = getSectionIcon(section.section_key);
           const canMoveUp = index > 0;
           const canMoveDown = index < localSections.length - 1;
           
