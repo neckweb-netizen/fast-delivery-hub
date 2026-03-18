@@ -24,6 +24,10 @@ export interface CreateCanalInformativoData {
   conteudo?: string;
   categoria?: string;
   imagem_url?: string;
+  tipo_conteudo?: string;
+  url_midia?: string;
+  link_externo?: string;
+  resultado_sorteio?: any;
 }
 
 export const useCanalInformativo = () => {

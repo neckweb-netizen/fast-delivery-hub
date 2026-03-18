@@ -12,6 +12,7 @@ export interface Banner {
   criado_em: string;
   descricao?: string;
   link?: string;
+  secao?: string;
 }
 
 export const useAdminBanners = (secao?: string) => {
