@@ -4,42 +4,28 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { NeonCard } from '@/components/ui/neon-card';
 import { Button } from '@/components/ui/button';
-import { Copy, Calendar, MapPin, ArrowRight, Briefcase } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Calendar, ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCidadePadrao } from '@/hooks/useCidadePadrao';
 
 export const LatestJobCoupons = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { data: cidadePadrao } = useCidadePadrao();
 
   const { data: vagasEmprego, isLoading } = useQuery({
     queryKey: ['latest-job-coupons', cidadePadrao?.id],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from('vagas')
         .select('*')
         .eq('ativo', true)
-        .order('criado_em', { ascending: false });
+        .order('criado_em', { ascending: false })
+        .limit(3);
 
-      const { data, error } = await query.limit(3);
-
-      if (error) {
-        console.error('Erro ao buscar vagas:', error);
-        throw error;
-      }
+      if (error) throw error;
       return data;
     }
   });
-
-  const copyToClipboard = (contato: string) => {
-    navigator.clipboard.writeText(contato);
-    toast({
-      title: "Contato copiado!",
-      description: "O contato da vaga foi copiado para a área de transferência.",
-    });
-  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -70,26 +56,26 @@ export const LatestJobCoupons = () => {
         {vagasEmprego.map((vaga) => (
           <Card key={vaga.id} className="border-0 bg-gradient-to-r from-blue-50 to-indigo-50 overflow-hidden">
             <CardContent className="p-0">
-              {/* Layout responsivo: vertical no mobile, horizontal no desktop */}
               <div className="flex flex-col sm:flex-row">
-                {/* Conteúdo principal */}
                 <div className="flex-1 p-3 sm:p-4 space-y-2 sm:space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1 min-w-0 flex-1">
                       <h3 className="font-bold text-sm sm:text-base truncate">{vaga.titulo}</h3>
-                      <div className="flex items-center space-x-2">
-                        <Briefcase className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                        <span className="text-xs sm:text-sm text-muted-foreground truncate">
-                          {vaga.categorias_oportunidades?.nome || 'Categoria'}
-                        </span>
-                      </div>
+                      {vaga.local && (
+                        <div className="flex items-center space-x-2">
+                          <MapPin className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                          <span className="text-xs sm:text-sm text-muted-foreground truncate">
+                            {vaga.local}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
                   <div className="space-y-1">
-                    {vaga.faixa_salarial && (
+                    {vaga.salario && (
                       <p className="text-xs sm:text-sm text-green-600 font-medium">
-                        {vaga.faixa_salarial}
+                        {vaga.salario}
                       </p>
                     )}
                     <div className="flex items-center space-x-2 text-xs text-muted-foreground">
@@ -99,31 +85,20 @@ export const LatestJobCoupons = () => {
                   </div>
                 </div>
                 
-                {/* Separador - apenas no desktop */}
                 <div className="hidden sm:block w-px bg-border mx-2 my-3"></div>
                 
-                {/* Seção de contato */}
                 <div className="w-full sm:w-28 lg:w-32 p-3 sm:p-4 text-center space-y-2 bg-gradient-to-b from-blue-100 to-indigo-100 border-t sm:border-t-0 sm:border-l border-border/20">
                   <div className="space-y-1">
                     <div className="text-xs text-muted-foreground uppercase font-medium">
-                      {vaga.tipo_vaga}
+                      {vaga.tipo_contrato || 'CLT'}
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <div className="bg-muted/50 px-2 py-1 rounded text-xs break-all">
-                      Contato
+                  {vaga.remoto && (
+                    <div className="bg-muted/50 px-2 py-1 rounded text-xs">
+                      Remoto
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyToClipboard(vaga.contato_candidatura)}
-                      className="w-full h-6 sm:h-8 text-xs"
-                    >
-                      <Copy className="h-3 w-3 mr-1" />
-                      Copiar
-                    </Button>
-                  </div>
+                  )}
                 </div>
               </div>
             </CardContent>

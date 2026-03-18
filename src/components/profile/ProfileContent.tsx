@@ -12,20 +12,16 @@ import { AvaliacoesDialog } from './AvaliacoesDialog';
 import { ConfiguracoesDialog } from './ConfiguracoesDialog';
 import { CadastrarEmpresaDialog } from './CadastrarEmpresaDialog';
 import { CreateNotificationTest } from '@/components/test/CreateNotificationTest';
-import { LevelDisplay } from '@/components/gamification/LevelDisplay';
-import { useGamification } from '@/hooks/useGamification';
 import { 
   User, 
   Heart, 
   Star, 
   Settings, 
   LogOut, 
-  MapPin,
   Mail,
   Phone,
   Calendar,
   Building2,
-  Plus,
   Trophy,
   Target
 } from 'lucide-react';
@@ -33,7 +29,6 @@ import {
 export const ProfileContent = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
-  const { userStats, levelInfo, nextLevel, calculateLevelProgress } = useGamification();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [favoritosDialogOpen, setFavoritosDialogOpen] = useState(false);
   const [avaliacoesDialogOpen, setAvaliacoesDialogOpen] = useState(false);
@@ -177,45 +172,36 @@ export const ProfileContent = () => {
           </CardContent>
         </NeonCard>
 
-        {/* Gamificação */}
-        {userStats && levelInfo && (
-          <NeonCard className="hover:shadow-md transition-shadow col-span-full">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Trophy className="h-6 w-6 text-amber-500" />
-                <h3 className="font-semibold">Gamificação</h3>
-              </div>
-              
-              <LevelDisplay
-                level={userStats.current_level}
-                levelName={levelInfo.name}
-                currentPoints={userStats.total_points}
-                nextLevelPoints={nextLevel?.min_points}
-                progress={calculateLevelProgress()}
-                compact
-              />
-              
-              <div className="grid gap-3 sm:grid-cols-2 mt-4">
-                <Button
-                  variant="outline"
-                  className="gap-2"
-                  onClick={() => navigate('/conquistas')}
-                >
-                  <Trophy className="h-4 w-4" />
-                  Ver Conquistas ({userStats.badges_count})
-                </Button>
-                <Button
-                  variant="outline"
-                  className="gap-2"
-                  onClick={() => navigate('/ranking')}
-                >
-                  <Target className="h-4 w-4" />
-                  Ver Ranking
-                </Button>
-              </div>
-            </CardContent>
-          </NeonCard>
-        )}
+        {/* Conquistas */}
+        <NeonCard className="hover:shadow-md transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Trophy className="h-6 w-6 text-amber-500" />
+              <h3 className="font-semibold">Conquistas</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Veja suas conquistas e ranking
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => navigate('/conquistas')}
+              >
+                <Trophy className="h-4 w-4" />
+                Conquistas
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => navigate('/ranking')}
+              >
+                <Target className="h-4 w-4" />
+                Ranking
+              </Button>
+            </div>
+          </CardContent>
+        </NeonCard>
 
         {/* Configurações */}
         <NeonCard className="hover:shadow-md transition-shadow">
@@ -271,7 +257,6 @@ export const ProfileContent = () => {
         </NeonCard>
       )}
       
-      {/* Componente de teste para notificações (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
         <div className="mt-6">
           <CreateNotificationTest />

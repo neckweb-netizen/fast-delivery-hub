@@ -52,18 +52,19 @@ export const PopularBusinesses = () => {
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-        {empresas.slice(0, 6).map((empresa) => (
+        {empresas.slice(0, 6).map((empresa: any) => (
           <LocalCard
             key={empresa.id}
             empresa={{
-              ...empresa,
+              id: empresa.id,
+              nome: empresa.nome,
+              descricao: empresa.descricao,
+              endereco: empresa.endereco,
+              capa_url: empresa.capa_url,
               destaque: true,
-              categorias: { nome: empresa.categoria_nome },
-              estatisticas: {
-                media_avaliacoes: empresa.media_avaliacoes,
-                total_avaliacoes: empresa.total_avaliacoes,
-                total_visualizacoes: 0
-              }
+              categorias: empresa.categorias || { nome: 'Geral' },
+              media_avaliacoes: empresa.media_avaliacoes,
+              total_avaliacoes: empresa.total_avaliacoes,
             }}
             onClick={() => navigate(`/locais/${empresa.id}`)}
           />

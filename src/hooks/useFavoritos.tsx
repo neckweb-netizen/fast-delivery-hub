@@ -1,5 +1,4 @@
 
-import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -22,12 +21,10 @@ export const useFavoritos = () => {
             id,
             nome,
             endereco,
-            imagem_capa_url,
-            categorias(nome),
-            estatisticas(
-              media_avaliacoes,
-              total_avaliacoes
-            )
+            capa_url,
+            media_avaliacoes,
+            total_avaliacoes,
+            categorias(nome)
           )
         `)
         .eq('usuario_id', user.user.id);

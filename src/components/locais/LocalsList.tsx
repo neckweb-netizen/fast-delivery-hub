@@ -27,7 +27,7 @@ export const LocalsList = ({ categoriaId, searchTerm, title }: LocaisListProps) 
     
     return local.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
            local.descricao?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           local.categorias?.nome.toLowerCase().includes(searchQuery.toLowerCase());
+           (local.categorias as any)?.nome?.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   if (isLoading) {
@@ -75,7 +75,6 @@ export const LocalsList = ({ categoriaId, searchTerm, title }: LocaisListProps) 
 
   return (
     <div className="space-y-6">
-      {/* Header com controles */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
           {title && (
@@ -87,7 +86,6 @@ export const LocalsList = ({ categoriaId, searchTerm, title }: LocaisListProps) 
         </div>
         
         <div className="flex items-center space-x-4">
-          {/* Busca local (se não há searchTerm props) */}
           {!searchTerm && (
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -100,7 +98,6 @@ export const LocalsList = ({ categoriaId, searchTerm, title }: LocaisListProps) 
             </div>
           )}
           
-          {/* Controles de visualização */}
           <div className="flex items-center space-x-2">
             <Button
               variant={viewMode === 'grid' ? 'default' : 'outline'}
@@ -125,13 +122,12 @@ export const LocalsList = ({ categoriaId, searchTerm, title }: LocaisListProps) 
         </div>
       </div>
 
-      {/* Lista de locais */}
       <div className={
         viewMode === 'grid' 
           ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
           : 'space-y-4'
       }>
-        {filteredLocais.map((local) => (
+        {filteredLocais.map((local: any) => (
           <LocalCard
             key={local.id}
             empresa={local}
