@@ -197,15 +197,9 @@ export const EmpresaDashboard = () => {
               
               <div className="flex flex-wrap gap-2 lg:shrink-0">
                 <Badge 
-                  variant={
-                    empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                    empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                    'secondary'
-                  }
+                  variant={empresaAtual.aprovada ? 'default' : 'secondary'}
                 >
-                  Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                          empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                          'Pendente'}
+                  Status: {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
                 </Badge>
                 <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
                   {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
