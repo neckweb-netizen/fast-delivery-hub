@@ -171,10 +171,10 @@ export const EmpresaDashboard = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                       {empresaAtual.nome}
                     </h1>
-                    {empresaAtual.verificado && (
+                    {empresaAtual.aprovada && (
                       <Badge variant="default" className="bg-blue-600">
                         <Star className="w-3 h-3 mr-1" />
-                        Verificado
+                        Aprovado
                       </Badge>
                     )}
                   </div>
