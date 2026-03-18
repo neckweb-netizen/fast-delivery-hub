@@ -472,7 +472,6 @@ const EmpresaProfile = () => {
                                             {avaliacao.comentario && <p className="text-sm text-muted-foreground">
                                                 {avaliacao.comentario}
                                               </p>}
-                                              </div>}
                                           </div>
                                         </div>
                                       </div>)}
