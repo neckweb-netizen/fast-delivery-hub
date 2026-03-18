@@ -180,8 +180,8 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const toggleStatusMutation = useMutation({
     mutationFn: async ({ id, ativo }: { id: string; ativo: boolean }) => {
       const { error } = await supabase
-        .from('vagas_emprego')
-        .update({ ativo })
+        .from('vagas')
+        .update({ ativo } as any)
         .eq('id', id);
       
       if (error) throw error;
