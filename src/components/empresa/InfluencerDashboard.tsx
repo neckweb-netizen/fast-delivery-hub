@@ -71,7 +71,7 @@ export const InfluencerDashboard = () => {
     }
   };
 
-  const redesSociais = parseRedesSociais(empresaAtual.site);
+  const redesSociais = parseRedesSociais(empresaAtual.website);
 
   const getSocialIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
