@@ -261,9 +261,9 @@ const EmpresaProfile = () => {
                       <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
                         {empresa.categorias?.nome}
                       </Badge>
-                      {empresa.verificado && <Badge className="bg-green-500/90 text-white border-green-400">
+                      {empresa.aprovada && <Badge className="bg-green-500/90 text-white border-green-400">
                           <Verified className="h-3 w-3 mr-1" />
-                          Verificado
+                          Aprovado
                         </Badge>}
                       {empresa.destaque && <Badge className="bg-yellow-500/90 text-white border-yellow-400">
                           ⭐ Destaque
