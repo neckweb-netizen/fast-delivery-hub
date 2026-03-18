@@ -70,7 +70,7 @@ export const EnderecosList = ({ empresaId, canEdit = false }: EnderecosListProps
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base flex items-center gap-2">
-                    {endereco.nome_identificacao}
+                    {endereco.nome || 'Endereço'}
                     {endereco.principal && (
                       <Badge variant="default" className="text-xs">
                         <Star className="h-3 w-3 mr-1" />
