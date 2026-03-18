@@ -125,7 +125,7 @@ export const AgendamentosEmpresa: React.FC<AgendamentosEmpresaProps> = ({ empres
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => atualizarStatus({ id: agendamento.id, status: 'cancelado' })}
+                      onClick={() => atualizarStatus.mutate({ id: agendamento.id, status: 'cancelado' })}
                       className="border-red-200 text-red-600 hover:bg-red-50"
                     >
                       Cancelar
