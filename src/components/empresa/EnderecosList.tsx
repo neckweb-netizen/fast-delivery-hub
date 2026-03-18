@@ -129,7 +129,7 @@ export const EnderecosList = ({ empresaId, canEdit = false }: EnderecosListProps
                   <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                   <div className="text-sm">
                     <div>{endereco.endereco}</div>
-                    {endereco.bairro && <div className="text-muted-foreground">{endereco.bairro}</div>}
+                    {endereco.cidade && <div className="text-muted-foreground">{endereco.cidade}</div>}
                     {endereco.cep && <div className="text-muted-foreground">CEP: {endereco.cep}</div>}
                     <div className="text-muted-foreground">Cidade</div>
                   </div>
