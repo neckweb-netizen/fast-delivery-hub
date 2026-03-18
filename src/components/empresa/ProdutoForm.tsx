@@ -164,7 +164,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 placeholder="Digite o nome do produto"
               />
               {errors.nome && (
-                <p className="text-red-500 text-sm">{errors.nome.message}</p>
+                <p className="text-red-500 text-sm">{errors.nome.message as string}</p>
               )}
             </div>
 
