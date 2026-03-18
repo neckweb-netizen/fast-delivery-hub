@@ -14,7 +14,7 @@ interface SecurityLog {
   user_id: string | null;
   ip_address: string | null;
   user_agent: string | null;
-  metadata: any;
+  details: any;
   created_at: string;
 }
 
