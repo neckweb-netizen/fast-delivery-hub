@@ -133,11 +133,12 @@ export const InfluencerDashboard = () => {
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
-            {empresaAtual.imagem_capa_url && (
+            {empresaAtual.capa_url && (
               <img
-                src={empresaAtual.imagem_capa_url}
+                src={empresaAtual.capa_url}
                 alt={empresaAtual.nome}
                 className="w-16 h-16 rounded-full object-cover"
+              />
               />
             )}
             <div>
