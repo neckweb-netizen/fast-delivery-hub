@@ -29,8 +29,6 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
         .select('*')
         .eq('empresa_id', empresaId)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
-        .or(`data_fim.gte.${now},data_fim.is.null`)
         .order('data_inicio', { ascending: true });
 
       if (error) throw error;

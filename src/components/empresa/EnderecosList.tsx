@@ -135,17 +135,6 @@ export const EnderecosList = ({ empresaId, canEdit = false }: EnderecosListProps
                   </div>
                 </div>
 
-                {endereco.telefone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{endereco.telefone}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{formatHorario(endereco.horario_funcionamento)}</span>
-                </div>
               </CardContent>
             </Card>
           ))}

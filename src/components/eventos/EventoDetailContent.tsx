@@ -343,10 +343,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                   <div className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />
                   <span className="text-sm text-gray-600 dark:text-gray-300">Criado em {formatDate(evento.criado_em)}</span>
                 </div>
-                {evento.atualizado_em !== evento.criado_em && (
+                {evento.criado_em && (
                   <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700 rounded-xl">
                     <div className="w-3 h-3 rounded-full bg-blue-500 shadow-sm" />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Atualizado em {formatDate(evento.atualizado_em)}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Criado em {formatDate(evento.criado_em)}</span>
                   </div>
                 )}
               </div>

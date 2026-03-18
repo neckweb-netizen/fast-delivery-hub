@@ -16,10 +16,9 @@ export const SolicitarPropriedadeAviso = ({ nomeEmpresa, empresaId, empresaUsuar
     queryKey: ['empresa-admin-check', empresaId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('usuario_empresa_admin')
+        .from('empresa_admins')
         .select('id')
         .eq('empresa_id', empresaId)
-        .eq('ativo', true)
         .limit(1);
       
       if (error) throw error;

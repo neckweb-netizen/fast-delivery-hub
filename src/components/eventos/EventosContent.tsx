@@ -102,9 +102,9 @@ export const EventosContent = () => {
                       {evento.categorias.nome}
                     </Badge>
                   )}
-                  {evento.cidades && (
+                  {evento.local && (
                     <Badge variant="outline" className="text-xs">
-                      {evento.cidades.nome}
+                      {evento.local}
                     </Badge>
                   )}
                 </div>
