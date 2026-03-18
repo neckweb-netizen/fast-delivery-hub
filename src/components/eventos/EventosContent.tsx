@@ -84,10 +84,10 @@ export const EventosContent = () => {
             className="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer"
             onClick={() => navigate(`/evento/${evento.id}`)}
           >
-            {evento.imagem_banner && (
+            {evento.imagem_url && (
               <div className="aspect-video overflow-hidden">
                 <img
-                  src={evento.imagem_banner}
+                  src={evento.imagem_url}
                   alt={evento.titulo}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
