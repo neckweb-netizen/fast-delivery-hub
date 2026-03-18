@@ -324,16 +324,8 @@ export const EmpresaDashboard = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm">Status de Aprovação:</span>
-                    <Badge 
-                      variant={
-                        empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                        empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                        'secondary'
-                      }
-                    >
-                      {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                       empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                       'Pendente'}
+                    <Badge variant={empresaAtual.aprovada ? 'default' : 'secondary'}>
+                      {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
                     </Badge>
                   </div>
                   
