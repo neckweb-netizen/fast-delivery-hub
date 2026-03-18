@@ -5,14 +5,12 @@ import { useToast } from './use-toast';
 export interface Agendamento {
   id: string;
   empresa_id: string;
-  nome_cliente: string;
-  telefone_cliente: string;
-  servico: string;
-  data_agendamento: string;
+  usuario_id?: string;
+  servico_id?: string;
+  data_hora: string;
   observacoes?: string;
-  status: 'pendente' | 'confirmado' | 'cancelado' | 'concluido';
+  status: string;
   criado_em: string;
-  atualizado_em: string;
 }
 
 export const useAgendamentos = (empresaId?: string) => {
@@ -28,10 +26,10 @@ export const useAgendamentos = (empresaId?: string) => {
         .from('agendamentos')
         .select('*')
         .eq('empresa_id', empresaId)
-        .order('data_agendamento', { ascending: true });
+        .order('data_hora', { ascending: true });
 
       if (error) throw error;
-      return data as Agendamento[];
+      return (data || []) as any[];
     },
     enabled: !!empresaId,
   });
@@ -39,15 +37,23 @@ export const useAgendamentos = (empresaId?: string) => {
   const criarAgendamento = useMutation({
     mutationFn: async (dados: {
       empresa_id: string;
-      nome_cliente: string;
-      telefone_cliente: string;
-      servico: string;
-      data_agendamento: string;
+      data_hora: string;
       observacoes?: string;
+      servico_id?: string;
     }) => {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('Usuário não autenticado');
+
       const { data, error } = await supabase
         .from('agendamentos')
-        .insert(dados)
+        .insert({
+          empresa_id: dados.empresa_id,
+          data_hora: dados.data_hora,
+          observacoes: dados.observacoes || null,
+          servico_id: dados.servico_id || null,
+          usuario_id: user.user.id,
+          status: 'pendente',
+        })
         .select()
         .single();
 
@@ -82,27 +88,17 @@ export const useAgendamentos = (empresaId?: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agendamentos'] });
-      toast({
-        title: 'Status atualizado',
-        description: 'O status do agendamento foi atualizado com sucesso.',
-      });
+      toast({ title: 'Status atualizado!' });
     },
-    onError: (error) => {
-      console.error('Erro ao atualizar status:', error);
-      toast({
-        title: 'Erro ao atualizar',
-        description: 'Não foi possível atualizar o status.',
-        variant: 'destructive',
-      });
+    onError: () => {
+      toast({ title: 'Erro ao atualizar status', variant: 'destructive' });
     },
   });
 
   return {
     agendamentos: agendamentos || [],
     isLoading,
-    criarAgendamento: criarAgendamento.mutate,
-    atualizarStatus: atualizarStatus.mutate,
-    isCreating: criarAgendamento.isPending,
-    isUpdating: atualizarStatus.isPending,
+    criarAgendamento,
+    atualizarStatus,
   };
 };

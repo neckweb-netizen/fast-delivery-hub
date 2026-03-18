@@ -11,12 +11,10 @@ export const useEmpresas = (cidadeId?: string, categoriaId?: string) => {
         .select(`
           *,
           categorias(nome),
-          cidades(nome),
-          estatisticas(*)
+          cidades(nome)
         `)
         .eq('ativo', true)
         .order('destaque', { ascending: false })
-        .order('verificado', { ascending: false })
         .order('criado_em', { ascending: false });
 
       if (cidadeId) {
@@ -39,14 +37,22 @@ export const useEmpresasDestaque = (cidadeId: string) => {
   return useQuery({
     queryKey: ['empresas-destaque', cidadeId],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('buscar_empresas_destaque', {
-        cidade_id_param: cidadeId,
-        limite: 6
-      });
+      const { data, error } = await supabase
+        .from('empresas')
+        .select(`
+          *,
+          categorias(nome)
+        `)
+        .eq('ativo', true)
+        .eq('destaque', true)
+        .eq('cidade_id', cidadeId)
+        .order('media_avaliacoes', { ascending: false })
+        .limit(6);
       
       if (error) throw error;
       return data;
     },
+    enabled: !!cidadeId,
   });
 };
 
@@ -60,74 +66,59 @@ export const useEmpresaById = (id: string) => {
   return useQuery({
     queryKey: ['empresa', id],
     queryFn: async () => {
-      console.log('🔍 useEmpresaById - Iniciando busca com parâmetro:', id);
-      console.log('🔍 useEmpresaById - Tipo do parâmetro:', typeof id);
-      
       if (!id || id === 'undefined' || id.trim() === '') {
-        console.error('❌ useEmpresaById - ID inválido:', id);
         throw new Error('ID da empresa é obrigatório');
       }
 
       const isUUID = isValidUUID(id);
-      console.log('🔍 useEmpresaById - É UUID?', isUUID);
-
       let data, error;
 
+      const selectQuery = `
+        *,
+        categorias(nome, icone),
+        cidades(nome),
+        avaliacoes(
+          *
+        )
+      `;
+
       if (isUUID) {
-        // Se for UUID, buscar por ID
-        console.log('🔍 useEmpresaById - Buscando por ID (UUID):', id);
         const result = await supabase
           .from('empresas')
-          .select(`
-            *,
-            categorias(nome, icone_url),
-            cidades(nome),
-            estatisticas(*),
-            avaliacoes(
-              *,
-              usuarios(nome)
-            )
-          `)
+          .select(selectQuery)
           .eq('id', id)
           .maybeSingle();
         
         data = result.data;
         error = result.error;
-        console.log('🔍 useEmpresaById - Resultado busca por ID:', { data, error });
       } else {
-        // Se não for UUID, buscar por slug
-        console.log('🔍 useEmpresaById - Buscando por slug:', id);
         const result = await supabase
           .from('empresas')
-          .select(`
-            *,
-            categorias(nome, icone_url),
-            cidades(nome),
-            estatisticas(*),
-            avaliacoes(
-              *,
-              usuarios(nome)
-            )
-          `)
+          .select(selectQuery)
           .eq('slug', id)
           .maybeSingle();
         
         data = result.data;
         error = result.error;
-        console.log('🔍 useEmpresaById - Resultado busca por slug:', { data, error });
       }
       
-      if (error) {
-        console.error('❌ useEmpresaById - Erro na busca:', error);
-        throw error;
+      if (error) throw error;
+      if (!data) throw new Error('Empresa não encontrada');
+      
+      // Fetch user names for avaliacoes
+      if (data.avaliacoes && data.avaliacoes.length > 0) {
+        const userIds = [...new Set(data.avaliacoes.map((a: any) => a.usuario_id).filter(Boolean))];
+        const { data: usuarios } = await supabase
+          .from('usuarios')
+          .select('id, nome')
+          .in('id', userIds as string[]);
+        const userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u.nome; return acc; }, {});
+        data.avaliacoes = data.avaliacoes.map((a: any) => ({
+          ...a,
+          usuario_nome: userMap[a.usuario_id] || 'Usuário'
+        }));
       }
       
-      if (!data) {
-        console.error('❌ useEmpresaById - Empresa não encontrada:', id);
-        throw new Error('Empresa não encontrada');
-      }
-      
-      console.log('✅ useEmpresaById - Empresa encontrada:', data.nome);
       return data;
     },
     enabled: !!id && id !== 'undefined' && id.trim() !== '',

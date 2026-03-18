@@ -13,7 +13,6 @@ import {
   Phone, 
   Heart,
   Eye,
-  Verified,
   Camera
 } from 'lucide-react';
 
@@ -24,17 +23,15 @@ interface LocalCardProps {
     descricao?: string;
     endereco?: string;
     telefone?: string;
-    imagem_capa_url?: string;
     capa_url?: string;
-    verificado?: boolean;
-    destaque: boolean;
+    destaque?: boolean;
+    aprovada?: boolean;
     categorias?: { nome: string };
     cidades?: { nome: string };
-    estatisticas?: {
-      media_avaliacoes: number;
-      total_avaliacoes: number;
-      total_visualizacoes: number;
-    };
+    media_avaliacoes?: number;
+    total_avaliacoes?: number;
+    visualizacoes?: number;
+    [key: string]: any;
   };
   onClick?: () => void;
   showActions?: boolean;
@@ -65,73 +62,30 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
   };
 
   const isFavorited = user ? verificarFavorito(empresa.id) : false;
+  const imageUrl = empresa.capa_url;
+  const mediaAvaliacoes = empresa.media_avaliacoes ?? 0;
+  const totalAvaliacoes = empresa.total_avaliacoes ?? 0;
 
   return (
     <NeonCard className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0 bg-card backdrop-blur-sm">
       <div className="relative overflow-hidden rounded-t-lg">
-        {empresa.imagem_capa_url ? (
-          <>
-            <img 
-              src={empresa.imagem_capa_url} 
-              alt={empresa.nome}
-              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-              onClick={onClick}
-              crossOrigin="anonymous"
-              loading="lazy"
-              onError={(e) => {
-                console.error('❌ Erro ao carregar imagem da empresa:', empresa.nome);
-                console.error('❌ URL original da imagem:', empresa.imagem_capa_url);
-                console.error('❌ Tipo de erro:', e.type);
-                console.error('❌ Target src atual:', (e.target as HTMLImageElement)?.src);
-                
-                const img = e.currentTarget as HTMLImageElement;
-                const originalUrl = empresa.imagem_capa_url!;
-                
-                // Para URLs do Google, tentar versão sem parâmetros de tamanho primeiro
-                if (originalUrl.includes('googleusercontent.com') && !img.dataset.googleRetried) {
-                  img.dataset.googleRetried = 'true';
-                  // Remover parâmetros específicos do Google que podem causar problemas
-                  let cleanUrl = originalUrl.split('=')[0]; // Remove tudo após o primeiro =
-                  console.log('🔄 Tentando URL do Google limpa:', cleanUrl);
-                  img.src = cleanUrl;
-                  return;
-                }
-                
-                // Tentar recarregar a imagem uma vez com timestamp para evitar cache
-                if (!img.dataset.retried) {
-                  img.dataset.retried = 'true';
-                  const separator = originalUrl.includes('?') ? '&' : '?';
-                  const retryUrl = `${originalUrl}${separator}t=${Date.now()}`;
-                  console.log('🔄 Tentando com timestamp:', retryUrl);
-                  img.src = retryUrl;
-                  return;
-                }
-                
-                console.warn('⚠️ Todas as tentativas falharam, mostrando fallback para:', empresa.nome);
-                // Se ainda falhou, mostrar fallback
-                img.style.display = 'none';
-                const fallbackDiv = img.nextElementSibling as HTMLElement;
-                if (fallbackDiv) {
-                  fallbackDiv.style.display = 'flex';
-                }
-              }}
-              onLoad={() => {
-                console.log('✅ Imagem carregada com sucesso:', empresa.nome, empresa.imagem_capa_url);
-              }}
-            />
-            {/* Fallback sempre presente, mas inicialmente escondido */}
-            <div 
-              className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted hidden items-center justify-center group-hover:scale-105 transition-transform duration-300"
-              onClick={onClick}
-              style={{ display: 'none' }}
-            >
-              <div className="text-center">
-                <Camera className="h-12 w-12 text-muted-foreground mb-2 mx-auto" />
-                <p className="text-xs text-muted-foreground">Imagem não disponível</p>
-              </div>
-            </div>
-          </>
-        ) : (
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt={empresa.nome}
+            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            onClick={onClick}
+            loading="lazy"
+            onError={(e) => {
+              const img = e.currentTarget as HTMLImageElement;
+              img.style.display = 'none';
+              const fallback = img.nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        
+        {!imageUrl && (
           <div 
             className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
             onClick={onClick}
@@ -143,22 +97,33 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
           </div>
         )}
         
-        {/* Badges no canto superior */}
+        {/* Fallback hidden div for image error */}
+        {imageUrl && (
+          <div 
+            className="w-full h-48 bg-gradient-to-br from-muted/50 to-muted items-center justify-center"
+            onClick={onClick}
+            style={{ display: 'none' }}
+          >
+            <div className="text-center">
+              <Camera className="h-12 w-12 text-muted-foreground mb-2 mx-auto" />
+              <p className="text-xs text-muted-foreground">Imagem não disponível</p>
+            </div>
+          </div>
+        )}
+        
         <div className="absolute top-3 left-3 flex flex-col space-y-1">
           {empresa.destaque && (
             <Badge className="bg-yellow-500 text-white text-xs">
               Destaque
             </Badge>
           )}
-          {empresa.verificado && (
-            <Badge className="bg-green-500 text-white text-xs flex items-center">
-              <Verified className="h-3 w-3 mr-1" />
-              Verificado
+          {empresa.aprovada && (
+            <Badge className="bg-green-500 text-white text-xs">
+              ✓ Aprovado
             </Badge>
           )}
         </div>
         
-        {/* Ações no canto superior direito */}
         {showActions && (
           <div className="absolute top-3 right-3 flex gap-2">
             <div onClick={(e) => e.stopPropagation()}>
@@ -190,7 +155,6 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
 
       <CardContent className="p-4" onClick={onClick}>
         <div className="space-y-3">
-          {/* Header com nome e categoria */}
           <div>
             <h3 className="font-semibold text-lg group-hover:text-primary transition-colors line-clamp-1">
               {empresa.nome}
@@ -202,14 +166,12 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
             )}
           </div>
 
-          {/* Descrição */}
           {empresa.descricao && (
             <p className="text-sm text-muted-foreground line-clamp-2">
               {empresa.descricao}
             </p>
           )}
 
-          {/* Informações de contato */}
           <div className="space-y-2">
             {empresa.endereco && (
               <div className="flex items-center text-sm text-muted-foreground">
@@ -226,26 +188,27 @@ export const LocalCard = ({ empresa, onClick, showActions = true }: LocalCardPro
             )}
           </div>
 
-          {/* Estatísticas */}
-          {empresa.estatisticas && (
+          {totalAvaliacoes > 0 && (
             <div className="flex items-center justify-between pt-2 border-t">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-1">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   <span className="text-sm font-medium">
-                    {Number(empresa.estatisticas.media_avaliacoes).toFixed(1)}
+                    {Number(mediaAvaliacoes).toFixed(1)}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    ({empresa.estatisticas.total_avaliacoes})
+                    ({totalAvaliacoes})
                   </span>
                 </div>
                 
-                <div className="flex items-center space-x-1">
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">
-                    {empresa.estatisticas.total_visualizacoes}
-                  </span>
-                </div>
+                {empresa.visualizacoes != null && empresa.visualizacoes > 0 && (
+                  <div className="flex items-center space-x-1">
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      {empresa.visualizacoes}
+                    </span>
+                  </div>
+                )}
               </div>
               
               {empresa.cidades && (

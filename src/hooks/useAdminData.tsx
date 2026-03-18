@@ -3,17 +3,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-// Define the tipo_conta enum to match the database
 type TipoConta = 'usuario' | 'empresa' | 'criador_empresa' | 'admin_cidade' | 'admin_geral';
 
-// Hook para buscar estatísticas gerais
 export const useAdminStats = () => {
   return useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
       const { data: empresas } = await supabase
         .from('empresas')
-        .select('id, ativo, verificado, destaque, status_aprovacao')
+        .select('id, ativo, aprovada, destaque')
         .eq('ativo', true);
 
       const { data: usuarios } = await supabase
@@ -37,11 +35,11 @@ export const useAdminStats = () => {
       const { data: empresasPendentes } = await supabase
         .from('empresas')
         .select('id')
-        .eq('status_aprovacao', 'pendente');
+        .eq('aprovada', false);
 
       return {
         totalEmpresas: empresas?.length || 0,
-        empresasVerificadas: empresas?.filter(e => e.verificado).length || 0,
+        empresasAprovadas: empresas?.filter(e => e.aprovada).length || 0,
         empresasDestaque: empresas?.filter(e => e.destaque).length || 0,
         empresasPendentes: empresasPendentes?.length || 0,
         totalUsuarios: usuarios?.length || 0,
@@ -49,14 +47,13 @@ export const useAdminStats = () => {
         totalEventos: eventos?.length || 0,
         totalAvaliacoes: avaliacoes?.length || 0,
         mediaAvaliacoes: avaliacoes?.length ? 
-          (avaliacoes.reduce((acc, a) => acc + a.nota, 0) / avaliacoes.length).toFixed(1) : '0',
+          (avaliacoes.reduce((acc, a) => acc + (a.nota || 0), 0) / avaliacoes.length).toFixed(1) : '0',
         totalCupons: cupons?.length || 0,
       };
     },
   });
 };
 
-// Hook para gerenciar usuários com segurança
 export const useAdminUsuarios = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -77,7 +74,6 @@ export const useAdminUsuarios = () => {
     },
   });
 
-  // Get current user profile to check permissions
   const currentUserQuery = useQuery({
     queryKey: ['current-user-profile'],
     queryFn: async () => {
@@ -94,19 +90,13 @@ export const useAdminUsuarios = () => {
 
   const updateUsuarioMutation = useMutation({
     mutationFn: async ({ id, tipo_conta }: { id: string; tipo_conta: TipoConta }) => {
-      // Client-side validation (server will also validate)
       const currentUser = currentUserQuery.data;
-      if (!currentUser) {
-        throw new Error('Usuário não autenticado');
-      }
-
-      // Check if user can assign this role
+      if (!currentUser) throw new Error('Usuário não autenticado');
       if (currentUser.tipo_conta === 'admin_cidade' && tipo_conta === 'admin_geral') {
         throw new Error('Admin de cidade não pode criar Admin Geral');
       }
-
       if (currentUser.tipo_conta !== 'admin_geral' && currentUser.tipo_conta !== 'admin_cidade') {
-        throw new Error('Acesso negado: permissões insuficientes');
+        throw new Error('Acesso negado');
       }
 
       const { error } = await supabase
@@ -121,32 +111,16 @@ export const useAdminUsuarios = () => {
       toast({ title: 'Usuário atualizado com sucesso!' });
     },
     onError: (error: any) => {
-      const errorMessage = error.message || 'Erro ao atualizar usuário';
-      toast({ 
-        title: 'Erro de Segurança', 
-        description: errorMessage,
-        variant: 'destructive' 
-      });
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
     },
   });
 
   const deleteUsuarioMutation = useMutation({
     mutationFn: async (userId: string) => {
-      // Client-side validation
       const currentUser = currentUserQuery.data;
-      if (!currentUser) {
-        throw new Error('Usuário não autenticado');
-      }
-
-      // Only admin_geral and admin_cidade can delete users
+      if (!currentUser) throw new Error('Usuário não autenticado');
       if (currentUser.tipo_conta !== 'admin_geral' && currentUser.tipo_conta !== 'admin_cidade') {
-        throw new Error('Acesso negado: permissões insuficientes');
-      }
-
-      // Check if trying to delete another admin
-      const userToDelete = usuariosQuery.data?.find(u => u.id === userId);
-      if (userToDelete?.tipo_conta === 'admin_geral' && currentUser.tipo_conta !== 'admin_geral') {
-        throw new Error('Apenas Admin Geral pode excluir outros Admin Geral');
+        throw new Error('Acesso negado');
       }
 
       const { error } = await supabase
@@ -161,26 +135,18 @@ export const useAdminUsuarios = () => {
       toast({ title: 'Usuário excluído com sucesso!' });
     },
     onError: (error: any) => {
-      const errorMessage = error.message || 'Erro ao excluir usuário';
-      toast({ 
-        title: 'Erro de Segurança', 
-        description: errorMessage,
-        variant: 'destructive' 
-      });
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
     },
   });
 
-  // Function to check what roles current user can assign
   const getAvailableRoles = (): TipoConta[] => {
     const currentUser = currentUserQuery.data;
     if (!currentUser) return [];
-
     if (currentUser.tipo_conta === 'admin_geral') {
       return ['usuario', 'criador_empresa', 'empresa', 'admin_cidade', 'admin_geral'];
     } else if (currentUser.tipo_conta === 'admin_cidade') {
       return ['usuario', 'criador_empresa', 'empresa'];
     }
-    
     return [];
   };
 
@@ -195,7 +161,6 @@ export const useAdminUsuarios = () => {
   };
 };
 
-// Hook para gerenciar categorias
 export const useAdminCategorias = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();

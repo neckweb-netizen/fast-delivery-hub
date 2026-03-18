@@ -84,7 +84,7 @@ export const FloatingActionButton = () => {
   // Filtrar opções baseadas no tipo de usuário
   const availableOptions = options.filter(option => {
     if (option.requiresAuth && !user) return false;
-    if (option.allowedUserTypes && !option.allowedUserTypes.includes(profile.tipo_conta)) return false;
+    if (option.allowedUserTypes && !option.allowedUserTypes.includes(profile.tipo_conta as any)) return false;
     return true;
   });
 

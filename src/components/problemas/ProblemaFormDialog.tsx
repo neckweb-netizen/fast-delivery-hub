@@ -3,22 +3,32 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useProblemasCidade, useCategoriasProblema, ProblemaCidade } from '@/hooks/useProblemasCidade';
+import { useProblemasCidade } from '@/hooks/useProblemasCidade';
 import { useCidadePadrao } from '@/hooks/useCidadePadrao';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
+const CATEGORIAS_PROBLEMA = [
+  { id: 'infraestrutura', nome: 'Infraestrutura' },
+  { id: 'iluminacao', nome: 'Iluminação' },
+  { id: 'saneamento', nome: 'Saneamento' },
+  { id: 'transito', nome: 'Trânsito' },
+  { id: 'limpeza', nome: 'Limpeza Urbana' },
+  { id: 'seguranca', nome: 'Segurança' },
+  { id: 'saude', nome: 'Saúde' },
+  { id: 'educacao', nome: 'Educação' },
+  { id: 'meio_ambiente', nome: 'Meio Ambiente' },
+  { id: 'outros', nome: 'Outros' },
+];
+
 const problemaSchema = z.object({
   titulo: z.string().min(10, 'O título deve ter pelo menos 10 caracteres').max(200),
   descricao: z.string().min(20, 'A descrição deve ter pelo menos 20 caracteres').max(2000),
-  categoria_id: z.string().min(1, 'Selecione uma categoria'),
+  categoria: z.string().min(1, 'Selecione uma categoria'),
   endereco: z.string().min(5, 'Informe o endereço completo'),
-  bairro: z.string().optional(),
-  prioridade: z.enum(['baixa', 'media', 'alta', 'urgente']),
 });
 
 type ProblemaFormData = z.infer<typeof problemaSchema>;
@@ -26,13 +36,12 @@ type ProblemaFormData = z.infer<typeof problemaSchema>;
 interface ProblemaFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  problema?: ProblemaCidade;
+  problema?: any;
   isEdit?: boolean;
 }
 
 export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = false }: ProblemaFormDialogProps) => {
   const { data: cidadePadrao } = useCidadePadrao();
-  const { categorias } = useCategoriasProblema();
   const { criarProblema, atualizarProblema } = useProblemasCidade();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,10 +50,8 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
     defaultValues: {
       titulo: '',
       descricao: '',
-      categoria_id: '',
+      categoria: '',
       endereco: '',
-      bairro: '',
-      prioridade: 'media',
     },
   });
 
@@ -53,19 +60,15 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
       form.reset({
         titulo: problema.titulo,
         descricao: problema.descricao,
-        categoria_id: problema.categoria_id || '',
+        categoria: problema.categoria || '',
         endereco: problema.endereco,
-        bairro: problema.bairro || '',
-        prioridade: problema.prioridade,
       });
     } else {
       form.reset({
         titulo: '',
         descricao: '',
-        categoria_id: '',
+        categoria: '',
         endereco: '',
-        bairro: '',
-        prioridade: 'media',
       });
     }
   }, [isEdit, problema, form]);
@@ -81,22 +84,16 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
           dados: {
             titulo: data.titulo,
             descricao: data.descricao,
-            categoria_id: data.categoria_id,
             endereco: data.endereco,
-            bairro: data.bairro,
-            prioridade: data.prioridade,
-          },
+          } as any,
         });
       } else {
         await criarProblema.mutateAsync({
           titulo: data.titulo,
           descricao: data.descricao,
-          categoria_id: data.categoria_id,
           endereco: data.endereco,
-          bairro: data.bairro,
-          prioridade: data.prioridade,
-          cidade_id: cidadePadrao!.id,
-        });
+          categoria: data.categoria,
+        } as any);
       }
       form.reset();
       onOpenChange(false);
@@ -133,7 +130,7 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
 
             <FormField
               control={form.control}
-              name="categoria_id"
+              name="categoria"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Categoria</FormLabel>
@@ -144,35 +141,11 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categorias?.map((cat) => (
+                      {CATEGORIAS_PROBLEMA.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.nome}
                         </SelectItem>
                       ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="prioridade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Prioridade</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="baixa">Baixa</SelectItem>
-                      <SelectItem value="media">Média</SelectItem>
-                      <SelectItem value="alta">Alta</SelectItem>
-                      <SelectItem value="urgente">Urgente</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -209,20 +182,6 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
                       placeholder="Rua, número, complemento"
                       {...field}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="bairro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bairro (opcional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome do bairro" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

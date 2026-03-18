@@ -51,21 +51,13 @@ export const AvaliacoesDialog = ({ open, onOpenChange }: AvaliacoesDialogProps) 
               <p className="text-sm text-muted-foreground mt-2">Carregando avaliações...</p>
             </div>
           ) : avaliacoes && avaliacoes.length > 0 ? (
-            avaliacoes.map((avaliacao) => (
+            avaliacoes.map((avaliacao: any) => (
               <Card key={avaliacao.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">
-                    {avaliacao.empresas?.imagem_capa_url ? (
-                      <img
-                        src={avaliacao.empresas.imagem_capa_url}
-                        alt={avaliacao.empresas.nome}
-                        className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Star className="h-6 w-6 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Star className="h-6 w-6 text-muted-foreground" />
+                    </div>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-2">
@@ -92,20 +84,6 @@ export const AvaliacoesDialog = ({ open, onOpenChange }: AvaliacoesDialogProps) 
                       {avaliacao.comentario && (
                         <div className="bg-muted/50 rounded-lg p-3 mb-3">
                           <p className="text-sm">{avaliacao.comentario}</p>
-                        </div>
-                      )}
-                      
-                      {avaliacao.resposta_empresa && (
-                        <div className="bg-primary/5 border-l-4 border-primary rounded-r-lg p-3 mb-3">
-                          <p className="text-sm font-medium text-primary mb-1">
-                            Resposta da empresa:
-                          </p>
-                          <p className="text-sm">{avaliacao.resposta_empresa}</p>
-                          {avaliacao.respondido_em && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {new Date(avaliacao.respondido_em).toLocaleDateString('pt-BR')}
-                            </p>
-                          )}
                         </div>
                       )}
                       
