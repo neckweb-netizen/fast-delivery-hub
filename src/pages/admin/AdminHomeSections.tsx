@@ -241,7 +241,7 @@ export function AdminHomeSections() {
                     Status: {section.ativo ? 'Visível' : 'Oculta'}
                   </span>
                   <span>
-                    Atualizada em: {new Date(section.atualizado_em).toLocaleDateString('pt-BR')}
+                    Atualizada em: {new Date(section.criado_em || '').toLocaleDateString('pt-BR')}
                   </span>
                 </div>
               </CardContent>

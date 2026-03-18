@@ -291,7 +291,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 type="url"
               />
               {errors.link_whatsapp && (
-                <p className="text-red-500 text-sm">{errors.link_whatsapp.message}</p>
+                <p className="text-red-500 text-sm">{errors.link_whatsapp.message as string}</p>
               )}
               <p className="text-xs text-muted-foreground mt-1">
                 Opcional: Link para contato via WhatsApp sobre o produto

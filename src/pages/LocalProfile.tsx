@@ -456,12 +456,12 @@ const EmpresaProfile = () => {
                                         <div className="flex items-start space-x-3 mb-3">
                                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                                             <span className="text-sm font-medium text-blue-600">
-                                              {avaliacao.usuarios?.nome?.charAt(0).toUpperCase() || 'U'}
+                                              {(avaliacao as any).usuario_nome?.charAt(0).toUpperCase() || 'U'}
                                             </span>
                                           </div>
                                           <div className="flex-1">
                                             <div className="flex items-center justify-between mb-1">
-                                              <p className="font-medium">{avaliacao.usuarios?.nome || 'Usuário'}</p>
+                                              <p className="font-medium">{(avaliacao as any).usuario_nome || 'Usuário'}</p>
                                               <span className="text-xs text-muted-foreground">
                                                 {new Date(avaliacao.criado_em).toLocaleDateString('pt-BR')}
                                               </span>
@@ -472,9 +472,6 @@ const EmpresaProfile = () => {
                                             {avaliacao.comentario && <p className="text-sm text-muted-foreground">
                                                 {avaliacao.comentario}
                                               </p>}
-                                            {avaliacao.resposta_empresa && <div className="mt-2 p-2 bg-primary/5 border-l-4 border-primary rounded-r">
-                                                <p className="text-xs font-medium text-primary mb-1">Resposta da empresa:</p>
-                                                <p className="text-xs text-muted-foreground">{avaliacao.resposta_empresa}</p>
                                               </div>}
                                           </div>
                                         </div>

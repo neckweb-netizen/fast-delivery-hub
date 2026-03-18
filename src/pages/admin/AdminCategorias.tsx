@@ -379,10 +379,10 @@ export const AdminCategorias = () => {
             
             <div>
               <Label htmlFor="edit-tipo">Tipo</Label>
-              <Select 
-                value={formData.tipo} 
-                onValueChange={(value: 'empresa' | 'evento' | 'servico') => 
-                  setFormData(prev => ({ ...prev, tipo: value }))
+                <Select 
+                  value={formData.tipo} 
+                  onValueChange={(value: string) => 
+                    setFormData(prev => ({ ...prev, tipo: value }))
                 }
               >
                 <SelectTrigger>

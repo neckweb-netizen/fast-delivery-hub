@@ -58,7 +58,7 @@ export default function Radios() {
             {radioStations.map((station) => (
               <div key={station.id} className="space-y-3">
                 <RadioPlayer 
-                  radioUrl={station.link_radio || ''}
+                  radioUrl={(station as any).link_radio || ''}
                   stationName={station.nome}
                 />
                 <div className="text-center px-4">
