@@ -299,16 +299,16 @@ export const EmpresaDashboard = () => {
                 )}
                 
                 <div className="grid gap-2">
-                  {empresaAtual.site && (
+                {empresaAtual.website && (
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4 text-muted-foreground" />
                       <a 
-                        href={empresaAtual.site} 
+                        href={empresaAtual.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-sm text-blue-600 hover:underline"
                       >
-                        {empresaAtual.site}
+                        {empresaAtual.website}
                       </a>
                     </div>
                   )}
