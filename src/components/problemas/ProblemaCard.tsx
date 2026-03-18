@@ -164,7 +164,6 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                 {/* Localização */}
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
                   <MapPin className="w-3.5 h-3.5" />
-                  {problema.bairro && `${problema.bairro} • `}
                   {problema.endereco}
                 </div>
 
