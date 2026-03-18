@@ -111,11 +111,10 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const createVagaMutation = useMutation({
     mutationFn: async (data: any) => {
       const { data: result, error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .insert({
           ...data,
-          criado_por: empresaId,
-          cidade_id: data.cidade_id || '550e8400-e29b-41d4-a716-446655440000' // Cidade padrão
+          empresa_id: empresaId,
         })
         .select()
         .single();
