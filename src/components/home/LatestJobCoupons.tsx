@@ -18,18 +18,10 @@ export const LatestJobCoupons = () => {
     queryKey: ['latest-job-coupons', cidadePadrao?.id],
     queryFn: async () => {
       let query = supabase
-        .from('vagas_emprego')
-        .select(`
-          *,
-          categorias_oportunidades!inner(nome)
-        `)
+        .from('vagas')
+        .select('*')
         .eq('ativo', true)
         .order('criado_em', { ascending: false });
-
-      // Filtrar por cidade se disponível
-      if (cidadePadrao?.id) {
-        query = query.eq('cidade_id', cidadePadrao.id);
-      }
 
       const { data, error } = await query.limit(3);
 
