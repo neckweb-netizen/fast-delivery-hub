@@ -167,16 +167,8 @@ export const InfluencerDashboard = () => {
           </div>
           
           <div className="flex gap-2">
-            <Badge 
-              variant={
-                empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                'secondary'
-              }
-            >
-              Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                      empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                      'Pendente'}
+            <Badge variant={empresaAtual.aprovada ? 'default' : 'secondary'}>
+              Status: {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
             </Badge>
             <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
               {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
