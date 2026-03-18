@@ -61,10 +61,10 @@ export const useMinhaEmpresa = () => {
 
       // Se está atualizando horário de funcionamento, usar RPC
       if (dados.horario_funcionamento) {
-        const { error } = await supabase.rpc('atualizar_horario_funcionamento', {
-          empresa_id_param: empresa.id,
-          horarios_param: dados.horario_funcionamento
-        });
+        const { error } = await supabase
+          .from('empresas')
+          .update({ horario_funcionamento: dados.horario_funcionamento })
+          .eq('id', empresa.id);
         if (error) throw error;
       } else {
         // Para outros campos, usar update normal

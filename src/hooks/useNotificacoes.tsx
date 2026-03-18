@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,7 +7,7 @@ export interface Notificacao {
   id: string;
   titulo: string;
   conteudo?: string;
-  tipo: 'aviso' | 'avaliacao' | 'cupom' | 'evento' | 'sistema';
+  tipo: string;
   lida: boolean;
   criada_em: string;
   usuario_id: string;
@@ -26,12 +25,11 @@ export const useNotificacoes = () => {
     queryFn: async () => {
       if (!user?.id) return [];
 
-      // Buscar notificações diretas do usuário
       const { data: notificacoesData, error } = await supabase
         .from('notificacoes')
         .select('*')
         .eq('usuario_id', user.id)
-        .order('criada_em', { ascending: false })
+        .order('criado_em', { ascending: false })
         .limit(50);
 
       if (error) {
@@ -44,32 +42,27 @@ export const useNotificacoes = () => {
         .from('avisos_sistema')
         .select('*')
         .eq('ativo', true)
-        .gte('data_fim', new Date().toISOString())
-        .order('prioridade', { ascending: false })
+        .order('criado_em', { ascending: false })
         .limit(10);
 
       const notificacoes: Notificacao[] = [
         ...(notificacoesData || []).map(n => ({
           id: n.id,
           titulo: n.titulo,
-          conteudo: n.conteudo,
-          tipo: n.tipo as any,
+          conteudo: n.mensagem,
+          tipo: n.tipo || 'info',
           lida: n.lida,
-          criada_em: n.criada_em,
+          criada_em: n.criado_em,
           usuario_id: n.usuario_id,
-          referencia_id: n.referencia_id,
-          referencia_tipo: n.referencia_tipo,
         })),
         ...(avisosData || []).map(aviso => ({
           id: `aviso-${aviso.id}`,
           titulo: aviso.titulo,
-          conteudo: aviso.conteudo,
+          conteudo: aviso.mensagem,
           tipo: 'sistema' as const,
           lida: false,
           criada_em: aviso.criado_em,
           usuario_id: user.id,
-          referencia_id: aviso.id,
-          referencia_tipo: 'aviso_sistema',
         })),
       ];
 
@@ -83,11 +76,7 @@ export const useNotificacoes = () => {
   const marcarComoLidaMutation = useMutation({
     mutationFn: async (notificacaoId: string) => {
       if (!user?.id) throw new Error('Usuário não autenticado');
-
-      if (notificacaoId.startsWith('aviso-')) {
-        // Para avisos do sistema, não fazemos nada (são sempre "não lidos")
-        return;
-      }
+      if (notificacaoId.startsWith('aviso-')) return;
 
       const { error } = await supabase
         .from('notificacoes')
@@ -101,10 +90,7 @@ export const useNotificacoes = () => {
       queryClient.invalidateQueries({ queryKey: ['notificacoes', user?.id] });
     },
     onError: () => {
-      toast({
-        title: 'Erro ao marcar notificação como lida',
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro ao marcar notificação como lida', variant: 'destructive' });
     },
   });
 
@@ -122,26 +108,19 @@ export const useNotificacoes = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notificacoes', user?.id] });
-      toast({
-        title: 'Todas as notificações foram marcadas como lidas',
-      });
+      toast({ title: 'Todas as notificações foram marcadas como lidas' });
     },
     onError: () => {
-      toast({
-        title: 'Erro ao marcar notificações como lidas',
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro ao marcar notificações como lidas', variant: 'destructive' });
     },
   });
 
   const criarNotificacaoMutation = useMutation({
     mutationFn: async (dados: {
       titulo: string;
-      conteudo?: string;
-      tipo: string;
+      mensagem?: string;
+      tipo?: string;
       usuario_id: string;
-      referencia_id?: string;
-      referencia_tipo?: string;
     }) => {
       const { error } = await supabase
         .from('notificacoes')

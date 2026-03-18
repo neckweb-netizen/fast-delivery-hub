@@ -29,7 +29,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { LugarPublicoForm } from '@/components/admin/forms/LugarPublicoForm';
-import { useLugaresPublicosAdmin, useDeleteLugarPublico, type LugarPublico } from '@/hooks/useLugaresPublicos';
+import { useLugaresPublicosAdmin, useDeleteLugarPublico } from '@/hooks/useLugaresPublicos';
+type LugarPublico = any;
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 

@@ -47,10 +47,7 @@ export const FormularioAgendamento: React.FC<FormularioAgendamentoProps> = ({
     criarAgendamento.mutate({
       empresa_id: empresaId,
       data_hora: formData.data_agendamento,
-      observacoes: formData.observacoes,
-      servico_id: undefined,
-      data_agendamento: formData.data_agendamento,
-      observacoes: formData.observacoes || undefined
+      observacoes: formData.observacoes || undefined,
     });
 
     // Reset form

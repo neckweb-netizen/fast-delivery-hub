@@ -102,7 +102,7 @@ export const EnquetesSection = () => {
       );
     } else {
       criarEnquete.mutate(
-        enqueteData,
+        { pergunta: enqueteData.titulo || enqueteData.pergunta || form.titulo, opcoes: enqueteData.opcoes, ativo: enqueteData.ativo, data_fim: enqueteData.data_fim } as any,
         { onSuccess: () => { setIsDialogOpen(false); resetForm(); }}
       );
     }
