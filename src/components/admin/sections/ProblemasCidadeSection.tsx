@@ -46,22 +46,31 @@ export const ProblemasCidadeSection = () => {
     queryFn: async () => {
       let query = supabase
         .from('problemas_cidade')
-        .select(`
-          *,
-          categoria:categorias_problema(nome, icone, cor),
-          usuario:usuarios(nome)
-        `)
-        .eq('ativo', true);
+        .select('*')
+        .order('criado_em', { ascending: false });
 
       if (filtroStatus !== 'todos') {
-        query = query.eq('status_aprovacao', filtroStatus);
+        query = query.eq('status', filtroStatus);
       }
-
-      query = query.order('criado_em', { ascending: false });
 
       const { data, error } = await query;
       if (error) throw error;
-      return data;
+      
+      // Fetch user names separately
+      const userIds = [...new Set((data || []).map(p => p.usuario_id).filter(Boolean))];
+      let userMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const { data: usuarios } = await supabase
+          .from('usuarios')
+          .select('id, nome')
+          .in('id', userIds as string[]);
+        userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u.nome; return acc; }, {});
+      }
+      
+      return (data || []).map(p => ({
+        ...p,
+        usuario_nome: userMap[p.usuario_id as string] || 'Anônimo'
+      })) as any[];
     },
   });
 
@@ -221,35 +230,29 @@ export const ProblemasCidadeSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {problemas?.map((problema) => (
+                {problemas?.map((problema: any) => (
                   <TableRow key={problema.id}>
                     <TableCell className="font-medium">{problema.titulo}</TableCell>
                     <TableCell>
-                      {problema.categoria?.nome || 'Sem categoria'}
+                      {problema.categoria || 'Sem categoria'}
                     </TableCell>
                     <TableCell>
-                      <Badge className={statusAprovacaoColors[problema.status_aprovacao]}>
-                        {statusAprovacaoLabels[problema.status_aprovacao]}
+                      <Badge className={statusColors[problema.status as keyof typeof statusColors]}>
+                        {statusLabels[problema.status as keyof typeof statusLabels] || problema.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge className={statusColors[problema.status]}>
-                        {statusLabels[problema.status]}
+                      <Badge className={statusColors[problema.status as keyof typeof statusColors]}>
+                        {statusLabels[problema.status as keyof typeof statusLabels] || problema.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          problema.prioridade === 'urgente'
-                            ? 'destructive'
-                            : 'secondary'
-                        }
-                      >
-                        {problema.prioridade}
+                      <Badge variant="secondary">
+                        Normal
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {problema.votos_positivos - problema.votos_negativos}
+                      {problema.votos || 0}
                     </TableCell>
                     <TableCell>
                       {format(new Date(problema.criado_em), 'dd/MM/yyyy', {
@@ -263,12 +266,12 @@ export const ProblemasCidadeSection = () => {
                           size="sm"
                           onClick={() => {
                             setProblemaModal(problema);
-                            setStatusSelecionado(problema.status);
+                            setStatusSelecionado(problema.status || 'pendente');
                             setTituloEdit(problema.titulo);
-                            setDescricaoEdit(problema.descricao);
-                            setEnderecoEdit(problema.endereco);
-                            setBairroEdit(problema.bairro || '');
-                            setPrioridadeEdit(problema.prioridade);
+                            setDescricaoEdit(problema.descricao || '');
+                            setEnderecoEdit(problema.endereco || '');
+                            setBairroEdit('');
+                            setPrioridadeEdit('');
                           }}
                         >
                           <Eye className="w-4 h-4" />

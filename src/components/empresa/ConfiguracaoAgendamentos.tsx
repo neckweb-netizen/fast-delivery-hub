@@ -60,10 +60,10 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
 
   const [novoHorario, setNovoHorario] = useState('');
 
+  const [agendamentosAtivo, setAgendamentosAtivo] = useState(false);
+
   const handleToggleAgendamentos = (ativo: boolean) => {
-    updateEmpresa({
-      agendamentos_ativo: ativo
-    });
+    setAgendamentosAtivo(ativo);
   };
 
   const handleSubmitServico = () => {
@@ -148,7 +148,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
               </p>
             </div>
             <Switch
-              checked={empresa?.agendamentos_ativo || false}
+              checked={agendamentosAtivo}
               onCheckedChange={handleToggleAgendamentos}
               disabled={isUpdating}
             />
@@ -157,7 +157,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
       </Card>
 
       {/* Serviços Disponíveis */}
-      {empresa?.agendamentos_ativo && (
+      {agendamentosAtivo && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Serviços Disponíveis para Agendamento</CardTitle>
@@ -348,7 +348,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
       )}
 
       {/* Configuração de Horários */}
-      {empresa?.agendamentos_ativo && (
+      {agendamentosAtivo && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

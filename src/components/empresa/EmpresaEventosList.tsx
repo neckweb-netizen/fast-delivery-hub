@@ -29,8 +29,6 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
         .select('*')
         .eq('empresa_id', empresaId)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
-        .or(`data_fim.gte.${now},data_fim.is.null`)
         .order('data_inicio', { ascending: true });
 
       if (error) throw error;
@@ -112,7 +110,7 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                       <h3 className="font-semibold text-lg">{evento.titulo}</h3>
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="default">
-                          {evento.gratuito ? 'Gratuito' : 'Pago'}
+                          {!evento.preco || evento.preco === 0 ? 'Gratuito' : 'Pago'}
                         </Badge>
                         {evento.destaque && (
                           <Badge variant="secondary">Destaque</Badge>
@@ -141,7 +139,7 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                         <Clock className="w-4 h-4" />
                         <span>
                           {formatTime(evento.data_inicio)}
-                          {evento.hora_fim && ` - ${evento.hora_fim}`}
+                          {evento.data_fim && ` - ${formatTime(evento.data_fim)}`}
                         </span>
                       </div>
                       
@@ -152,17 +150,9 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                         </div>
                       )}
                       
-                      {evento.limite_participantes && (
-                        <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4" />
-                          <span>
-                            {evento.participantes_confirmados || 0}/{evento.limite_participantes} participantes
-                          </span>
-                        </div>
-                      )}
                     </div>
                     
-                    {!evento.gratuito && evento.preco && (
+                    {evento.preco && evento.preco > 0 && (
                       <div className="mt-3">
                         <span className="font-bold text-lg text-primary">
                           R$ {evento.preco}

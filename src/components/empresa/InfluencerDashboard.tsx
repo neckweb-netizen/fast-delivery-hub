@@ -71,7 +71,7 @@ export const InfluencerDashboard = () => {
     }
   };
 
-  const redesSociais = parseRedesSociais(empresaAtual.site);
+  const redesSociais = parseRedesSociais(empresaAtual.website);
 
   const getSocialIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
@@ -114,9 +114,9 @@ export const InfluencerDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Users className="w-4 h-4" />
                         <span>{emp.nome}</span>
-                        {emp.verificado && (
+                        {emp.aprovada && (
                           <Badge variant="secondary" className="text-xs">
-                            Verificado
+                            Aprovado
                           </Badge>
                         )}
                       </div>
@@ -133,9 +133,9 @@ export const InfluencerDashboard = () => {
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
-            {empresaAtual.imagem_capa_url && (
+            {empresaAtual.capa_url && (
               <img
-                src={empresaAtual.imagem_capa_url}
+                src={empresaAtual.capa_url}
                 alt={empresaAtual.nome}
                 className="w-16 h-16 rounded-full object-cover"
               />
@@ -143,10 +143,10 @@ export const InfluencerDashboard = () => {
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-2">
                 {empresaAtual.nome}
-                {empresaAtual.verificado && (
+                {empresaAtual.aprovada && (
                   <Badge variant="default" className="bg-blue-600">
                     <Star className="w-3 h-3 mr-1" />
-                    Verificado
+                    Aprovado
                   </Badge>
                 )}
               </h1>
@@ -166,16 +166,8 @@ export const InfluencerDashboard = () => {
           </div>
           
           <div className="flex gap-2">
-            <Badge 
-              variant={
-                empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                'secondary'
-              }
-            >
-              Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                      empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                      'Pendente'}
+            <Badge variant={empresaAtual.aprovada ? 'default' : 'secondary'}>
+              Status: {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
             </Badge>
             <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
               {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
@@ -266,12 +258,12 @@ export const InfluencerDashboard = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{empresaAtual.status_aprovacao === 'aprovado' ? '✓' : '⏳'}</div>
+                    <div className="text-2xl font-bold text-primary">{empresaAtual.aprovada ? '✓' : '⏳'}</div>
                     <div className="text-sm text-muted-foreground">Status</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{empresaAtual.verificado ? '⭐' : '○'}</div>
-                    <div className="text-sm text-muted-foreground">Verificado</div>
+                    <div className="text-2xl font-bold text-primary">{empresaAtual.aprovada ? '⭐' : '○'}</div>
+                    <div className="text-sm text-muted-foreground">Aprovado</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">{empresaAtual.destaque ? '🔥' : '○'}</div>
@@ -288,9 +280,6 @@ export const InfluencerDashboard = () => {
                 <div className="text-xs text-muted-foreground space-y-1">
                   <p>Criado em: {new Date(empresaAtual.criado_em).toLocaleDateString('pt-BR')}</p>
                   <p>Atualizado em: {new Date(empresaAtual.atualizado_em).toLocaleDateString('pt-BR')}</p>
-                  {empresaAtual.data_aprovacao && (
-                    <p>Aprovado em: {new Date(empresaAtual.data_aprovacao).toLocaleDateString('pt-BR')}</p>
-                  )}
                 </div>
               </CardContent>
             </Card>

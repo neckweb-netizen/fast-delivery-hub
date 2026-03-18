@@ -136,9 +136,9 @@ export const EmpresaDashboard = () => {
                       <div className="flex items-center gap-2">
                         <Building2 className="w-4 h-4" />
                         <span>{emp.nome}</span>
-                        {emp.verificado && (
+                        {emp.aprovada && (
                           <Badge variant="secondary" className="text-xs">
-                            Verificado
+                            Aprovado
                           </Badge>
                         )}
                       </div>
@@ -157,10 +157,10 @@ export const EmpresaDashboard = () => {
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
-                {empresaAtual.imagem_capa_url && (
+                {empresaAtual.capa_url && (
                   <div className="shrink-0">
                     <img
-                      src={empresaAtual.imagem_capa_url}
+                      src={empresaAtual.capa_url}
                       alt={empresaAtual.nome}
                       className="w-20 h-20 rounded-xl object-cover shadow-md ring-2 ring-secondary/20"
                     />
@@ -171,10 +171,10 @@ export const EmpresaDashboard = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
                       {empresaAtual.nome}
                     </h1>
-                    {empresaAtual.verificado && (
+                    {empresaAtual.aprovada && (
                       <Badge variant="default" className="bg-blue-600">
                         <Star className="w-3 h-3 mr-1" />
-                        Verificado
+                        Aprovado
                       </Badge>
                     )}
                   </div>
@@ -197,15 +197,9 @@ export const EmpresaDashboard = () => {
               
               <div className="flex flex-wrap gap-2 lg:shrink-0">
                 <Badge 
-                  variant={
-                    empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                    empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                    'secondary'
-                  }
+                  variant={empresaAtual.aprovada ? 'default' : 'secondary'}
                 >
-                  Status: {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                          empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                          'Pendente'}
+                  Status: {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
                 </Badge>
                 <Badge variant={empresaAtual.ativo ? 'default' : 'secondary'}>
                   {empresaAtual.ativo ? 'Ativo' : 'Inativo'}
@@ -305,16 +299,16 @@ export const EmpresaDashboard = () => {
                 )}
                 
                 <div className="grid gap-2">
-                  {empresaAtual.site && (
+                {empresaAtual.website && (
                     <div className="flex items-center gap-2">
                       <Globe className="w-4 h-4 text-muted-foreground" />
                       <a 
-                        href={empresaAtual.site} 
+                        href={empresaAtual.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-sm text-blue-600 hover:underline"
                       >
-                        {empresaAtual.site}
+                        {empresaAtual.website}
                       </a>
                     </div>
                   )}
@@ -330,16 +324,8 @@ export const EmpresaDashboard = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm">Status de Aprovação:</span>
-                    <Badge 
-                      variant={
-                        empresaAtual.status_aprovacao === 'aprovado' ? 'default' : 
-                        empresaAtual.status_aprovacao === 'rejeitado' ? 'destructive' : 
-                        'secondary'
-                      }
-                    >
-                      {empresaAtual.status_aprovacao === 'aprovado' ? 'Aprovado' : 
-                       empresaAtual.status_aprovacao === 'rejeitado' ? 'Rejeitado' : 
-                       'Pendente'}
+                    <Badge variant={empresaAtual.aprovada ? 'default' : 'secondary'}>
+                      {empresaAtual.aprovada ? 'Aprovado' : 'Pendente'}
                     </Badge>
                   </div>
                   
@@ -351,9 +337,9 @@ export const EmpresaDashboard = () => {
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-sm">Verificado:</span>
-                    <Badge variant={empresaAtual.verificado ? 'default' : 'secondary'}>
-                      {empresaAtual.verificado ? 'Sim' : 'Não'}
+                    <span className="text-sm">Destaque:</span>
+                    <Badge variant={empresaAtual.destaque ? 'default' : 'secondary'}>
+                      {empresaAtual.destaque ? 'Sim' : 'Não'}
                     </Badge>
                   </div>
                   
@@ -370,8 +356,8 @@ export const EmpresaDashboard = () => {
                 <div className="text-xs text-muted-foreground space-y-1">
                   <p>Criado em: {new Date(empresaAtual.criado_em).toLocaleDateString('pt-BR')}</p>
                   <p>Atualizado em: {new Date(empresaAtual.atualizado_em).toLocaleDateString('pt-BR')}</p>
-                  {empresaAtual.data_aprovacao && (
-                    <p>Aprovado em: {new Date(empresaAtual.data_aprovacao).toLocaleDateString('pt-BR')}</p>
+                  {empresaAtual.atualizado_em && (
+                    <p>Atualizado em: {new Date(empresaAtual.atualizado_em).toLocaleDateString('pt-BR')}</p>
                   )}
                 </div>
               </CardContent>

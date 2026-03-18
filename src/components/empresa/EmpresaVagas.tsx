@@ -97,12 +97,9 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
     queryKey: ['empresa-vagas', empresaId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('vagas_emprego')
-        .select(`
-          *,
-          categorias_oportunidades(nome)
-        `)
-        .eq('criado_por', empresaId)
+        .from('vagas')
+        .select('*')
+        .eq('empresa_id', empresaId)
         .order('criado_em', { ascending: false });
       
       if (error) throw error;
@@ -114,11 +111,10 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const createVagaMutation = useMutation({
     mutationFn: async (data: any) => {
       const { data: result, error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .insert({
           ...data,
-          criado_por: empresaId,
-          cidade_id: data.cidade_id || '550e8400-e29b-41d4-a716-446655440000' // Cidade padrão
+          empresa_id: empresaId,
         })
         .select()
         .single();
@@ -141,7 +137,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const updateVagaMutation = useMutation({
     mutationFn: async ({ id, ...data }: any) => {
       const { data: result, error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .update(data)
         .eq('id', id)
         .select()
@@ -165,7 +161,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const deleteVagaMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .delete()
         .eq('id', id);
       
@@ -184,8 +180,8 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
   const toggleStatusMutation = useMutation({
     mutationFn: async ({ id, ativo }: { id: string; ativo: boolean }) => {
       const { error } = await supabase
-        .from('vagas_emprego')
-        .update({ ativo })
+        .from('vagas')
+        .update({ ativo } as any)
         .eq('id', id);
       
       if (error) throw error;
@@ -449,7 +445,7 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
         </NeonCard>
       ) : (
         <div className="grid gap-4">
-          {vagas.map((vaga) => (
+          {(vagas as any[]).map((vaga: any) => (
             <NeonCard key={vaga.id} className={`${!vaga.ativo ? 'opacity-60' : ''}`}>
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -461,19 +457,13 @@ export const EmpresaVagas = ({ empresaId }: EmpresaVagasProps) => {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      {vaga.categorias_oportunidades && (
-                        <span className="flex items-center gap-1">
-                          <Briefcase className="w-4 h-4" />
-                          {vaga.categorias_oportunidades.nome}
-                        </span>
-                      )}
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="w-4 h-4" />
+                        {vaga.tipo_contrato || 'Não informado'}
+                      </span>
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {format(new Date(vaga.criado_em), 'dd/MM/yyyy', { locale: ptBR })}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Eye className="w-4 h-4" />
-                        {vaga.visualizacoes} visualizações
                       </span>
                     </div>
                   </div>

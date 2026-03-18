@@ -25,7 +25,8 @@ interface LocalCardProps {
     endereco?: string;
     telefone?: string;
     imagem_capa_url?: string;
-    verificado: boolean;
+    capa_url?: string;
+    verificado?: boolean;
     destaque: boolean;
     categorias?: { nome: string };
     cidades?: { nome: string };

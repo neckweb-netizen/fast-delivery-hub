@@ -42,20 +42,17 @@ export const EventosSlider = () => {
           data_fim,
           local,
           endereco,
-          imagem_banner,
+          imagem_url,
           categorias(nome),
-          empresas(nome),
-          cidades(nome, estado)
+          empresas(nome)
         `)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
-        .eq('cidade_id', cidadePadrao.id)
         .gte('data_inicio', new Date().toISOString())
         .order('data_inicio', { ascending: true })
         .limit(10);
 
       if (error) throw error;
-      return data as Evento[];
+      return (data || []) as unknown as Evento[];
     },
     enabled: !!cidadePadrao?.id,
   });

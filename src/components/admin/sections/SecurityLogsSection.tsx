@@ -14,7 +14,7 @@ interface SecurityLog {
   user_id: string | null;
   ip_address: string | null;
   user_agent: string | null;
-  metadata: any;
+  details: any;
   created_at: string;
 }
 
@@ -260,11 +260,11 @@ export const SecurityLogsSection = () => {
                             </div>
                           </div>
 
-                          {log.metadata && Object.keys(log.metadata).length > 0 && (
+                          {log.details && Object.keys(log.details).length > 0 && (
                             <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
-                              <strong>Metadata:</strong>
+                              <strong>Detalhes:</strong>
                               <pre className="mt-1 text-xs text-gray-600">
-                                {JSON.stringify(log.metadata, null, 2)}
+                                {JSON.stringify(log.details, null, 2)}
                               </pre>
                             </div>
                           )}

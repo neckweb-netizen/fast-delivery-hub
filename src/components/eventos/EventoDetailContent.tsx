@@ -34,12 +34,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
         .select(`
           *,
           categorias(nome, slug),
-          empresas(nome, slug, endereco, telefone),
-          cidades(nome, estado)
+          empresas(nome, slug, endereco, telefone)
         `)
         .eq('id', eventoId)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
         .single();
 
       if (error) throw error;
@@ -97,10 +95,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
       {/* Hero Section Completamente Nova */}
       <div className="relative">
-        {evento.imagem_banner ? (
+        {evento.imagem_url ? (
           <div className="relative h-[60vh] overflow-hidden rounded-b-3xl shadow-2xl">
             <img
-              src={evento.imagem_banner}
+              src={evento.imagem_url}
               alt={evento.titulo}
               className="w-full h-full object-cover"
             />
@@ -136,9 +134,9 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                       {evento.categorias.nome}
                     </Badge>
                   )}
-                  {evento.cidades && (
+                  {evento.local && (
                     <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-0 px-4 py-2 text-sm font-semibold rounded-full shadow-lg">
-                      📍 {evento.cidades.nome} - {evento.cidades.estado}
+                      📍 {evento.local}
                     </Badge>
                   )}
                 </div>
@@ -180,9 +178,9 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                       {evento.categorias.nome}
                     </Badge>
                   )}
-                  {evento.cidades && (
+                  {evento.local && (
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-lg px-4 py-2 text-sm font-semibold rounded-full">
-                      📍 {evento.cidades.nome} - {evento.cidades.estado}
+                      📍 {evento.local}
                     </Badge>
                   )}
                 </div>
@@ -345,10 +343,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                   <div className="w-3 h-3 rounded-full bg-green-500 shadow-sm" />
                   <span className="text-sm text-gray-600 dark:text-gray-300">Criado em {formatDate(evento.criado_em)}</span>
                 </div>
-                {evento.atualizado_em !== evento.criado_em && (
+                {evento.criado_em && (
                   <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-700 rounded-xl">
                     <div className="w-3 h-3 rounded-full bg-blue-500 shadow-sm" />
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Atualizado em {formatDate(evento.atualizado_em)}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Criado em {formatDate(evento.criado_em)}</span>
                   </div>
                 )}
               </div>

@@ -79,10 +79,10 @@ export const FeaturedSection = ({ cidadeId }: FeaturedSectionProps) => {
           >
             <CardContent className="p-0">
               <div className="relative h-28 sm:h-32 lg:h-36 bg-gradient-to-br from-primary/20 to-primary/10 rounded-t-lg overflow-hidden">
-                {empresa.imagem_capa_url ? (
+                {(empresa as any).capa_url ? (
                   <img 
-                    src={empresa.imagem_capa_url} 
-                    alt={empresa.nome}
+                    src={(empresa as any).capa_url} 
+                    alt={(empresa as any).nome}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     loading="lazy"
                     style={{ aspectRatio: '16/9' }}
@@ -97,40 +97,32 @@ export const FeaturedSection = ({ cidadeId }: FeaturedSectionProps) => {
                     Destaque
                   </Badge>
                 </div>
-                {empresa.verificado && (
-                  <div className="absolute top-1 sm:top-2 left-1 sm:left-2">
-                    <Badge className="bg-green-500 text-white text-xs">
-                      Verificado
-                    </Badge>
-                  </div>
-                )}
               </div>
               
               <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
                 <div className="space-y-1">
                   <h3 className="font-semibold text-base sm:text-lg leading-tight hover:text-primary transition-colors line-clamp-2">
-                    {empresa.nome}
+                    {(empresa as any).nome}
                   </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{empresa.categoria_nome}</p>
                 </div>
                 
-                {empresa.endereco && (
+                {(empresa as any).endereco && (
                   <div className="flex items-center space-x-1 text-xs sm:text-sm text-muted-foreground">
                     <MapPin className="h-3 w-3 flex-shrink-0" />
-                    <span className="line-clamp-1 truncate">{empresa.endereco}</span>
+                    <span className="line-clamp-1 truncate">{(empresa as any).endereco}</span>
                   </div>
                 )}
 
-                {empresa.total_avaliacoes > 0 && (
+                {(empresa as any).total_avaliacoes > 0 && (
                   <div className="flex items-center space-x-1">
                     <div className="flex items-center space-x-1">
                       <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-medium text-xs sm:text-sm">
-                        {Number(empresa.media_avaliacoes).toFixed(1)}
+                        {Number((empresa as any).media_avaliacoes).toFixed(1)}
                       </span>
                     </div>
                     <span className="text-xs text-muted-foreground truncate">
-                      ({empresa.total_avaliacoes} avaliações)
+                      ({(empresa as any).total_avaliacoes} avaliações)
                     </span>
                   </div>
                 )}

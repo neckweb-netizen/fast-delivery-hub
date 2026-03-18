@@ -70,7 +70,7 @@ export const EnderecosList = ({ empresaId, canEdit = false }: EnderecosListProps
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base flex items-center gap-2">
-                    {endereco.nome_identificacao}
+                    {endereco.nome || 'Endereço'}
                     {endereco.principal && (
                       <Badge variant="default" className="text-xs">
                         <Star className="h-3 w-3 mr-1" />
@@ -129,23 +129,12 @@ export const EnderecosList = ({ empresaId, canEdit = false }: EnderecosListProps
                   <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                   <div className="text-sm">
                     <div>{endereco.endereco}</div>
-                    {endereco.bairro && <div className="text-muted-foreground">{endereco.bairro}</div>}
+                    {endereco.cidade && <div className="text-muted-foreground">{endereco.cidade}</div>}
                     {endereco.cep && <div className="text-muted-foreground">CEP: {endereco.cep}</div>}
                     <div className="text-muted-foreground">Cidade</div>
                   </div>
                 </div>
 
-                {endereco.telefone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{endereco.telefone}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{formatHorario(endereco.horario_funcionamento)}</span>
-                </div>
               </CardContent>
             </Card>
           ))}
