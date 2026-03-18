@@ -178,9 +178,9 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
                       {evento.categorias.nome}
                     </Badge>
                   )}
-                  {evento.cidades && (
+                  {evento.local && (
                     <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-lg px-4 py-2 text-sm font-semibold rounded-full">
-                      📍 {evento.cidades.nome} - {evento.cidades.estado}
+                      📍 {evento.local}
                     </Badge>
                   )}
                 </div>
