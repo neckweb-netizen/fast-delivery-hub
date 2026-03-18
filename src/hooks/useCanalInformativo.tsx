@@ -12,6 +12,11 @@ export interface CanalInformativoItem {
   autor_id?: string;
   ativo: boolean;
   criado_em: string;
+  tipo_conteudo?: string;
+  url_midia?: string;
+  link_externo?: string;
+  atualizado_em?: string;
+  resultado_sorteio?: any;
 }
 
 export interface CreateCanalInformativoData {
