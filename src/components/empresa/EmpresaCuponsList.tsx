@@ -178,7 +178,7 @@ export const EmpresaCuponsList = ({ empresaId, isOwner = false }: EmpresaCuponsL
                       <div className="flex items-center gap-2">
                         <span className="font-medium">Desconto:</span>
                         <span className="font-bold text-primary">
-                          {cupom.tipo === 'porcentagem' ? `${cupom.valor}%` : `R$ ${cupom.valor}`}
+                          {cupom.tipo_desconto === 'percentual' ? `${cupom.valor_desconto}%` : `R$ ${cupom.valor_desconto}`}
                         </span>
                       </div>
                       
