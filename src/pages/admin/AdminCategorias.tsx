@@ -296,10 +296,10 @@ export const AdminCategorias = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="text-2xl">
-                      {categoria.icone_url?.startsWith('http') ? (
-                        <img src={categoria.icone_url} alt="" className="w-8 h-8" />
+                      {(categoria.icone || categoria.icone_url || '')?.startsWith('http') ? (
+                        <img src={categoria.icone || categoria.icone_url || ''} alt="" className="w-8 h-8" />
                       ) : (
-                        <span>{categoria.icone_url || '📁'}</span>
+                        <span>{categoria.icone || categoria.icone_url || '📁'}</span>
                       )}
                     </div>
                     <div>
