@@ -22,7 +22,8 @@ export const FormularioAgendamento: React.FC<FormularioAgendamentoProps> = ({
   onSuccess 
 }) => {
   const { user } = useAuth();
-  const { criarAgendamento, isCreating } = useAgendamentos();
+  const { criarAgendamento } = useAgendamentos();
+  const isCreating = criarAgendamento.isPending;
   const { servicos } = useServicosAgendamento(empresaId);
 
   const [formData, setFormData] = useState({
