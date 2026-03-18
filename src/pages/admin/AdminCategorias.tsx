@@ -232,7 +232,7 @@ export const AdminCategorias = () => {
                 <Label htmlFor="tipo">Tipo</Label>
                 <Select 
                   value={formData.tipo} 
-                  onValueChange={(value: 'empresa' | 'evento' | 'servico') => 
+                  onValueChange={(value: string) => 
                     setFormData(prev => ({ ...prev, tipo: value }))
                   }
                 >
