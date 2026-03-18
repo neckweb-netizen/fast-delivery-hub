@@ -139,7 +139,6 @@ export const InfluencerDashboard = () => {
                 alt={empresaAtual.nome}
                 className="w-16 h-16 rounded-full object-cover"
               />
-              />
             )}
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-2">
