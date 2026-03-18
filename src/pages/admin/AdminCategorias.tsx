@@ -47,7 +47,7 @@ export const AdminCategorias = () => {
         .order('nome');
       
       if (error) throw error;
-      return data as Categoria[];
+      return (data || []).map(d => ({ ...d, icone_url: d.icone })) as Categoria[];
     }
   });
 
