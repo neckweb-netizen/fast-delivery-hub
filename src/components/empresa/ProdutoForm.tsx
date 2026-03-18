@@ -275,7 +275,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 type="url"
               />
               {errors.link_compra && (
-                <p className="text-red-500 text-sm">{errors.link_compra.message}</p>
+                <p className="text-red-500 text-sm">{errors.link_compra.message as string}</p>
               )}
               <p className="text-xs text-muted-foreground mt-1">
                 Opcional: Link direto para a página de compra do produto
