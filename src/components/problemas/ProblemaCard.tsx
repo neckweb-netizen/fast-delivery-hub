@@ -192,9 +192,9 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
           </div>
 
           {/* Imagens */}
-          {problema.imagens && problema.imagens.length > 0 && (
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {problema.imagens.slice(0, 3).map((img, idx) => (
+          {(problema as any).imagem_url && (
+            <div className="mt-4">
+              <img src={(problema as any).imagem_url} alt="Imagem" className="w-full h-24 object-cover rounded-md" />
                 <img
                   key={idx}
                   src={img}

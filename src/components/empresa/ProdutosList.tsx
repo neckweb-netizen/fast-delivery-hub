@@ -191,14 +191,14 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex flex-wrap gap-1">
-                        {produto.categoria_produto && (
+                         {(produto as any).categoria_produto || produto.categoria ? (
                           <Badge variant="outline" className="text-xs">
-                            {produto.categoria_produto}
+                            {(produto as any).categoria_produto || produto.categoria}
                           </Badge>
-                        )}
-                        {produto.codigo_produto && (
+                        ) : null}
+                        {(produto as any).codigo_produto && (
                           <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
-                            #{produto.codigo_produto}
+                            #{(produto as any).codigo_produto}
                           </span>
                         )}
                       </div>
