@@ -199,7 +199,7 @@ export const ProdutoForm = ({ empresaId, produto, onClose }: ProdutoFormProps) =
                 placeholder="0.00"
               />
               {errors.preco_original && (
-                <p className="text-red-500 text-sm">{errors.preco_original.message}</p>
+                <p className="text-red-500 text-sm">{errors.preco_original.message as string}</p>
               )}
             </div>
 
