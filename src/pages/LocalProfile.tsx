@@ -155,7 +155,7 @@ const EmpresaProfile = () => {
       </div>;
   }
   console.log('✅ EmpresaProfile - Renderizando perfil da empresa:', empresa.nome);
-  const images = [empresa.imagem_capa_url].filter(Boolean);
+  const images = [empresa.capa_url].filter(Boolean);
   const handleFavorite = () => {
     if (!user) {
       // Se usuário não está logado, abrir modal de autenticação
