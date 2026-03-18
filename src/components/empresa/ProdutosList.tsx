@@ -168,39 +168,19 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                     </div>
                     
                     {/* Botões de ação do produto */}
-                    {(produto.link_compra || produto.link_whatsapp) && (
+                     {((produto as any).link_compra || (produto as any).link_whatsapp) && (
                       <div className="flex gap-2 mb-3">
-                        {produto.link_compra && (
-                          <Button
-                            variant="default"
-                            size="sm"
-                            asChild
-                            className="flex-1 sm:flex-none"
-                          >
-                            <a 
-                              href={produto.link_compra} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2"
-                            >
+                        {(produto as any).link_compra && (
+                          <Button variant="default" size="sm" asChild className="flex-1 sm:flex-none">
+                            <a href={(produto as any).link_compra} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                               <ShoppingCart className="w-4 h-4" />
                               Comprar
                             </a>
                           </Button>
                         )}
-                        {produto.link_whatsapp && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                            className="flex-1 sm:flex-none text-[hsl(var(--success))] hover:text-[hsl(var(--success))] hover:bg-[hsl(var(--success))]/10"
-                          >
-                            <a 
-                              href={produto.link_whatsapp} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2"
-                            >
+                        {(produto as any).link_whatsapp && (
+                          <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+                            <a href={(produto as any).link_whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
                               <MessageCircle className="w-4 h-4" />
                               WhatsApp
                             </a>
