@@ -179,7 +179,7 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   <div className="flex items-center gap-3 ml-auto">
                     <div className="flex items-center gap-1">
                       <Eye className="w-3.5 h-3.5" />
-                      {problema.visualizacoes}
+                      {(problema as any).visualizacoes || 0}
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageCircle className="w-3.5 h-3.5" />
