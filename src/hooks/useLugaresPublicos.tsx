@@ -2,23 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export interface LugarPublico {
-  id: string;
-  nome: string;
-  descricao?: string;
-  endereco?: string;
-  tipo: string;
-  imagem_url?: string;
-  telefone?: string;
-  horario_funcionamento?: any;
-  localizacao?: any;
-  ativo: boolean;
-  destaque: boolean;
-  cidade_id: string;
-  criado_em: string;
-  atualizado_em: string;
-}
-
 export const useLugaresPublicos = (cidadeId?: string) => {
   return useQuery({
     queryKey: ['lugares-publicos', cidadeId],
@@ -27,7 +10,6 @@ export const useLugaresPublicos = (cidadeId?: string) => {
         .from('lugares_publicos')
         .select('*')
         .eq('ativo', true)
-        .order('destaque', { ascending: false })
         .order('nome');
 
       if (cidadeId) {
@@ -35,9 +17,8 @@ export const useLugaresPublicos = (cidadeId?: string) => {
       }
 
       const { data, error } = await query;
-      
       if (error) throw error;
-      return data as LugarPublico[];
+      return (data || []) as any[];
     },
   });
 };
@@ -52,7 +33,7 @@ export const useLugaresPublicosAdmin = () => {
         .order('criado_em', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return data as any[];
     },
   });
 };
@@ -61,17 +42,7 @@ export const useCreateLugarPublico = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (dados: {
-      nome: string;
-      descricao?: string;
-      endereco?: string;
-      tipo: string;
-      imagem_url?: string;
-      telefone?: string;
-      cidade_id: string;
-      ativo: boolean;
-      destaque: boolean;
-    }) => {
+    mutationFn: async (dados: any) => {
       const { data, error } = await supabase
         .from('lugares_publicos')
         .insert(dados)
@@ -86,8 +57,7 @@ export const useCreateLugarPublico = () => {
       queryClient.invalidateQueries({ queryKey: ['lugares-publicos-admin'] });
       toast.success('Lugar público criado com sucesso!');
     },
-    onError: (error) => {
-      console.error('Erro ao criar lugar público:', error);
+    onError: () => {
       toast.error('Erro ao criar lugar público');
     },
   });
@@ -97,7 +67,7 @@ export const useUpdateLugarPublico = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ id, ...dados }: Partial<LugarPublico> & { id: string }) => {
+    mutationFn: async ({ id, ...dados }: any) => {
       const { data, error } = await supabase
         .from('lugares_publicos')
         .update(dados)
@@ -113,8 +83,7 @@ export const useUpdateLugarPublico = () => {
       queryClient.invalidateQueries({ queryKey: ['lugares-publicos-admin'] });
       toast.success('Lugar público atualizado com sucesso!');
     },
-    onError: (error) => {
-      console.error('Erro ao atualizar lugar público:', error);
+    onError: () => {
       toast.error('Erro ao atualizar lugar público');
     },
   });
@@ -137,8 +106,7 @@ export const useDeleteLugarPublico = () => {
       queryClient.invalidateQueries({ queryKey: ['lugares-publicos-admin'] });
       toast.success('Lugar público excluído com sucesso!');
     },
-    onError: (error) => {
-      console.error('Erro ao excluir lugar público:', error);
+    onError: () => {
       toast.error('Erro ao excluir lugar público');
     },
   });

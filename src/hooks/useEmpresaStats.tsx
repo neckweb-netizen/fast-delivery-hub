@@ -59,7 +59,7 @@ export const useEmpresaStats = () => {
         avaliacoes_mes: avaliacoes_recentes.length,
         total_favoritos: favoritos.length,
         cupons_ativos: cupons.length,
-        cupons_utilizados: cupons.reduce((sum, c) => sum + (c.quantidade_usada || 0), 0),
+        cupons_utilizados: cupons.reduce((sum, c) => sum + ((c as any).usos || 0), 0),
       };
     },
     enabled: !!user,

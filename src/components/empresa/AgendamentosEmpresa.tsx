@@ -136,7 +136,7 @@ export const AgendamentosEmpresa: React.FC<AgendamentosEmpresaProps> = ({ empres
                 {agendamento.status === 'confirmado' && (
                   <Button
                     size="sm"
-                    onClick={() => atualizarStatus({ id: agendamento.id, status: 'concluido' })}
+                    onClick={() => atualizarStatus.mutate({ id: agendamento.id, status: 'concluido' })}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
                     Marcar como Concluído

@@ -4,12 +4,11 @@ import { toast } from 'sonner';
 
 interface HomeSection {
   id: string;
-  section_name: string;
-  display_name: string;
+  section_key: string;
   ordem: number;
   ativo: boolean;
+  config: any;
   criado_em: string;
-  atualizado_em: string;
 }
 
 export const useHomeSectionsOrder = () => {

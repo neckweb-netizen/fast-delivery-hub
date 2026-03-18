@@ -2,33 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-interface Enquete {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  opcoes: string[];
-  multipla_escolha: boolean;
-  ativo: boolean;
-  data_inicio: string;
-  data_fim?: string;
-  criado_por: string;
-  criado_em: string;
-  atualizado_em: string;
-}
-
-interface EnqueteAtiva {
-  id: string;
-  titulo: string;
-  descricao?: string;
-  opcoes: string[];
-  multipla_escolha: boolean;
-  total_votos: number;
-  resultados: Array<{
-    opcao_indice: number;
-    count: number;
-  }>;
-}
-
 export const useEnquetes = () => {
   const queryClient = useQueryClient();
 
@@ -36,9 +9,23 @@ export const useEnquetes = () => {
   const { data: enqueteAtiva, isLoading } = useQuery({
     queryKey: ['enquete-ativa'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('buscar_enquete_ativa');
+      const { data, error } = await supabase
+        .from('enquetes')
+        .select('*')
+        .eq('ativo', true)
+        .order('criado_em', { ascending: false })
+        .limit(1)
+        .maybeSingle();
       if (error) throw error;
-      return data?.[0] as EnqueteAtiva | null;
+      if (!data) return null;
+      return {
+        id: data.id,
+        titulo: data.pergunta,
+        opcoes: (data.opcoes as any) || [],
+        votos: (data.votos as any) || {},
+        ativo: data.ativo,
+        data_fim: data.data_fim,
+      } as any;
     }
   });
 
@@ -51,7 +38,7 @@ export const useEnquetes = () => {
         .select('*')
         .order('criado_em', { ascending: false });
       if (error) throw error;
-      return data as Enquete[];
+      return (data || []) as any[];
     }
   });
 
@@ -64,17 +51,26 @@ export const useEnquetes = () => {
       enqueteId: string; 
       opcoes: number[]; 
     }) => {
-      const { data, error } = await supabase.rpc('votar_enquete', {
-        enquete_id_param: enqueteId,
-        opcoes_indices: opcoes,
-        ip_param: await getClientIP(),
-        user_agent_param: navigator.userAgent
-      });
+      // Simple vote: update votos JSON
+      const { data: enquete, error: fetchError } = await supabase
+        .from('enquetes')
+        .select('votos')
+        .eq('id', enqueteId)
+        .single();
+      
+      if (fetchError) throw fetchError;
+      
+      const votos = (enquete?.votos as any) || {};
+      for (const idx of opcoes) {
+        votos[idx] = (votos[idx] || 0) + 1;
+      }
+      
+      const { error } = await supabase
+        .from('enquetes')
+        .update({ votos })
+        .eq('id', enqueteId);
       
       if (error) throw error;
-      if (!data) throw new Error('Não foi possível votar. Você já pode ter votado nesta enquete.');
-      
-      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['enquete-ativa'] });
@@ -87,12 +83,14 @@ export const useEnquetes = () => {
 
   // Criar enquete (admin)
   const criarEnquete = useMutation({
-    mutationFn: async (enquete: Omit<Enquete, 'id' | 'criado_em' | 'atualizado_em' | 'criado_por'>) => {
+    mutationFn: async (enquete: { pergunta: string; opcoes: any; ativo?: boolean; data_fim?: string }) => {
       const { data, error } = await supabase
         .from('enquetes')
         .insert({
-          ...enquete,
-          criado_por: (await supabase.auth.getUser()).data.user?.id
+          pergunta: enquete.pergunta,
+          opcoes: enquete.opcoes,
+          ativo: enquete.ativo ?? true,
+          data_fim: enquete.data_fim || null,
         })
         .select()
         .single();
@@ -112,10 +110,10 @@ export const useEnquetes = () => {
 
   // Atualizar enquete (admin)
   const atualizarEnquete = useMutation({
-    mutationFn: async ({ id, ...enquete }: Partial<Enquete> & { id: string }) => {
+    mutationFn: async ({ id, ...updates }: { id: string; [key: string]: any }) => {
       const { data, error } = await supabase
         .from('enquetes')
-        .update(enquete)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single();
@@ -164,14 +162,3 @@ export const useEnquetes = () => {
     excluirEnquete
   };
 };
-
-// Função auxiliar para obter IP do cliente
-async function getClientIP(): Promise<string> {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    return data.ip;
-  } catch {
-    return 'unknown';
-  }
-}

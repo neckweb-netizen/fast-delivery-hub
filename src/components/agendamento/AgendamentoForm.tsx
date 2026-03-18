@@ -40,9 +40,10 @@ export const AgendamentoForm: React.FC<AgendamentoFormProps> = ({
       return;
     }
 
-    criarAgendamento({
+    criarAgendamento.mutate({
       empresa_id: empresaId,
-      ...formData
+      data_hora: formData.data_agendamento,
+      observacoes: formData.observacoes,
     });
 
     if (onSuccess) {

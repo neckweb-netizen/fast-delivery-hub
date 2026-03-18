@@ -44,11 +44,11 @@ export const FormularioAgendamento: React.FC<FormularioAgendamentoProps> = ({
       return;
     }
 
-    criarAgendamento({
+    criarAgendamento.mutate({
       empresa_id: empresaId,
-      nome_cliente: formData.nome_cliente,
-      telefone_cliente: formData.telefone_cliente,
-      servico: formData.servico,
+      data_hora: formData.data_agendamento,
+      observacoes: formData.observacoes,
+      servico_id: undefined,
       data_agendamento: formData.data_agendamento,
       observacoes: formData.observacoes || undefined
     });

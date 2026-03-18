@@ -118,7 +118,7 @@ export const EstatisticasSection = () => {
                     className="bg-green-600 h-2 rounded-full" 
                     style={{
                       width: `${stats?.totalEmpresas ? 
-                        Math.round((stats.empresasVerificadas / stats.totalEmpresas) * 100) : 0
+                        Math.round((stats.empresasAprovadas / stats.totalEmpresas) * 100) : 0
                       }%`
                     }}
                   />
