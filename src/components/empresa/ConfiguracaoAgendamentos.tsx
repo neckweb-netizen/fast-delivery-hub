@@ -157,7 +157,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
       </Card>
 
       {/* Serviços Disponíveis */}
-      {empresa?.agendamentos_ativo && (
+      {agendamentosAtivo && (
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Serviços Disponíveis para Agendamento</CardTitle>
