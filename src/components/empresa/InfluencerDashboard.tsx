@@ -259,12 +259,12 @@ export const InfluencerDashboard = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{empresaAtual.status_aprovacao === 'aprovado' ? '✓' : '⏳'}</div>
+                    <div className="text-2xl font-bold text-primary">{empresaAtual.aprovada ? '✓' : '⏳'}</div>
                     <div className="text-sm text-muted-foreground">Status</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{empresaAtual.verificado ? '⭐' : '○'}</div>
-                    <div className="text-sm text-muted-foreground">Verificado</div>
+                    <div className="text-2xl font-bold text-primary">{empresaAtual.aprovada ? '⭐' : '○'}</div>
+                    <div className="text-sm text-muted-foreground">Aprovado</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">{empresaAtual.destaque ? '🔥' : '○'}</div>
