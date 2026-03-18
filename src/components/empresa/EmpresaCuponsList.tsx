@@ -202,10 +202,10 @@ export const EmpresaCuponsList = ({ empresaId, isOwner = false }: EmpresaCuponsL
                         </div>
                       </div>
                       
-                      {cupom.quantidade_total && (
+                      {cupom.limite_uso && (
                         <div className="flex items-center gap-2">
                           <span className="font-medium">Uso:</span>
-                          <span>{cupom.quantidade_usada}/{cupom.quantidade_total}</span>
+                          <span>{cupom.usos || 0}/{cupom.limite_uso}</span>
                         </div>
                       )}
                     </div>

@@ -337,9 +337,9 @@ export const EmpresaDashboard = () => {
                   </div>
                   
                   <div className="flex justify-between">
-                    <span className="text-sm">Verificado:</span>
-                    <Badge variant={empresaAtual.verificado ? 'default' : 'secondary'}>
-                      {empresaAtual.verificado ? 'Sim' : 'Não'}
+                    <span className="text-sm">Destaque:</span>
+                    <Badge variant={empresaAtual.destaque ? 'default' : 'secondary'}>
+                      {empresaAtual.destaque ? 'Sim' : 'Não'}
                     </Badge>
                   </div>
                   

@@ -230,35 +230,29 @@ export const ProblemasCidadeSection = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {problemas?.map((problema) => (
+                {problemas?.map((problema: any) => (
                   <TableRow key={problema.id}>
                     <TableCell className="font-medium">{problema.titulo}</TableCell>
                     <TableCell>
-                      {problema.categoria?.nome || 'Sem categoria'}
+                      {problema.categoria || 'Sem categoria'}
                     </TableCell>
                     <TableCell>
-                      <Badge className={statusAprovacaoColors[problema.status_aprovacao]}>
-                        {statusAprovacaoLabels[problema.status_aprovacao]}
+                      <Badge className={statusColors[problema.status as keyof typeof statusColors]}>
+                        {statusLabels[problema.status as keyof typeof statusLabels] || problema.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge className={statusColors[problema.status]}>
-                        {statusLabels[problema.status]}
+                      <Badge className={statusColors[problema.status as keyof typeof statusColors]}>
+                        {statusLabels[problema.status as keyof typeof statusLabels] || problema.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          problema.prioridade === 'urgente'
-                            ? 'destructive'
-                            : 'secondary'
-                        }
-                      >
-                        {problema.prioridade}
+                      <Badge variant="secondary">
+                        Normal
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {problema.votos_positivos - problema.votos_negativos}
+                      {problema.votos || 0}
                     </TableCell>
                     <TableCell>
                       {format(new Date(problema.criado_em), 'dd/MM/yyyy', {
@@ -272,12 +266,12 @@ export const ProblemasCidadeSection = () => {
                           size="sm"
                           onClick={() => {
                             setProblemaModal(problema);
-                            setStatusSelecionado(problema.status);
+                            setStatusSelecionado(problema.status || 'pendente');
                             setTituloEdit(problema.titulo);
-                            setDescricaoEdit(problema.descricao);
-                            setEnderecoEdit(problema.endereco);
-                            setBairroEdit(problema.bairro || '');
-                            setPrioridadeEdit(problema.prioridade);
+                            setDescricaoEdit(problema.descricao || '');
+                            setEnderecoEdit(problema.endereco || '');
+                            setBairroEdit('');
+                            setPrioridadeEdit('');
                           }}
                         >
                           <Eye className="w-4 h-4" />

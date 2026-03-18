@@ -348,7 +348,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
       )}
 
       {/* Configuração de Horários */}
-      {empresa?.agendamentos_ativo && (
+      {agendamentosAtivo && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
