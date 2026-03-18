@@ -148,7 +148,7 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
               </p>
             </div>
             <Switch
-              checked={empresa?.agendamentos_ativo || false}
+              checked={agendamentosAtivo}
               onCheckedChange={handleToggleAgendamentos}
               disabled={isUpdating}
             />
