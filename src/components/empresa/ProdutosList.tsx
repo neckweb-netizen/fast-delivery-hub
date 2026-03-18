@@ -114,9 +114,9 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
               <CardContent className="p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
                   <div className="w-full lg:w-16 h-40 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {produto.imagem_principal_url ? (
+                    {(produto as any).imagem_url || (produto as any).imagem_principal_url ? (
                       <img 
-                        src={produto.imagem_principal_url} 
+                        src={(produto as any).imagem_url || (produto as any).imagem_principal_url} 
                         alt={produto.nome} 
                         className="w-full h-full object-cover"
                       />
