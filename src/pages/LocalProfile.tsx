@@ -215,7 +215,7 @@ const EmpresaProfile = () => {
   });
 
   // Verifica se é uma rádio para mostrar apenas a aba de rádio
-  const isRadio = empresa.categorias?.nome === 'Rádios' && empresa.link_radio;
+  const isRadio = empresa.categorias?.nome === 'Rádios' && (empresa as any).link_radio;
 
   // Verifica se é um influencer para mostrar perfil específico
   const isInfluencer = empresa.categorias?.nome === 'Influencers';
