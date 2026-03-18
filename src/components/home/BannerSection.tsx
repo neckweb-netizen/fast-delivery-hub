@@ -41,15 +41,14 @@ export const BannerSection = ({ secao = 'home' }: BannerSectionProps) => {
     queryKey: ['banners-publicitarios', secao],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('banners_publicitarios')
-        .select('id, titulo, imagem_url, link_url, ativo, ordem, secao, criado_em, atualizado_em')
+        .from('banners')
+        .select('*')
         .eq('ativo', true)
-        .eq('secao', secao === 'locais' ? 'empresas' : secao)
         .order('ordem', { ascending: true })
         .limit(10);
 
       if (error) throw error;
-      return data as Banner[];
+      return (data || []) as unknown as Banner[];
     },
   });
 

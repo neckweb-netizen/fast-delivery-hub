@@ -128,7 +128,7 @@ export const LatestCoupons = ({ cidadeId }: LatestCouponsProps) => {
                 <div className="w-full sm:w-24 lg:w-28 p-3 sm:p-4 text-center space-y-2 bg-gradient-to-b from-yellow-100 to-orange-100 border-t sm:border-t-0 sm:border-l border-border/20">
                   <div className="space-y-1">
                     <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
-                      {cupom.tipo === 'porcentagem' ? `${cupom.valor}%` : `R$${cupom.valor}`}
+                      {cupom.tipo_desconto === 'percentual' ? `${cupom.valor_desconto}%` : `R$${cupom.valor_desconto}`}
                     </div>
                     <div className="text-xs text-muted-foreground">OFF</div>
                   </div>

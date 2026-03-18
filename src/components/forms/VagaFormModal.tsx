@@ -92,12 +92,17 @@ export const VagaFormModal = ({ open, onOpenChange }: VagaFormModalProps) => {
       }
 
       const { data: result, error } = await supabase
-        .from('vagas_emprego')
+        .from('vagas')
         .insert({
-          ...data,
-          criado_por: empresaUsuario.id,
-          cidade_id: empresaUsuario.cidade_id
-        })
+          titulo: data.titulo,
+          descricao: data.descricao,
+          requisitos: data.requisitos,
+          salario: data.salario,
+          tipo_contrato: data.tipo_contrato,
+          local: data.local,
+          remoto: data.remoto,
+          empresa_id: empresaUsuario.id,
+        } as any)
         .select()
         .single();
       
