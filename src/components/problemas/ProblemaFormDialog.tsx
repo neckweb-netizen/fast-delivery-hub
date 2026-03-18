@@ -84,17 +84,16 @@ export const ProblemaFormDialog = ({ open, onOpenChange, problema, isEdit = fals
           dados: {
             titulo: data.titulo,
             descricao: data.descricao,
-            categoria: data.categoria,
             endereco: data.endereco,
-          },
+          } as any,
         });
       } else {
         await criarProblema.mutateAsync({
           titulo: data.titulo,
           descricao: data.descricao,
-          categoria: data.categoria,
           endereco: data.endereco,
-        });
+          categoria: data.categoria,
+        } as any);
       }
       form.reset();
       onOpenChange(false);
