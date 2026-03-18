@@ -125,7 +125,7 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
                   <ArrowUp className="w-4 h-4" />
                 </Button>
                 <span className="font-bold text-lg">
-                  {problema.votos_positivos - problema.votos_negativos}
+                  {(problema as any).votos || 0}
                 </span>
                 <Button
                   variant="ghost"
