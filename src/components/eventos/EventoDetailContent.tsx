@@ -95,10 +95,10 @@ export const EventoDetailContent = ({ eventoId }: EventoDetailContentProps) => {
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
       {/* Hero Section Completamente Nova */}
       <div className="relative">
-        {evento.imagem_banner ? (
+        {evento.imagem_url ? (
           <div className="relative h-[60vh] overflow-hidden rounded-b-3xl shadow-2xl">
             <img
-              src={evento.imagem_banner}
+              src={evento.imagem_url}
               alt={evento.titulo}
               className="w-full h-full object-cover"
             />
