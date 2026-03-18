@@ -147,7 +147,7 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                         {produto.preco_promocional ? (
                           <>
                             <span className="line-through text-gray-500 text-sm">
-                              {formatPrice(produto.preco_original)}
+                              {formatPrice((produto as any).preco || (produto as any).preco_original)}
                             </span>
                             <span className="font-bold text-[hsl(var(--success))]">
                               {formatPrice(produto.preco_promocional)}
