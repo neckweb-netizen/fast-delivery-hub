@@ -100,8 +100,8 @@ export const ProblemaCard = ({ problema }: ProblemaCardProps) => {
     setShowEditDialog(true);
   };
 
-  const IconeCategoria = problema.categoria?.icone
-    ? (LucideIcons as any)[problema.categoria.icone]
+  const IconeCategoria = typeof problema.categoria === 'object' && (problema.categoria as any)?.icone
+    ? (LucideIcons as any)[(problema.categoria as any).icone]
     : null;
 
   return (
