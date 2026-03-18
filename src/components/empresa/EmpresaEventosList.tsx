@@ -141,7 +141,7 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                         <Clock className="w-4 h-4" />
                         <span>
                           {formatTime(evento.data_inicio)}
-                          {evento.hora_fim && ` - ${evento.hora_fim}`}
+                          {evento.data_fim && ` - ${formatTime(evento.data_fim)}`}
                         </span>
                       </div>
                       
