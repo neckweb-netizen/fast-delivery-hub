@@ -112,7 +112,7 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                       <h3 className="font-semibold text-lg">{evento.titulo}</h3>
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="default">
-                          {evento.gratuito ? 'Gratuito' : 'Pago'}
+                          {!evento.preco || evento.preco === 0 ? 'Gratuito' : 'Pago'}
                         </Badge>
                         {evento.destaque && (
                           <Badge variant="secondary">Destaque</Badge>
