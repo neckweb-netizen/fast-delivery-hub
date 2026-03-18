@@ -122,14 +122,11 @@ export const MobileHamburger = () => {
 
   // Mesclar com configurações do banco se existirem
   const finalMenuItems = allMenuItems.map(item => {
-    const dbConfig = configuracoes.find(config => config.rota === item.rota);
+    const dbConfig = configuracoes.find((config: any) => config.nome === item.rota || (config.config as any)?.rota === item.rota);
     if (dbConfig) {
       return {
         ...item,
-        nome_item: dbConfig.nome_item,
-        icone: dbConfig.icone,
         ativo: dbConfig.ativo,
-        apenas_admin: dbConfig.apenas_admin
       };
     }
     return {

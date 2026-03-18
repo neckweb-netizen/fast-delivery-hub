@@ -105,27 +105,27 @@ export const NotificationBell = () => {
                   <div
                     key={notification.id}
                     className={`p-3 rounded-lg cursor-pointer transition-colors hover:bg-muted/50 ${
-                      !notification.read ? 'bg-muted/30' : ''
+                      !notification.lida ? 'bg-muted/30' : ''
                     }`}
                     onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex items-start gap-3">
                       <div className={`w-2 h-2 rounded-full mt-2 ${
-                        !notification.read ? 'bg-primary' : 'bg-muted'
+                        !notification.lida ? 'bg-primary' : 'bg-muted'
                       }`} />
                       <div className="flex-1 min-w-0">
                         <p className={`font-medium text-sm ${
-                          !notification.read ? 'text-foreground' : 'text-muted-foreground'
+                          !notification.lida ? 'text-foreground' : 'text-muted-foreground'
                         }`}>
-                          {notification.title}
+                          {notification.titulo}
                         </p>
-                        {notification.message && (
+                        {notification.mensagem && (
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                            {notification.message}
+                            {notification.mensagem}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground mt-2">
-                          {formatDistanceToNow(new Date(notification.created_at), {
+                          {formatDistanceToNow(new Date(notification.criado_em), {
                             addSuffix: true,
                             locale: ptBR,
                           })}

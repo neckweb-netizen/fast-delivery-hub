@@ -203,25 +203,25 @@ export const Header = () => {
                          <DropdownMenuItem 
                            key={notification.id} 
                             className={`flex flex-col items-start p-4 hover:bg-accent cursor-pointer ${
-                              !notification.read ? 'bg-primary/5' : ''
-                            }`}
-                           onClick={() => handleNotificationClick(notification)}
-                         >
-                           <div className="flex items-start justify-between w-full">
-                             <div className="flex-1">
-                               <div className="font-medium text-sm text-foreground flex items-center gap-2">
-                                 {notification.title}
-                                 {!notification.read && (
-                                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                                 )}
-                               </div>
-                               {notification.message && (
-                                 <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                                   {notification.message}
-                                 </div>
-                               )}
-                               <div className="text-xs text-muted-foreground mt-1">
-                                 {formatarTempo(notification.created_at)}
+                               !notification.lida ? 'bg-primary/5' : ''
+                             }`}
+                            onClick={() => handleNotificationClick(notification)}
+                          >
+                            <div className="flex items-start justify-between w-full">
+                              <div className="flex-1">
+                                <div className="font-medium text-sm text-foreground flex items-center gap-2">
+                                  {notification.titulo}
+                                  {!notification.lida && (
+                                    <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                  )}
+                                </div>
+                                {notification.mensagem && (
+                                  <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                    {notification.mensagem}
+                                  </div>
+                                )}
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {formatarTempo(notification.criado_em)}
                                </div>
                              </div>
                            </div>
