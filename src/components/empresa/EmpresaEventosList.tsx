@@ -152,14 +152,6 @@ export const EmpresaEventosList = ({ empresaId, isOwner = false }: EmpresaEvento
                         </div>
                       )}
                       
-                      {evento.limite_participantes && (
-                        <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4" />
-                          <span>
-                            {evento.participantes_confirmados || 0}/{evento.limite_participantes} participantes
-                          </span>
-                        </div>
-                      )}
                     </div>
                     
                     {!evento.gratuito && evento.preco && (
