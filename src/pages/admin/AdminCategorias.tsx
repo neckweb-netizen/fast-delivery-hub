@@ -64,7 +64,7 @@ export const AdminCategorias = () => {
         .insert({
           nome: data.nome,
           slug,
-          icone_url: data.icone_url || null,
+          icone: data.icone_url || null,
           tipo: data.tipo,
           ativo: data.ativo
         });
