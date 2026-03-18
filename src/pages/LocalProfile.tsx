@@ -53,14 +53,15 @@ const EmpresaProfile = () => {
   // Verificar se existe um admin atribuído para esta empresa
   const {
     data: adminAtribuido
-  } = useQuery({
+   } = useQuery({
     queryKey: ['empresa-admin-check', empresa?.id],
     queryFn: async () => {
       if (!empresa?.id) return false;
-      const {
-        data,
-        error
-      } = await supabase.from('usuario_empresa_admin').select('id').eq('empresa_id', empresa.id).eq('ativo', true).limit(1);
+      const { data, error } = await supabase
+        .from('empresa_admins')
+        .select('id')
+        .eq('empresa_id', empresa.id)
+        .limit(1);
       if (error) throw error;
       return data && data.length > 0;
     },
