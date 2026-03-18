@@ -144,10 +144,10 @@ export const InfluencerDashboard = () => {
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-2">
                 {empresaAtual.nome}
-                {empresaAtual.verificado && (
+                {empresaAtual.aprovada && (
                   <Badge variant="default" className="bg-blue-600">
                     <Star className="w-3 h-3 mr-1" />
-                    Verificado
+                    Aprovado
                   </Badge>
                 )}
               </h1>
