@@ -60,10 +60,10 @@ export const ConfiguracaoAgendamentos: React.FC<ConfiguracaoAgendamentosProps> =
 
   const [novoHorario, setNovoHorario] = useState('');
 
+  const [agendamentosAtivo, setAgendamentosAtivo] = useState(false);
+
   const handleToggleAgendamentos = (ativo: boolean) => {
-    updateEmpresa({
-      agendamentos_ativo: ativo
-    });
+    setAgendamentosAtivo(ativo);
   };
 
   const handleSubmitServico = () => {
