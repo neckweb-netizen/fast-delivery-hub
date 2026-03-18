@@ -59,7 +59,7 @@ export const VagaFormModal = ({ open, onOpenChange }: VagaFormModalProps) => {
         .select('*')
         .eq('usuario_id', profile.id)
         .eq('ativo', true)
-        .eq('status_aprovacao', 'aprovado')
+        .eq('aprovada', true)
         .maybeSingle();
       
       if (error) throw error;
