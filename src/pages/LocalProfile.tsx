@@ -246,7 +246,7 @@ const EmpresaProfile = () => {
       <main className="flex-1">
         {/* Header com imagem de capa */}
         <div className="relative h-64 md:h-80 bg-gradient-to-br from-blue-100 to-blue-200">
-          {empresa.imagem_capa_url ? <img src={empresa.imagem_capa_url} alt={empresa.nome} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center">
+          {empresa.capa_url ? <img src={empresa.capa_url} alt={empresa.nome} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center">
               <Camera className="h-16 w-16 text-blue-600/50" />
             </div>}
           
