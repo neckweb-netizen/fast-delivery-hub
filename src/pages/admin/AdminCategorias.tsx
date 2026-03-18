@@ -17,8 +17,9 @@ interface Categoria {
   id: string;
   nome: string;
   slug: string;
-  icone_url: string | null;
-  tipo: 'empresa' | 'evento' | 'servico';
+  icone: string | null;
+  icone_url?: string | null;
+  tipo: string;
   ativo: boolean;
   criado_em: string;
 }
