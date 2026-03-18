@@ -29,7 +29,8 @@ export const AgendamentoForm: React.FC<AgendamentoFormProps> = ({
     observacoes: ''
   });
 
-  const { criarAgendamento, isCreating } = useAgendamentos();
+  const { criarAgendamento } = useAgendamentos();
+  const isCreating = criarAgendamento.isPending;
   const { servicos } = useServicosAgendamento(empresaId);
 
   const handleSubmit = (e: React.FormEvent) => {
