@@ -46,22 +46,31 @@ export const ProblemasCidadeSection = () => {
     queryFn: async () => {
       let query = supabase
         .from('problemas_cidade')
-        .select(`
-          *,
-          categoria:categorias_problema(nome, icone, cor),
-          usuario:usuarios(nome)
-        `)
-        .eq('ativo', true);
+        .select('*')
+        .order('criado_em', { ascending: false });
 
       if (filtroStatus !== 'todos') {
-        query = query.eq('status_aprovacao', filtroStatus);
+        query = query.eq('status', filtroStatus);
       }
-
-      query = query.order('criado_em', { ascending: false });
 
       const { data, error } = await query;
       if (error) throw error;
-      return data;
+      
+      // Fetch user names separately
+      const userIds = [...new Set((data || []).map(p => p.usuario_id).filter(Boolean))];
+      let userMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const { data: usuarios } = await supabase
+          .from('usuarios')
+          .select('id, nome')
+          .in('id', userIds as string[]);
+        userMap = (usuarios || []).reduce((acc: any, u: any) => { acc[u.id] = u.nome; return acc; }, {});
+      }
+      
+      return (data || []).map(p => ({
+        ...p,
+        usuario_nome: userMap[p.usuario_id as string] || 'Anônimo'
+      })) as any[];
     },
   });
 
