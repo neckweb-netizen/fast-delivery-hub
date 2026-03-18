@@ -155,7 +155,7 @@ export const ProdutosList = ({ empresaId }: ProdutosListProps) => {
                           </>
                         ) : (
                           <span className="font-bold">
-                            {formatPrice(produto.preco_original)}
+                            {formatPrice((produto as any).preco || (produto as any).preco_original)}
                           </span>
                         )}
                       </div>
